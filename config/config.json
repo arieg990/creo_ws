@@ -1,0 +1,29 @@
+{
+  "development": {
+    "username": "root",
+    "password": "root",
+    "database": "db_creo",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "secret":"69c3f001cfe625d06d4c2e2377d54a72a5f6dcffbf9f62ab9c0d26a945355403"
+  },
+  "test": {
+    "username": "root",
+    "password": "root",
+    "database": "db_creo",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "secret":"6782f0f4a8bf5a4ecb73873c350fb131f9dbf457d43379f5b08c9b1b8104eae0"
+  },
+  "production": {
+    "username": "root",
+    "password": "root",
+    "database": "db_creo",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false,
+    "secret":"0448051f186b7df890b5808da70ad908699dcde7aa0d7b0d4586d61243a8c1af"
+  }
+}
