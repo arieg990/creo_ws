@@ -44,7 +44,7 @@ router.get('/list', async function(req, res, next) {
 
     res.status(200).json(response(200,"cities",list, paging));
   } catch(err) {
-    res.status(200).json(response(400,"cities",err.errors));
+    res.status(200).json(response(400,"cities",err));
   }
 
 });
@@ -61,7 +61,7 @@ router.post('/', async function(req, res, next) {
 
     res.status(200).json(response(200,"city",list));
   } catch(err) {
-    res.status(200).json(response(400,"city",err.errors));
+    res.status(200).json(response(400,"city",err));
   }
   
 });
@@ -84,8 +84,7 @@ router.put('/:id', async function(req, res, next) {
     res.status(200).json(response(200,"city",update));
 
   } catch(err) {
-
-    res.status(200).json(response(400,"city",err.errors));
+    res.status(200).json(response(400,"city",err));
   }
 
 });
@@ -104,7 +103,7 @@ router.delete('/', async function(req, res, next) {
     res.status(200).json(response(200,"city",update));
     
   } catch(err) {
-    res.status(200).json(response(400,"city",err.errors));
+    res.status(200).json(response(400,"city",err));
   }
   
 });
@@ -130,7 +129,7 @@ router.get('/:id', async function(req, res, next) {
     res.status(200).json(response(200,"city",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"city",err.errors));
+    res.status(200).json(response(400,"city",err));
   }
 
 });

@@ -37,7 +37,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
 
     res.status(200).json(response(200,"types",list, paging));
   } catch(err) {
-    res.status(200).json(response(400,"types",err.errors));
+    res.status(200).json(response(400,"types",err));
   }
 
 });
@@ -55,19 +55,7 @@ router.post('/', async function(req, res, next) {
 
     res.status(200).json(response(200,"type",list));
   } catch(err) {
-
-    if (err instanceof Sequelize.ForeignKeyConstraintError) {
-
-      var error = [{
-        "message": "not found",
-        "path": err.fields[0],
-        "value": err.value
-      }]
-
-      res.status(200).json(response(400,"type",error));
-    } else if (err instanceof Sequelize.UniqueConstraintError) {
-      res.status(200).json(response(400,"type",err.errors));
-    }
+      res.status(200).json(response(400,"type",err));
   }
   
 });
@@ -91,18 +79,7 @@ router.post('/:type', async function(req, res, next) {
     res.status(200).json(response(200,"type",update));
 
   } catch(err) {
-    if (err instanceof Sequelize.ForeignKeyConstraintError) {
-
-      var error = [{
-        "message": "not found",
-        "path": err.fields[0],
-        "value": err.value
-      }]
-
-      res.status(200).json(response(400,"type",error));
-    } else if (err instanceof Sequelize.UniqueConstraintError) {
-      res.status(200).json(response(400,"type",err.errors));
-    }
+      res.status(200).json(response(400,"type",err));
   }
 
 });
@@ -121,7 +98,7 @@ router.delete('/', async function(req, res, next) {
     res.status(200).json(response(200,"type",update));
     
   } catch(err) {
-    res.status(200).json(response(400,"type",err.errors));
+    res.status(200).json(response(400,"type",err));
   }
   
 });
@@ -139,7 +116,7 @@ router.get('/:type', async function(req, res, next) {
     res.status(200).json(response(200,"type",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"type",err.errors));
+    res.status(200).json(response(400,"type",err));
   }
 
 });

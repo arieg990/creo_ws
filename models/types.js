@@ -2,9 +2,14 @@
 module.exports = (sequelize, DataTypes) => {
   const types = sequelize.define('Type', {
     type: {
-      type:DataTypes.STRING(10),
+      type:DataTypes.STRING,
       primaryKey:true,
       isUppercase: true,
+      validate: {
+        isAlphanumeric: {
+                    msg: "Alphanumeric allowed"
+                }
+      }
     },
     name: DataTypes.STRING,
   }, {});

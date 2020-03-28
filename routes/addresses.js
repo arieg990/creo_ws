@@ -47,7 +47,7 @@ router.get('/list', async function(req, res, next) {
 
     res.status(200).json(response(200,"addresses",list, paging));
   } catch(err) {
-    res.status(200).json(response(400,"addresses",err.errors));
+      res.status(200).json(response(400,"addresses",err));
   }
 
 });
@@ -68,7 +68,7 @@ router.post('/', async function(req, res, next) {
 
     res.status(200).json(response(200,"address",list));
   } catch(err) {
-    res.status(200).json(response(400,"address",err.errors));
+    res.status(200).json(response(400,"address",err));
   }
   
 });
@@ -101,8 +101,7 @@ router.put('/:id', async function(req, res, next) {
     res.status(200).json(response(200,"address",update));
 
   } catch(err) {
-
-    res.status(200).json(response(400,"address",err.errors));
+      res.status(200).json(response(400,"address",err));
   }
 
 });
@@ -121,7 +120,7 @@ router.delete('/', async function(req, res, next) {
     res.status(200).json(response(200,"address",update));
     
   } catch(err) {
-    res.status(200).json(response(400,"address",err.errors));
+    res.status(200).json(response(400,"address",err));
   }
   
 });
@@ -150,7 +149,7 @@ router.get('/:id', async function(req, res, next) {
     res.status(200).json(response(200,"address",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"address",err.errors));
+    res.status(200).json(response(400,"address",err));
   }
 
 });

@@ -46,7 +46,7 @@ router.get('/list', async function(req, res, next) {
     res.status(200).json(response(200,"subDistricts",list,paging));
   } catch(err) {
     console.log(err)
-    res.status(200).json(response(400,"subDistricts",err.errors));
+    res.status(200).json(response(400,"subDistricts",err));
   }
 
 });
@@ -63,7 +63,7 @@ router.post('/', async function(req, res, next) {
 
     res.status(200).json(response(200,"subDistrict",list));
   } catch(err) {
-    res.status(200).json(response(400,"subDistrict",err.errors));
+    res.status(200).json(response(400,"subDistrict",err));
   }
   
 });
@@ -87,7 +87,7 @@ router.put('/:id', async function(req, res, next) {
 
   } catch(err) {
 
-    res.status(200).json(response(400,"subDistrict",err.errors));
+    res.status(200).json(response(400,"subDistrict",err));
   }
 
 });
@@ -106,7 +106,7 @@ router.delete('/', async function(req, res, next) {
     res.status(200).json(response(200,"subDistrict",update));
     
   } catch(err) {
-    res.status(200).json(response(400,"subDistrict",err.errors));
+    res.status(200).json(response(400,"subDistrict",err));
   }
   
 });
@@ -134,7 +134,7 @@ router.get('/:id', async function(req, res, next) {
     res.status(200).json(response(200,"subDistrict",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"subDistrict",err.errors));
+    res.status(200).json(response(400,"subDistrict",err));
   }
 
 });

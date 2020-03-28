@@ -3,6 +3,7 @@ var router = express.Router();
 var model = require('../models');
 var response = require('../config/constant').response;
 var auth = require('../config/auth');
+const Sequelize = require('sequelize');
 
 /* GET users listing. */
 router.get('/list', async function(req, res, next) {
@@ -36,8 +37,7 @@ router.get('/list', async function(req, res, next) {
 
     res.status(200).json(response(200,"categories",list,paging));
   } catch(err) {
-    console.log(err)
-    res.status(200).json(response(400,"categories",err.errors));
+      res.status(200).json(response(400,"category",err));
   }
 
 });
@@ -54,7 +54,7 @@ router.post('/', async function(req, res, next) {
 
     res.status(200).json(response(200,"category",list));
   } catch(err) {
-    res.status(200).json(response(400,"category",err.errors));
+      res.status(200).json(response(400,"category",err));
   }
   
 });
@@ -77,10 +77,7 @@ router.put('/:category', async function(req, res, next) {
     res.status(200).json(response(200,"category",update));
 
   } catch(err) {
-    console.log("masuk")
-
-    console.log(err)
-    res.status(200).json(response(400,"category",err.errors));
+      res.status(200).json(response(400,"category",err));
   }
 
 });
@@ -99,7 +96,7 @@ router.delete('/', async function(req, res, next) {
     res.status(200).json(response(200,"category",update));
     
   } catch(err) {
-    res.status(200).json(response(400,"category",err.errors));
+      res.status(200).json(response(400,"category",err));
   }
   
 });
@@ -117,7 +114,7 @@ router.get('/:category', async function(req, res, next) {
     res.status(200).json(response(200,"category",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"category",err.errors));
+      res.status(200).json(response(400,"category",err));
   }
 
 });

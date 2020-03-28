@@ -12,12 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       isEmail: true,
     },
     password: DataTypes.STRING,
-    phoneNumber: DataTypes.STRING,
+    phone: DataTypes.STRING,
     picture: DataTypes.STRING,
-    gender: DataTypes.INTEGER(2),
     googleId: DataTypes.STRING,
     provider: DataTypes.STRING(20),
-
   },{
     tableName: 'vendors',
     hooks: {
@@ -49,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
     vendors.hasMany(models.Package,{
       foreignKey: 'vendorId'
     });
+
+    vendors.belongsTo(models.Type, {
+      foreignKey: 'typeId'
+    })
   };
   return vendors;
 };

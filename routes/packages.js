@@ -45,7 +45,7 @@ router.get('/list', async function(req, res, next) {
 
     res.status(200).json(response(200,"packages",list, paging));
   } catch(err) {
-    res.status(200).json(response(400,"packages",err.errors));
+    res.status(200).json(response(400,"packages",err));
   }
 
 });
@@ -66,7 +66,7 @@ router.post('/', auth.isVendor, async function(req, res, next) {
 
     res.status(200).json(response(200,"package",list));
   } catch(err) {
-    res.status(200).json(response(400,"package",err.errors));
+    res.status(200).json(response(400,"package",err));
   }
   
 });
@@ -94,7 +94,7 @@ router.put('/:id', auth.isVendor, async function(req, res, next) {
 
   } catch(err) {
 
-    res.status(200).json(response(400,"package",err.errors));
+    res.status(200).json(response(400,"package",err));
   }
 
 });
@@ -113,7 +113,7 @@ router.delete('/', auth.isVendor, async function(req, res, next) {
     res.status(200).json(response(200,"package",update));
     
   } catch(err) {
-    res.status(200).json(response(400,"package",err.errors));
+    res.status(200).json(response(400,"package",err));
   }
   
 });
@@ -140,7 +140,7 @@ router.get('/:id', async function(req, res, next) {
     res.status(200).json(response(200,"package",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"package",err.errors));
+    res.status(200).json(response(400,"package",err));
   }
 
 });

@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     password: DataTypes.STRING,
-    phoneNumber: {
+    phone: {
       type:DataTypes.STRING,
       validate: {
          notEmpty: {
@@ -36,7 +36,12 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     picture: DataTypes.STRING,
-    gender: DataTypes.INTEGER(2),
+    gender: {
+      type: DataTypes.ENUM,
+      values: ['male','female']
+    },
+    dob: DataTypes.DATEONLY,
+    pod: DataTypes.STRING(20),
     googleId: DataTypes.STRING,
     provider: DataTypes.STRING(20),
 

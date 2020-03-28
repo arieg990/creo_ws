@@ -81,7 +81,7 @@ router.put('/:id', auth.isVendor, async function(req, res, next) {
 
   } catch(err) {
 
-    res.status(200).json(response(400,"service",err.errors));
+    res.status(200).json(response(400,"service",err));
   }
 
 });
@@ -100,7 +100,7 @@ router.delete('/', auth.isVendor, async function(req, res, next) {
     res.status(200).json(response(200,"service",update));
     
   } catch(err) {
-    res.status(200).json(response(400,"service",err.errors));
+    res.status(200).json(response(400,"service",err));
   }
   
 });
@@ -120,7 +120,7 @@ router.get('/:id', async function(req, res, next) {
     res.status(200).json(response(200,"service",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"service",err.errors));
+    res.status(200).json(response(400,"service",err));
   }
 
 });

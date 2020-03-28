@@ -21,7 +21,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   }
 
   try{
-    var list = await model.Customer.findAll({
+    var list = await model.Vendor.findAll({
       offset:page*perPage,
       limit:perPage,
       attributes: { exclude: ['password'] },
@@ -35,9 +35,9 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       "limitPerPage": perPage,
     }
 
-    res.status(200).json(response(200,"customers",list,paging));
+    res.status(200).json(response(200,"vendors",list,paging));
   } catch(err) {
-    res.status(200).json(response(400,"customers",err));
+    res.status(200).json(response(400,"vendors",err));
   }
 
 });
@@ -49,15 +49,16 @@ router.post('/', async function(req, res, next) {
 		password:body.password,
 		name:body.name,
 		phone:body.phone,
-		gender:body.gender
+		gender:body.gender,
+    typeId: body.typeId
 	}
 
   try{
-    var list = await model.Customer.create(data);
+    var list = await model.Vendor.create(data);
 
-    res.status(200).json(response(200,"customer",list));
+    res.status(200).json(response(200,"vendor",list));
   } catch(err) {
-    res.status(200).json(response(400,"customer",err));
+    res.status(200).json(response(400,"vendor",err));
   }
   
 });
@@ -67,21 +68,22 @@ router.put('/', async function(req, res, next) {
   var data = {
     name:body.name,
     phone:body.phone,
-    gender:body.gender
+    gender:body.gender,
+    typeId: body.typeId
   }
 
   try{
 
-    var update = await model.Customer.update(data, {
+    var update = await model.Vendor.update(data, {
       where: {
         id:body.id
       }
     });
 
-    res.status(200).json(response(200,"customer",update));
+    res.status(200).json(response(200,"vendor",update));
 
   } catch(err) {
-    res.status(200).json(response(400,"customer",err));
+    res.status(200).json(response(400,"vendor",err));
   }
 
 });
@@ -132,16 +134,16 @@ router.delete('/', async function(req, res, next) {
 
   try{
 
-    var update = await model.Customer.destroy({
+    var update = await model.Vendor.destroy({
       where: {
         id:body.id
       }
     });
 
-    res.status(200).json(response(200,"customer",update));
+    res.status(200).json(response(200,"vendor",update));
     
   } catch(err) {
-    res.status(200).json(response(400,"customer",err));
+    res.status(200).json(response(400,"vendor",err));
   }
   
 });
@@ -150,17 +152,17 @@ router.get('/:id', async function(req, res, next) {
 
   try{
 
-    var list = await model.Customer.findByPk(req.params.id,{
+    var list = await model.Vendor.findByPk(req.params.id,{
       attributes: { exclude: ['password'] },
       include:[
       {model:model.Address}
       ]
     });
 
-    res.status(200).json(response(200,"customer",list));
+    res.status(200).json(response(200,"vendor",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"customer",err));
+    res.status(200).json(response(400,"vendor",err));
   }
 
 });

@@ -23,6 +23,7 @@ var provincesRouter = require('./routes/provinces');
 var servicesRouter = require('./routes/services');
 var subDistrictsRouter = require('./routes/sub_district');
 var typesRouter = require('./routes/types');
+var vendorsRouter = require('./routes/vendors');
 
 var app = express();
 
@@ -63,6 +64,7 @@ app.use('/province',auth.isLoggedIn,provincesRouter);
 app.use('/services',auth.isLoggedIn,servicesRouter);
 app.use('/sub_district',auth.isLoggedIn,subDistrictsRouter);
 app.use('/type',auth.isLoggedIn,typesRouter);
+app.use('/vendor',auth.isLoggedIn,vendorsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
