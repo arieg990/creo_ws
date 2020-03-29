@@ -1,9 +1,9 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.addColumn('users','picture', {
+    return queryInterface.addColumn('types','color', {
       type: Sequelize.STRING,
-      after:"password"
+      after:"name"
       });
   }
 };

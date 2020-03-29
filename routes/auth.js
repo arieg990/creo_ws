@@ -25,10 +25,9 @@ router.post('/login',function(req, res, next) {
     if (err) { return next(err); }
     if (!user) { return res.status(200).json(response(400,"login",[info])) }
 
-    req.logIn(user, function(err) {
-      if (err) { return next(err); }
-      return res.status(200).json(response(200,user.dataValues.type,user));
-    });
+    if (user.token) {return res.status(200).json(response(200,"user",user.user, null,user.token))}
+
+      return res.status(200).json(response(200,"user",user));
   })(req, res, next);
 });
 

@@ -21,6 +21,8 @@ router.get('/list', async function(req, res, next) {
     perPage = limit
   }
 
+  console.log(req.user)
+
   try{
     var list = await model.Category.findAll({
       offset: page*perPage,

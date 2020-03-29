@@ -9,6 +9,7 @@ var flash = require('connect-flash');
 //passport
 const passport = require('passport');
 const cookieSession = require('cookie-session');
+var passportOneSessionPerUser=require('passport-one-session-per-user')
 
 //router
 var indexRouter = require('./routes/index');
@@ -32,8 +33,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({limit:'5mb'}));
+app.use(express.urlencoded({ extended: false, limit:'5mb' }));
 
 // cookieSession config
 app.use(cookieSession({
@@ -50,6 +51,9 @@ auth.bearer(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+
+passport.use(new passportOneSessionPerUser())
+app.use(passport.authenticate('passport-one-session-per-user'))
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);

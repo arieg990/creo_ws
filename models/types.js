@@ -4,14 +4,17 @@ module.exports = (sequelize, DataTypes) => {
     type: {
       type:DataTypes.STRING,
       primaryKey:true,
-      isUppercase: true,
       validate: {
         isAlphanumeric: {
                     msg: "Alphanumeric allowed"
-                }
+                },
+        isUppercase: {
+          msg: "Uppercase Allowed"
+        }
       }
     },
     name: DataTypes.STRING,
+    color: DataTypes.STRING,
   }, {});
   types.associate = function(models) {
     types.belongsTo(models.Category,{

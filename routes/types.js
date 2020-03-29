@@ -48,6 +48,7 @@ router.post('/', async function(req, res, next) {
     type: body.type,
     name: body.name,
     category: body.category,
+    color: body.color,
   }
 
   try{
@@ -66,6 +67,7 @@ router.post('/:type', async function(req, res, next) {
     type: body.type,
     name: body.name,
     category: body.category,
+    color: body.color,
   }
 
   try{

@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const crypto = require('crypto');
+const cryptoLocal = require('../config/crypto');
 var model = require('../models');
 var response = require('../config/constant').response;
 var auth = require('../config/auth');
@@ -42,7 +44,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
 
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', auth.isLoggedIn, async function(req, res, next) {
 	var body = req.body;
 	var data = {
 		email: body.email,
@@ -75,6 +77,36 @@ router.put('/', async function(req, res, next) {
     var update = await model.Customer.update(data, {
       where: {
         id:body.id
+      }
+    });
+
+    res.status(200).json(response(200,"customer",update));
+
+  } catch(err) {
+    res.status(200).json(response(400,"customer",err));
+  }
+
+});
+
+router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
+  var body = req.body;
+
+  var url = req.protocol + '://' + req.get('host')+"/uploads/customers/images/"
+
+  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var img = url + crypto.randomBytes(32).toString('hex')+'.'+decode.type;
+  require("fs").writeFile("public/uploads/customers/images/"+img, decode.data, function(err) {
+  });
+
+  var data = {
+    picture:img,
+  }
+
+  try{
+
+    var update = await model.Customer.update(data, {
+      where: {
+        id:req.user.id
       }
     });
 

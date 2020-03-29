@@ -1,8 +1,11 @@
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const BearerStrategy = require('passport-http-bearer').Strategy;
+const passport = require('passport');
 var response = require('./constant').response;
 const model = require('../models') 
+var crypto = require('crypto');
+
 function google(passport) {
   passport.serializeUser((user, done) => {
     done(null, user);
@@ -73,7 +76,55 @@ function local(passport) {
         }
         delete user.dataValues.password
         user.dataValues.userType = "customer"
-        return done(null, user);
+
+        var tokenValue = crypto.randomBytes(32).toString('hex');
+
+        var tokenSave = {
+          token:tokenValue,
+          customerId: user.dataValues.id
+        }
+
+        model.Token.findOne({
+          where: {
+            customerId:user.dataValues.id
+          },
+        }).then((oldToken) => {
+          if (oldToken) {
+            model.Token.update(tokenSave,{
+              where: {
+                customerId: user.dataValues.id
+              }
+            }).then((tkn) => {
+              if (!tkn) {
+                return done(null, false, { "message": "Failed update token.",
+                  "path": "token",
+                  "value": tokenValue });
+              }
+
+              var array = {
+                user:user,
+                token:tokenValue
+              }
+
+              return done(null, array)
+            })
+          } else {
+            model.Token.create(tokenSave).then((tkn) => {
+              if (!tkn) {
+                return done(null, false, { "message": "Failed save token.",
+                  "path": "token",
+                  "value": tokenValue });
+              }
+
+              var array = {
+                user:user,
+                token:tkn.token
+              }
+
+              return done(null, array)
+            })
+          }
+        })
       });
     } else if(req.body.type == "vendor") {
       model.Vendor.findOne({
@@ -81,27 +132,32 @@ function local(passport) {
         include: [
         {model:model.Type}
         ]
-    }).then((user) => {
-      if (!user) {
-        return done(null, false,  {
-          "message": "Incorrect email.",
+      }).then((user) => {
+        if (!user) {
+          return done(null, false,  {
+            "message": "Incorrect email.",
             "path": "email",
             "value": username
-        });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { "message": "Incorrect password.",
+          });
+        }
+        if (!user.validPassword(password)) {
+          return done(null, false, { "message": "Incorrect password.",
             "path": "password",
             "value": password });
-      }
-      delete user.dataValues.password
-      user.dataValues.userType = "vendor"
-      return done(null, user);
-    });
+        }
+        delete user.dataValues.password
+        user.dataValues.userType = "vendor"
+
+        req.logIn(user, function(err) {
+          if (err) { return next(err); }
+
+          return done(null, user);
+        });
+      });
     } else {
       return done(null, false, { "message": "Incorrect type (customer or vendor).",
-            "path": "type",
-            "value": req.body.type });
+        "path": "type",
+        "value": req.body.type });
     }
   }
   ));
@@ -110,21 +166,50 @@ function local(passport) {
 function bearer(passport) {
   passport.use(new BearerStrategy(
     function(token, done) {
-      model.Customer.findOne({ token: token }, function (err, user) {
-        if (err) { return done(err); }
-        if (!user) { return done(null, false); }
-        return done(null, user, { scope: 'read' });
-      });
+
+      model.Token.findByPk(token).then((tkn) => {
+        if(!tkn)
+          return done(true, false,{})
+
+        if(tkn.isExpired(tkn)) {
+          model.Token.destroy({
+            where: {
+              token:token
+            }
+          }).then((deleted) => {
+            return done(null, false, { "message": "Token expired.",
+              "path": "authorization",
+              "value": token });
+          })
+        } else {
+          model.Customer.findByPk(tkn.customerId).then((user) => {
+            if (!user) 
+             return done(null, false, { "message": "User not found",
+              "path": "authorization",
+              "value": token })
+
+           return done(null, user)
+
+         })
+        }
+      })
     }
     ));
 }
 
 function isLoggedIn(req, res, next) {
-  console.log(req.user)
   if (req.isAuthenticated())
     return next();
 
-  res.status(200).json(response(401,"unauthorized",null));
+  passport.authenticate('bearer', {session: false} , function(err, user, info) {
+    if (err) { return res.status(200).json(response(401,"unauthorized",null)); }
+    if (!user) { return res.status(200).json(response(401,"unauthorized",null)); }
+
+    req.user = user
+
+      return next();
+  })(req, res, next)
+
 }
 
 function isVendor(req, res, next) {

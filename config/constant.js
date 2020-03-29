@@ -17,20 +17,24 @@ function data(data) {
   return data;
 }
 
-function response(code,type,list, page = null) {
+function response(code,type,list, page = null, token = null) {
 	var response;
-	var array;
 	if (code == 200) {
-		array = {
-      		[type]: list,
-      		"status": status(code,"ok")
-    	}
+    response = {
+          "data":{
+            [type]: list
+          },
+          "status": status(code,"ok")
+      }
 
     	if (page != null) {
-    		array = Object.assign({ paging: page }, array);
+    		response.data = Object.assign({ paging: page }, response.data);
     	}
 
-    	response = data(array);
+      if (token != null) {
+        response.data = Object.assign({ token: token }, response.data);
+      }
+
 	} else if(code == 400) {
     var message;
 

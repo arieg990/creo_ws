@@ -5,11 +5,13 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.STRING,
       primaryKey:true,
       unique: true,
-      isUppercase: true,
       validate: {
         isAlphanumeric: {
                     msg: "Alphanumeric allowed"
-                }
+                },
+        isUppercase: {
+          msg: "Uppercase Allowed"
+        }
       }
     },
     name: DataTypes.STRING,
