@@ -23,3 +23,21 @@ npm install
 ```bash
 npm start
 ```
+
+## Config Database
+database already config in config/config
+```json
+{
+	"development": {
+    	"username": "root",
+    	"password": "root",
+    	"database": "db_creo",
+    	"host": "127.0.0.1",
+    	"dialect": "mysql",
+    	"operatorsAliases": false,
+    	"secret":"69c3f001cfe625d06d4c2e2377d54a72a5f6dcffbf9f62ab9c0d26a945355403",
+    	"tokenLife": 86400000
+  	}
+}
+```
+
