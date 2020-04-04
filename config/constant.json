@@ -1,0 +1,11 @@
+{
+	"path": {
+		"categories":"uploads/categories/images/",
+		"customers":"uploads/customers/images/",
+		"vendorUsers":"uploads/vendorUsers/images/",
+		"users":"uploads/users/images/",
+		"banners":"uploads/banners/images",
+		"stories":"uploads/stories/images",
+		"galleries":"uploads/galleries/images"
+	}
+}

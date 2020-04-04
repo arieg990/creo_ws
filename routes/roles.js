@@ -1,87 +1,122 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../models');
-var constant = require('../config/constant');
+var response = require('../config/constant').response;
 var auth = require('../config/auth');
-var response; 
+const Sequelize = require('sequelize');
 
 /* GET users listing. */
-router.get('/getList', async function(req, res, next) {
-  var list = await model.roles.findAll();
+router.get('/list', async function(req, res, next) {
 
-  response = {
-      "roles": list,
-      "status": constant.status(200,"ok");
+  var page = 0;
+  var perPage = 10;
+  var offset = parseInt(req.query.page)
+  var limit = parseInt(req.query.perPage)
+
+  if (offset > 1) {
+    page = offset-1
+  }
+
+  if (limit > 10) {
+    perPage = limit
+  }
+
+  try{
+    var list = await model.Role.findAll({
+      offset:page*perPage,
+      limit: perPage,
+      include: [
+      {model: models.Category}
+      ]
+    });
+
+    var paging = {
+      "currentPage": page+1,
+      "limitPerPage": perPage,
     }
 
-  res.status(200).json(constant.data(response));
+    res.status(200).json(response(200,"roles",list, paging));
+  } catch(err) {
+    res.status(200).json(response(400,"roles",err));
+  }
 
 });
 
-router.put('/addRole', async function(req, res, next) {
+router.post('/', async function(req, res, next) {
   var body = req.body;
   var data = {
-    name: body.name,
-    type: body.type
+    role: body.role,
+    name: body.name
   }
 
-  var list = await model.roles.create(data);
+  try{
+    var list = await model.Role.create(data);
 
-  if (list != null) {
-    res.status(201).json(response(201,"data_created",list));
-  } else {
-    res.status(400).json(response(400,"bad_request",null));
+    res.status(200).json(response(200,"role",list));
+  } catch(err) {
+      res.status(200).json(response(400,"role",err));
   }
   
 });
 
-router.post('/editRole', async function(req, res, next) {
+router.post('/:role', async function(req, res, next) {
   var body = req.body;
   var data = {
-    name:body.name,
+    role: body.role,
+    name: body.name
   }
 
-  var update = await model.roles.update(data, {
-    where: {
-      type:body.type
-    }
-  });
+  try{
 
-  if (update != null) {
-    res.status(200).json(response(200,"data_updated",list));
-  } else {
-    res.status(400).json(response(400,"bad_request",null));
+    var update = await model.Role.update(data, {
+      where: {
+        type:req.params.type
+      }
+    });
+
+    res.status(200).json(response(200,"role",update));
+
+  } catch(err) {
+      res.status(200).json(response(400,"role",err));
   }
-  
+
 });
 
-router.delete('/deleteRole', async function(req, res, next) {
+router.delete('/', async function(req, res, next) {
   var body = req.body;
 
-  var update = await model.roles.destroy({
-    where: {
-      type:body.type
-    }
-  });
+  try{
 
-  if (update != null) {
-    res.status(200).json(response(200,"data_deleted",list));
-  } else {
-    res.status(400).json(response(400,"bad_request",null));
+    var update = await model.Role.destroy({
+      where: {
+        role:body.role
+      }
+    });
+
+    res.status(200).json(response(200,"role",update));
+    
+  } catch(err) {
+    res.status(200).json(response(400,"role",err));
   }
   
 });
 
-router.get('/:type', async function(req, res, next) {
+router.get('/:role', async function(req, res, next) {
 
-  var list = await model.roles.findByPk(req.params.type);
+  try{
 
-  if (list != null) {
-    res.status(200).json(response(200,"data_found",list));
-  } else {
-    res.status(404).json(response(404,"data_not_found",null));
+    var list = await model.Role.findByPk(req.params.role,{
+      include: [
+      {model: models.Category}
+      ]
+    });
+
+    res.status(200).json(response(200,"role",list));
+
+  } catch(err) {
+    res.status(200).json(response(400,"role",err));
   }
-  
+
 });
 
 module.exports = router;

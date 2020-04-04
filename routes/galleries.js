@@ -2,12 +2,9 @@ var express = require('express');
 var router = express.Router();
 var model = require('../models');
 var response = require('../config/constant').response;
+var constant = require('../config/constant.json');
 var auth = require('../config/auth');
-const Sequelize = require('sequelize');
-const crypto = require('crypto');
-const cryptoLocal = require('../config/crypto');
-const constant = require('../config/constant.json');
-var path = constant.path.categories
+var path = constant.path.galleries
 
 /* GET users listing. */
 router.get('/list', async function(req, res, next) {
@@ -25,12 +22,13 @@ router.get('/list', async function(req, res, next) {
     perPage = limit
   }
 
-  console.log(req.user)
-
   try{
-    var list = await model.Category.findAll({
-      offset: page*perPage,
+    var list = await model.Gallery.findAll({
+      offset:page*perPage,
       limit:perPage,
+      where: {
+        vendorId: req.query.vendorId
+      }
     });
 
     var paging = {
@@ -38,20 +36,48 @@ router.get('/list', async function(req, res, next) {
       "limitPerPage": perPage,
     }
 
-    res.status(200).json(response(200,"categories",list,paging));
+    res.status(200).json(response(200,"galleries",list,paging));
   } catch(err) {
-    res.status(200).json(response(400,"categorie",err));
+    res.status(200).json(response(400,"galleries",err));
   }
 
 });
 
 router.post('/', async function(req, res, next) {
+	var body = req.body;
+  var url = req.protocol + '://' + req.get('host')
+	var data = {
+    vendorId: body.vendorId,
+    url:url
+	}
+
+  if (body.image != null) {
+
+    var decode = cryptoLocal.decodeBase64Image(body.image)
+    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+      console.log(err)
+    });
+
+    data.imageUrl = path + img
+  }
+
+  try{
+    var list = await model.Gallery.create(data);
+
+    res.status(200).json(response(200,"gallery",list));
+  } catch(err) {
+    res.status(200).json(response(400,"gallery",err));
+  }
+  
+});
+
+router.put('/', async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
-
+  var path = constant.path.categories
   var data = {
-    category: body.category,
-    color:body.color,
+    vendorId: body.vendorId,
     url:url
   }
 
@@ -67,48 +93,17 @@ router.post('/', async function(req, res, next) {
   }
 
   try{
-    var list = await model.Category.create(data);
 
-    res.status(200).json(response(200,"category",list));
-  } catch(err) {
-    res.status(200).json(response(400,"category",err));
-  }
-  
-});
-
-router.put('/:id', async function(req, res, next) {
-  var body = req.body;
-  var url = req.protocol + '://' + req.get('host')
-  var data = {
-    category: body.category,
-    color:body.color
-  }
-
-  if (body.image != null) {
-
-
-    var decode = cryptoLocal.decodeBase64Image(body.image)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
-
-    data.imageUrl = path + img
-    data.url = url
-  }
-
-  try{
-
-    var update = await model.Category.update(data, {
+    var update = await model.Gallery.update(data, {
       where: {
-        id:req.params.id
+        id:body.id
       }
     });
 
-    res.status(200).json(response(200,"category",update));
+    res.status(200).json(response(200,"gallery",update));
 
   } catch(err) {
-    res.status(200).json(response(400,"category",err));
+    res.status(200).json(response(400,"gallery",err));
   }
 
 });
@@ -118,16 +113,16 @@ router.delete('/', async function(req, res, next) {
 
   try{
 
-    var update = await model.Category.destroy({
+    var update = await model.Gallery.destroy({
       where: {
-        category:body.category
+        id:body.id
       }
     });
 
-    res.status(200).json(response(200,"category",update));
+    res.status(200).json(response(200,"gallery",update));
     
   } catch(err) {
-    res.status(200).json(response(400,"category",err));
+    res.status(200).json(response(400,"gallery",err));
   }
   
 });
@@ -136,12 +131,12 @@ router.get('/:id', async function(req, res, next) {
 
   try{
 
-    var list = await model.Category.findByPk(req.params.id);
+    var list = await model.Gallery.findByPk(req.params.id);
 
-    res.status(200).json(response(200,"category",list));
+    res.status(200).json(response(200,"gallery",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"category",err));
+    res.status(200).json(response(400,"gallery",err));
   }
 
 });

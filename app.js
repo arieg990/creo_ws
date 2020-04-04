@@ -15,6 +15,7 @@ var passportOneSessionPerUser=require('passport-one-session-per-user')
 var indexRouter = require('./routes/index');
 var addressesRouter = require('./routes/addresses');
 var authRouter = require('./routes/auth');
+var bannersRouter = require('./routes/banners');
 var customersRouter = require('./routes/customers');
 var categoriesRouter = require('./routes/categories');
 var citiesRouter = require('./routes/cities');
@@ -23,7 +24,9 @@ var postalCodesRouter = require('./routes/postal_codes');
 var provincesRouter = require('./routes/provinces');
 var servicesRouter = require('./routes/services');
 var subDistrictsRouter = require('./routes/sub_district');
+var storiesRouter = require('./routes/stories');
 var typesRouter = require('./routes/types');
+var usersRouter = require('./routes/users');
 var vendorsRouter = require('./routes/vendors');
 
 var app = express();
@@ -57,17 +60,20 @@ app.use(passport.authenticate('passport-one-session-per-user'))
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
-app.use('/addresses',auth.isLoggedIn, addressesRouter);
+app.use('/address',auth.isLoggedIn, addressesRouter);
+app.use('/banner',auth.isLoggedIn, bannersRouter);
 app.use('/customer', customersRouter);
 // app.use('/roles', auth.isLoggedIn,rolesRouter);
 app.use('/category',auth.isLoggedIn,categoriesRouter);
 app.use('/city',auth.isLoggedIn,citiesRouter);
-app.use('/packages',auth.isLoggedIn,packagesRouter);
+app.use('/package',auth.isLoggedIn,packagesRouter);
 app.use('/postal_code',auth.isLoggedIn,postalCodesRouter);
 app.use('/province',auth.isLoggedIn,provincesRouter);
-app.use('/services',auth.isLoggedIn,servicesRouter);
+app.use('/service',auth.isLoggedIn,servicesRouter);
 app.use('/sub_district',auth.isLoggedIn,subDistrictsRouter);
+app.use('/story',auth.isLoggedIn,storiesRouter);
 app.use('/type',auth.isLoggedIn,typesRouter);
+app.use('/user',usersRouter);
 app.use('/vendor',auth.isLoggedIn,vendorsRouter);
 
 // catch 404 and forward to error handler

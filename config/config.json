@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "root",
-    "database": "db_creo",
-    "host": "127.0.0.1",
+    "username": "ba3afea3ce4a2c",
+    "password": "a82df41a",
+    "database": "heroku_2fbf3e37ec262ef",
+    "host": "us-cdbr-iron-east-01.cleardb.net",
     "dialect": "mysql",
     "operatorsAliases": false,
     "secret":"69c3f001cfe625d06d4c2e2377d54a72a5f6dcffbf9f62ab9c0d26a945355403",

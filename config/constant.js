@@ -67,7 +67,7 @@ function response(code,type,list, page = null, token = null) {
 
 	} else if(code == 401) {
     response = {
-          "data":{},
+          "data":list,
           "status": status(code,"unauthorized")
       }
   }
