@@ -49,7 +49,7 @@ router.get('/list', async function(req, res, next) {
 
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/',auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     name: body.name,
@@ -66,7 +66,7 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/:id', async function(req, res, next) {
+router.put('/:id', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     name: body.name,
@@ -89,7 +89,7 @@ router.put('/:id', async function(req, res, next) {
 
 });
 
-router.delete('/', async function(req, res, next) {
+router.delete('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
 
   try{

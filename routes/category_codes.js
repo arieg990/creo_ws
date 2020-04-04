@@ -23,8 +23,6 @@ router.get('/list', async function(req, res, next) {
     perPage = limit
   }
 
-  console.log(req.user)
-
   try{
     var list = await model.CategoryCode.findAll({
       offset: page*perPage,
@@ -43,7 +41,7 @@ router.get('/list', async function(req, res, next) {
 
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
 
   var data = {
@@ -61,7 +59,7 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/:categoryCode', async function(req, res, next) {
+router.put('/:categoryCode', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     name: body.name
@@ -83,7 +81,7 @@ router.put('/:categoryCode', async function(req, res, next) {
 
 });
 
-router.delete('/', async function(req, res, next) {
+router.delete('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
 
   try{

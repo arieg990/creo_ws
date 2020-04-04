@@ -60,7 +60,7 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/', auth.isLoggedIn, async function(req, res, next) {
+router.put('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     name:body.name,
@@ -85,7 +85,7 @@ router.put('/', auth.isLoggedIn, async function(req, res, next) {
 
 });
 
-router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
+router.put('/profile', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var path = constant.path.users
@@ -116,7 +116,7 @@ router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
 
 });
 
-router.delete('/', auth.isLoggedIn, async function(req, res, next) {
+router.delete('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
 
   try{
@@ -135,7 +135,7 @@ router.delete('/', auth.isLoggedIn, async function(req, res, next) {
   
 });
 
-router.get('/:id', auth.isLoggedIn, async function(req, res, next) {
+router.get('/:id', auth.isUser, async function(req, res, next) {
 
   try{
 

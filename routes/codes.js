@@ -41,7 +41,7 @@ router.get('/list', async function(req, res, next) {
 
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
 
   var data = {
@@ -59,7 +59,7 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/:code', async function(req, res, next) {
+router.put('/:code', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     name: body.name
@@ -81,7 +81,7 @@ router.put('/:code', async function(req, res, next) {
 
 });
 
-router.delete('/', async function(req, res, next) {
+router.delete('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
 
   try{

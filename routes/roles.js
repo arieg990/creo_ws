@@ -42,7 +42,7 @@ router.get('/list', async function(req, res, next) {
 
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     role: body.role,
@@ -59,7 +59,7 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.post('/:role', async function(req, res, next) {
+router.post('/:role', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     role: body.role,
@@ -82,7 +82,7 @@ router.post('/:role', async function(req, res, next) {
 
 });
 
-router.delete('/', async function(req, res, next) {
+router.delete('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
 
   try{

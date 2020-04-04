@@ -10,7 +10,7 @@ const constant = require('../config/constant.json');
 var path = constant.path.categories
 
 /* GET users listing. */
-router.get('/list', auth.isUser, async function(req, res, next) {
+router.get('/list', async function(req, res, next) {
 
   var page = 0;
   var perPage = 10;
@@ -24,8 +24,6 @@ router.get('/list', auth.isUser, async function(req, res, next) {
   if (limit > 10) {
     perPage = limit
   }
-
-  console.log(req.user)
 
   try{
     var list = await model.Category.findAll({
@@ -132,7 +130,7 @@ router.delete('/', auth.isUser, async function(req, res, next) {
   
 });
 
-router.get('/:id', auth.isUser, async function(req, res, next) {
+router.get('/:id', async function(req, res, next) {
 
   try{
 
