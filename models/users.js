@@ -5,7 +5,7 @@ const randomString = require(__dirname + '/../config/randomString');
 const crypto = require('crypto');
 
 module.exports = (sequelize, DataTypes) => {
-  const customers = sequelize.define('Customer', {
+  const users = sequelize.define('User', {
     name: DataTypes.STRING,
     email: {
       type:DataTypes.STRING,
@@ -35,19 +35,13 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'Phone Number already in use!'
       },
     },
-    imageUrl: DataTypes.STRING,
-    url:DataTypes.STRING,
+    picture: DataTypes.STRING,
     gender: {
       type: DataTypes.ENUM,
       values: ['male','female']
     },
-    dob: DataTypes.DATEONLY,
-    pod: DataTypes.STRING(20),
-    googleId: DataTypes.STRING,
-    provider: DataTypes.STRING(20),
-
   },{
-    tableName: 'customers',
+    tableName: 'users',
     hooks: {
       beforeCreate: (user,option) => {
         const hmac = crypto.createHmac('sha256', config.secret);
@@ -60,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
   });
 
-  customers.prototype.validPassword = function(password) {
+  users.prototype.validPassword = function(password) {
     const hmac = crypto.createHmac('sha256', config.secret);
     var encrypt = hmac.update(password);
 
@@ -69,10 +63,11 @@ module.exports = (sequelize, DataTypes) => {
     return password === this.password ? true : false;
   }
 
-  customers.associate = function(models) {
-    customers.hasMany(models.Address,{
-      foreignKey: 'customerId'
+  users.associate = function(models) {
+    users.belongsTo(models.Role,{
+      foreignKey: 'role'
     });
   };
-  return customers;
+
+  return users;
 };
