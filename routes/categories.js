@@ -10,7 +10,7 @@ const constant = require('../config/constant.json');
 var path = constant.path.categories
 
 /* GET users listing. */
-router.get('/list', async function(req, res, next) {
+router.get('/list', auth.isUser, async function(req, res, next) {
 
   var page = 0;
   var perPage = 10;
@@ -45,7 +45,7 @@ router.get('/list', async function(req, res, next) {
 
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
 
@@ -76,7 +76,7 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/:id', async function(req, res, next) {
+router.put('/:id', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var data = {
@@ -113,7 +113,7 @@ router.put('/:id', async function(req, res, next) {
 
 });
 
-router.delete('/', async function(req, res, next) {
+router.delete('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
 
   try{
@@ -132,7 +132,7 @@ router.delete('/', async function(req, res, next) {
   
 });
 
-router.get('/:id', async function(req, res, next) {
+router.get('/:id', auth.isUser, async function(req, res, next) {
 
   try{
 

@@ -353,4 +353,12 @@ function isVendor(req, res, next) {
   }
 }
 
-module.exports = {google,local,bearer,isLoggedIn,isVendor};
+function isUser(req, res, next) {
+  if (req.user.userType == "user") {
+    return next();
+  } else {
+    res.status(200).json(response(400,"restricted",null));
+  }
+}
+
+module.exports = {google,local,bearer,isLoggedIn,isVendor, isUser};
