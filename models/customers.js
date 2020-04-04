@@ -35,7 +35,8 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'Phone Number already in use!'
       },
     },
-    picture: DataTypes.STRING,
+    imageUrl: DataTypes.STRING,
+    url:DataTypes.STRING,
     gender: {
       type: DataTypes.ENUM,
       values: ['male','female']

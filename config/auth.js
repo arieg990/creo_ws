@@ -129,7 +129,7 @@ function local(passport) {
       model.VendorUser.findOne({
         where: { email: username },
         include: [
-        {model:model.role}
+        {model:model.Role}
         ]
       }).then((user) => {
         if (!user) {
@@ -200,7 +200,7 @@ function local(passport) {
       model.User.findOne({
         where: { email: username },
         include: [
-        {model:model.role}
+        {model:model.Role}
         ]
       }).then((user) => {
         if (!user) {
@@ -302,6 +302,7 @@ function bearer(passport) {
                 "path": "authorization",
                 "value": token })
 
+             user.dataValues.userType = "customer"
              return done(null, user)
 
            })
@@ -312,6 +313,7 @@ function bearer(passport) {
                 "path": "authorization",
                 "value": token })
 
+             user.dataValues.userType = "vendor"
              return done(null, user)
 
            })
@@ -322,6 +324,7 @@ function bearer(passport) {
                 "path": "authorization",
                 "value": token })
 
+             user.dataValues.userType = "user"
              return done(null, user)
 
            })
@@ -346,7 +349,7 @@ function isLoggedIn(req, res, next) {
 }
 
 function isVendor(req, res, next) {
-  if (req.user.userType == "vendor") {
+  if (req.user.dataValues.userType == "vendor") {
     return next();
   } else {
     res.status(200).json(response(400,"restricted",null));
@@ -354,7 +357,7 @@ function isVendor(req, res, next) {
 }
 
 function isUser(req, res, next) {
-  if (req.user.userType == "user") {
+  if (req.user.dataValues.userType == "user") {
     return next();
   } else {
     res.status(200).json(response(400,"restricted",null));
