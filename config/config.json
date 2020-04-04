@@ -10,10 +10,10 @@
     "tokenLife": 86400000
   },
   "test": {
-    "username": "root",
-    "password": "root",
-    "database": "db_creo",
-    "host": "127.0.0.1",
+    "username": "ba3afea3ce4a2c",
+    "password": "a82df41a",
+    "database": "heroku_2fbf3e37ec262ef",
+    "host": "us-cdbr-iron-east-01.cleardb.net",
     "dialect": "mysql",
     "operatorsAliases": false,
     "secret":"6782f0f4a8bf5a4ecb73873c350fb131f9dbf457d43379f5b08c9b1b8104eae0",
