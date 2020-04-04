@@ -7,9 +7,15 @@ const crypto = require('crypto');
 module.exports = (sequelize, DataTypes) => {
   const vendors = sequelize.define('Vendor', {
     name: DataTypes.STRING,
-    description: DataTypes.TEXT,
+    email: {
+      type:DataTypes.STRING,
+      isEmail: true,
+    },
+    password: DataTypes.STRING,
+    phone: DataTypes.STRING,
     picture: DataTypes.STRING,
-    rating: DataTypes.INTEGER
+    googleId: DataTypes.STRING,
+    provider: DataTypes.STRING(20),
   },{
     tableName: 'vendors',
     hooks: {
@@ -24,6 +30,15 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
   });
 
+  vendors.prototype.validPassword = function(password) {
+    const hmac = crypto.createHmac('sha256', config.secret);
+    var encrypt = hmac.update(password);
+
+    password = encrypt.digest('hex');
+
+    return password === this.password ? true : false;
+  }
+
   vendors.associate = function(models) {
     vendors.hasMany(models.Address,{
       foreignKey: 'vendorId'
@@ -33,16 +48,8 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'vendorId'
     });
 
-    vendors.hasMany(models.SocialMedia,{
-      foreignKey: 'vendorId'
-    });
-
-    vendors.hasMany(models.Contact,{
-      foreignKey: 'vendorId'
-    });
-
-    vendors.belongsTo(models.Category, {
-      foreignKey: 'categoryId'
+    vendors.belongsTo(models.Type, {
+      foreignKey: 'typeId'
     })
   };
   return vendors;

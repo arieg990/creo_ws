@@ -5,7 +5,6 @@ const cryptoLocal = require('../config/crypto');
 var model = require('../models');
 var response = require('../config/constant').response;
 var auth = require('../config/auth');
-var constant = require('../config/constant.json');
 
 /* GET users listing. */
 router.get('/list', auth.isLoggedIn, async function(req, res, next) {
@@ -45,7 +44,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
 
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', auth.isLoggedIn, async function(req, res, next) {
 	var body = req.body;
 	var data = {
 		email: body.email,
@@ -65,7 +64,7 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/', auth.isLoggedIn, async function(req, res, next) {
+router.put('/', async function(req, res, next) {
   var body = req.body;
   var data = {
     name:body.name,
@@ -91,17 +90,16 @@ router.put('/', auth.isLoggedIn, async function(req, res, next) {
 
 router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
   var body = req.body;
-  var url = req.protocol + '://' + req.get('host')
-  var path = constant.path.customers
+
+  var url = req.protocol + '://' + req.get('host')+"/uploads/customers/images/"
 
   var decode = cryptoLocal.decodeBase64Image(body.image)
-  var img = crypto.randomBytes(32).toString('hex')+'.'+decode.type;
-  require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+  var img = url + crypto.randomBytes(32).toString('hex')+'.'+decode.type;
+  require("fs").writeFile("public/uploads/customers/images/"+img, decode.data, function(err) {
   });
 
   var data = {
-    imageUrl: path + img,
-    url:url
+    picture:img,
   }
 
   try{
@@ -161,7 +159,7 @@ router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
 
 // });
 
-router.delete('/', auth.isLoggedIn, async function(req, res, next) {
+router.delete('/', async function(req, res, next) {
   var body = req.body;
 
   try{
@@ -180,7 +178,7 @@ router.delete('/', auth.isLoggedIn, async function(req, res, next) {
   
 });
 
-router.get('/:id', auth.isLoggedIn, async function(req, res, next) {
+router.get('/:id', async function(req, res, next) {
 
   try{
 

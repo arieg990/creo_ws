@@ -23,7 +23,7 @@ router.post('/login',function(req, res, next) {
   /* look at the 2nd parameter to the below call */
   passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err); }
-    if (!user) { return res.status(200).json(response(401,"login",[info])) }
+    if (!user) { return res.status(200).json(response(400,"login",[info])) }
 
     if (user.token) {return res.status(200).json(response(200,"user",user.user, null,user.token))}
 

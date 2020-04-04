@@ -26,9 +26,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       limit:perPage,
       attributes: { exclude: ['password'] },
       include:[
-      {model:model.Address},
-      {model:model.SocialMedia},
-      {model:model.Contact}
+      {model:model.Address}
       ]
     });
 
@@ -48,9 +46,11 @@ router.post('/', async function(req, res, next) {
 	var body = req.body;
 	var data = {
 		email: body.email,
+		password:body.password,
 		name:body.name,
-    typeId: body.typeId,
-    description: body.description
+		phone:body.phone,
+		gender:body.gender,
+    typeId: body.typeId
 	}
 
   try{
@@ -68,8 +68,8 @@ router.put('/', async function(req, res, next) {
   var data = {
     name:body.name,
     phone:body.phone,
-    typeId: body.typeId,
-    description: body.description
+    gender:body.gender,
+    typeId: body.typeId
   }
 
   try{
@@ -155,9 +155,7 @@ router.get('/:id', async function(req, res, next) {
     var list = await model.Vendor.findByPk(req.params.id,{
       attributes: { exclude: ['password'] },
       include:[
-      {model:model.Address},
-      {model:model.SocialMedia},
-      {model:model.Contact}
+      {model:model.Address}
       ]
     });
 

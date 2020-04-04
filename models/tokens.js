@@ -14,17 +14,13 @@ module.exports = (sequelize, DataTypes) => {
 
   tokens.prototype.isExpired = function(token) {
 
-    return Math.round((Date.now()-token.updatedAt)/1000) > config.tokenLife;
+    return Math.round((Date.now()-token.createdAt)/1000) > config.tokenLife;
   }
 
   tokens.associate = function(models) {
 
     tokens.belongsTo(models.Customer,{
       foreignKey: 'customerId',
-    });
-
-    tokens.belongsTo(models.VendorUser,{
-      foreignKey: 'vendorUserId',
     });
   };
   return tokens;

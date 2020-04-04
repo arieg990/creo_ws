@@ -12,8 +12,6 @@ router.get('/list', async function(req, res, next) {
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.perPage)
 
-  var category = req.query.category
-
   if (offset > 1) {
     page = offset-1
   }
@@ -35,13 +33,7 @@ router.get('/list', async function(req, res, next) {
       },
       {
         model:model.Vendor,
-        exclude:["password"],
-        include: [
-        {model:model.Category}
-        ],
-        where: {
-          category:category
-        }
+        exclude:["password"]
       }
       ]
     });

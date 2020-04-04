@@ -41,7 +41,6 @@ function google(passport) {
 }
 
 function local(passport) {
-  var tokenValue = crypto.randomBytes(32).toString('hex');
 
   passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -77,6 +76,8 @@ function local(passport) {
         }
         delete user.dataValues.password
         user.dataValues.userType = "customer"
+
+        var tokenValue = crypto.randomBytes(32).toString('hex');
 
         var tokenSave = {
           token:tokenValue,
@@ -126,10 +127,10 @@ function local(passport) {
         })
       });
     } else if(req.body.type == "vendor") {
-      model.VendorUser.findOne({
+      model.Vendor.findOne({
         where: { email: username },
         include: [
-        {model:model.role}
+        {model:model.Type}
         ]
       }).then((user) => {
         if (!user) {
@@ -139,136 +140,22 @@ function local(passport) {
             "value": username
           });
         }
-
         if (!user.validPassword(password)) {
           return done(null, false, { "message": "Incorrect password.",
             "path": "password",
             "value": password });
         }
-
         delete user.dataValues.password
         user.dataValues.userType = "vendor"
 
-        var tokenSave = {
-          token:tokenValue,
-          vendorUserId: user.dataValues.id
-        }
+        req.logIn(user, function(err) {
+          if (err) { return next(err); }
 
-        model.Token.findOne({
-          where: {
-            vendorUserId:user.dataValues.id
-          },
-        }).then((oldToken) => {
-          if (oldToken) {
-            model.Token.update(tokenSave,{
-              where: {
-                vendorUserId: user.dataValues.id
-              }
-            }).then((tkn) => {
-              if (!tkn) {
-                return done(null, false, { "message": "Failed update token.",
-                  "path": "token",
-                  "value": tokenValue });
-              }
-
-              var array = {
-                user:user,
-                token:tokenValue
-              }
-
-              return done(null, array)
-            })
-          } else {
-            model.Token.create(tokenSave).then((tkn) => {
-              if (!tkn) {
-                return done(null, false, { "message": "Failed save token.",
-                  "path": "token",
-                  "value": tokenValue });
-              }
-
-              var array = {
-                user:user,
-                token:tkn.token
-              }
-
-              return done(null, array)
-            })
-          }
-        })
-      });
-    } else if(req.body.type == "user") {
-      model.User.findOne({
-        where: { email: username },
-        include: [
-        {model:model.role}
-        ]
-      }).then((user) => {
-        if (!user) {
-          return done(null, false,  {
-            "message": "Incorrect email.",
-            "path": "email",
-            "value": username
-          });
-        }
-
-        if (!user.validPassword(password)) {
-          return done(null, false, { "message": "Incorrect password.",
-            "path": "password",
-            "value": password });
-        }
-
-        delete user.dataValues.password
-        user.dataValues.userType = "user"
-
-        var tokenSave = {
-          token:tokenValue,
-          userId: user.dataValues.id
-        }
-
-        model.Token.findOne({
-          where: {
-            userId:user.dataValues.id
-          },
-        }).then((oldToken) => {
-          if (oldToken) {
-            model.Token.update(tokenSave,{
-              where: {
-                userId: user.dataValues.id
-              }
-            }).then((tkn) => {
-              if (!tkn) {
-                return done(null, false, { "message": "Failed update token.",
-                  "path": "token",
-                  "value": tokenValue });
-              }
-
-              var array = {
-                user:user,
-                token:tokenValue
-              }
-
-              return done(null, array)
-            })
-          } else {
-            model.Token.create(tokenSave).then((tkn) => {
-              if (!tkn) {
-                return done(null, false, { "message": "Failed save token.",
-                  "path": "token",
-                  "value": tokenValue });
-              }
-
-              var array = {
-                user:user,
-                token:tkn.token
-              }
-
-              return done(null, array)
-            })
-          }
-        })
+          return done(null, user);
+        });
       });
     } else {
-      return done(null, false, { "message": "Incorrect type (customer, vendor, user).",
+      return done(null, false, { "message": "Incorrect type (customer or vendor).",
         "path": "type",
         "value": req.body.type });
     }
@@ -295,37 +182,15 @@ function bearer(passport) {
               "value": token });
           })
         } else {
-          if (tkn.customerId != null) {
-            model.Customer.findByPk(tkn.customerId).then((user) => {
-              if (!user) 
-               return done(null, false, { "message": "User not found",
-                "path": "authorization",
-                "value": token })
+          model.Customer.findByPk(tkn.customerId).then((user) => {
+            if (!user) 
+             return done(null, false, { "message": "User not found",
+              "path": "authorization",
+              "value": token })
 
-             return done(null, user)
+           return done(null, user)
 
-           })
-          } else if(tkn.vendorUserId != null) {
-            model.VendorUser.findByPk(tkn.vendorUserId).then((user) => {
-              if (!user) 
-               return done(null, false, { "message": "User not found",
-                "path": "authorization",
-                "value": token })
-
-             return done(null, user)
-
-           })
-        } else {
-            model.User.findByPk(tkn.userId).then((user) => {
-              if (!user) 
-               return done(null, false, { "message": "User not found",
-                "path": "authorization",
-                "value": token })
-
-             return done(null, user)
-
-           })
-          }
+         })
         }
       })
     }
@@ -333,6 +198,8 @@ function bearer(passport) {
 }
 
 function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated())
+    return next();
 
   passport.authenticate('bearer', {session: false} , function(err, user, info) {
     if (err) { return res.status(200).json(response(401,"unauthorized",null)); }
@@ -340,7 +207,7 @@ function isLoggedIn(req, res, next) {
 
     req.user = user
 
-    return next();
+      return next();
   })(req, res, next)
 
 }
