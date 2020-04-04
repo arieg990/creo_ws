@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "build": "node_modules/.bin/sequelize model:create --name users --attributes name:string,email:string,phone_number:string,gender:boolean"
+    "test":"NODE_ENV=test node./bin/www",
+    // "build": "node_modules/.bin/sequelize model:create --name users --attributes name:string,email:string,phone_number:string,gender:boolean"
   },
   "dependencies": {
     "connect-flash": "^0.1.1",
