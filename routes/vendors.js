@@ -33,7 +33,10 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       {model:model.Address},
       {model:model.SocialMedia},
       {model:model.Contact}
-      ]
+      ],
+      where: {
+        categoryId:req.query.categoryId
+      }
     });
 
     var paging = {

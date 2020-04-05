@@ -28,9 +28,14 @@ router.get('/list', async function(req, res, next) {
     var list = await model.Gallery.findAll({
       offset:page*perPage,
       limit:perPage,
-      where: {
-        vendorId: req.query.vendorId
+      include: [
+      {
+        model:model.Vendor,
+        where: {
+          categoyId: req.query.categoyId
+        }
       }
+      ]
     });
 
     var paging = {
@@ -48,10 +53,10 @@ router.get('/list', async function(req, res, next) {
 router.post('/', async function(req, res, next) {
 	var body = req.body;
   var url = req.protocol + '://' + req.get('host')
-	var data = {
+  var data = {
     vendorId: body.vendorId,
     url:url
-	}
+  }
 
   if (body.image != null) {
 
