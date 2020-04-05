@@ -75,6 +75,7 @@ router.post('/', async function(req, res, next) {
 
 router.put('/:id', async function(req, res, next) {
   var body = req.body;
+  var user = user.datalavues
   var data = {
     name: body.name,
     address:body.address,
@@ -85,9 +86,9 @@ router.put('/:id', async function(req, res, next) {
   }
 
   if (req.user.type == "customer") {
-    data.customerId = data.user.id
+    data.customerId = user.id
   } else {
-    data.vendorId = data.user.id
+    data.vendorId = user.id
   }
 
   try{

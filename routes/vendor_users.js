@@ -64,7 +64,7 @@ router.post('/', isUserOrVendor, async function(req, res, next) {
 
 router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
-  var user = data.user.dataValues
+  var user = req.user.dataValues
   var id = req.params.id
   var data = {
     name:body.name,
@@ -97,7 +97,7 @@ router.put('/profile/:id', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var path = constant.path.vendorUsers
-  var user = data.user.dataValues
+  var user = req.user.dataValues
   var id = req.params.id
 
   var decode = cryptoLocal.decodeBase64Image(body.image)

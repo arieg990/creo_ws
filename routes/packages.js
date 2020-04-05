@@ -66,7 +66,7 @@ router.get('/list', async function(req, res, next) {
 router.post('/', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
-  var user = data.user.dataValues
+  var user = req.user.dataValues
   var data = {
     name: body.name,
     price:body.price,
@@ -107,7 +107,7 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
 router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
-  var user = data.user.dataValues
+  var user = req.user.dataValues
   var data = {
     name: body.name,
     price:body.price,
