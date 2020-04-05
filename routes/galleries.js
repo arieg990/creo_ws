@@ -15,6 +15,7 @@ router.get('/list', async function(req, res, next) {
   var perPage = 10;
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.perPage)
+  var where = {}
 
   if (offset > 1) {
     page = offset-1
@@ -24,6 +25,11 @@ router.get('/list', async function(req, res, next) {
     perPage = limit
   }
 
+
+  if(req.query.categoryId != null) {
+    where.categoryId = req.query.categoryId
+  }
+
   try{
     var list = await model.Gallery.findAll({
       offset:page*perPage,
@@ -31,9 +37,8 @@ router.get('/list', async function(req, res, next) {
       include: [
       {
         model:model.Vendor,
-        where: {
-          categoyId: req.query.categoyId
-        }
+        required: req.query.categoryId != null ? true :false,
+        where: where
       }
       ]
     });
@@ -45,6 +50,7 @@ router.get('/list', async function(req, res, next) {
 
     res.status(200).json(response(200,"galleries",list,paging));
   } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"galleries",err));
   }
 
