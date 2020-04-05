@@ -65,19 +65,24 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/', auth.isLoggedIn, async function(req, res, next) {
+router.put('/:id', auth.isLoggedIn, async function(req, res, next) {
   var body = req.body;
+  var id = req.params.id
   var data = {
     name:body.name,
     phone:body.phone,
     gender:body.gender
   }
 
+  if (user.userType == "customer") {
+    id = user.id
+  }
+
   try{
 
     var update = await model.Customer.update(data, {
       where: {
-        id:body.id
+        id:id
       }
     });
 
@@ -89,7 +94,7 @@ router.put('/', auth.isLoggedIn, async function(req, res, next) {
 
 });
 
-router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
+router.put('/profile/:id', auth.isLoggedIn, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var path = constant.path.customers
@@ -98,17 +103,22 @@ router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
   var img = crypto.randomBytes(32).toString('hex')+'.'+decode.type;
   require("fs").writeFile("public/"+path+img, decode.data, function(err) {
   });
+  var id = req.params.id
 
   var data = {
     imageUrl: path + img,
     url:url
   }
 
+  if (user.userType == "customer") {
+    id = user.id
+  }
+
   try{
 
     var update = await model.Customer.update(data, {
       where: {
-        id:req.user.id
+        id:id
       }
     });
 

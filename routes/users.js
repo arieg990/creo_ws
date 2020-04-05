@@ -75,7 +75,7 @@ router.put('/', auth.isUser, async function(req, res, next) {
 
     var update = await model.User.update(data, {
       where: {
-        id:body.id
+        id: req.user.dataValues.id
       }
     });
 
@@ -106,7 +106,7 @@ router.put('/profile', auth.isUser, async function(req, res, next) {
 
     var update = await model.User.update(data, {
       where: {
-        id:req.user.id
+        id:req.user.dataValues.id
       }
     });
 

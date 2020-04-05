@@ -41,7 +41,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
 
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', isUserOrVendor, async function(req, res, next) {
 	var body = req.body;
 	var data = {
 		email: body.email,
@@ -62,8 +62,10 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/', auth.isLoggedIn, async function(req, res, next) {
+router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
+  var user = data.user.dataValues
+  var id = req.params.id
   var data = {
     name:body.name,
     phone:body.phone,
@@ -71,11 +73,15 @@ router.put('/', auth.isLoggedIn, async function(req, res, next) {
     role:body.role
   }
 
+  if (user.userType == "vendor") {
+    id = user.id
+  }
+
   try{
 
     var update = await model.VendorUser.update(data, {
       where: {
-        id:body.id
+        id:id
       }
     });
 
@@ -87,10 +93,12 @@ router.put('/', auth.isLoggedIn, async function(req, res, next) {
 
 });
 
-router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
+router.put('/profile/:id', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var path = constant.path.vendorUsers
+  var user = data.user.dataValues
+  var id = req.params.id
 
   var decode = cryptoLocal.decodeBase64Image(body.image)
   var img = crypto.randomBytes(32).toString('hex')+'.'+decode.type;
@@ -102,11 +110,15 @@ router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
     url:url
   }
 
+  if (user.userType == "vendor") {
+    id = user.id
+  }
+
   try{
 
     var update = await model.VendorUser.update(data, {
       where: {
-        id:req.user.id
+        id:id
       }
     });
 

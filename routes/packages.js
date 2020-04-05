@@ -78,7 +78,7 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
   if (user.userType == "user") {
     data.vendorId = body.vendorId
   } else {
-    data.vendorId = user.id
+    data.vendorId = user.vendorId
   }
 
   if (body.image != null) {
@@ -104,21 +104,16 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
   
 });
 
-router.put('/:id', auth.isVendor, async function(req, res, next) {
+router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
+  var user = data.user.dataValues
   var data = {
     name: body.name,
     price:body.price,
     capacity:body.capacity,
     provinceId:body.provinceId,
     cityId:body.cityId
-  }
-
-  if (user.userType == "user") {
-    data.vendorId = body.vendorId
-  } else {
-    data.vendorId = user.id
   }
 
   if (body.image != null) {
