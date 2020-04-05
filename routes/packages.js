@@ -15,8 +15,7 @@ router.get('/list', async function(req, res, next) {
   var perPage = 10;
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.perPage)
-
-  var category = req.query.category
+  var where = {}
 
   if (offset > 1) {
     page = offset-1
@@ -24,6 +23,10 @@ router.get('/list', async function(req, res, next) {
 
   if (limit > 10) {
     perPage = limit
+  }
+
+  if(req.query.categoryId != null) {
+    where.categoryId = req.query.categoryId
   }
 
   try{
@@ -39,13 +42,11 @@ router.get('/list', async function(req, res, next) {
       },
       {
         model:model.Vendor,
-        exclude:["password"],
+        required: req.query.categoryId != null ? true :false,
         include: [
         {model:model.Category}
         ],
-        where: {
-          category:category
-        }
+        where: where
       }
       ]
     });
@@ -62,16 +63,22 @@ router.get('/list', async function(req, res, next) {
 
 });
 
-router.post('/', auth.isVendor, async function(req, res, next) {
+router.post('/', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
+  var user = data.user.dataValues
   var data = {
     name: body.name,
     price:body.price,
     capacity:body.capacity,
     provinceId:body.provinceId,
-    cityId:body.cityId,
-    vendorId:req.user.id
+    cityId:body.cityId
+  }
+
+  if (user.userType == "user") {
+    data.vendorId = body.vendorId
+  } else {
+    data.vendorId = user.id
   }
 
   if (body.image != null) {
@@ -105,8 +112,13 @@ router.put('/:id', auth.isVendor, async function(req, res, next) {
     price:body.price,
     capacity:body.capacity,
     provinceId:body.provinceId,
-    cityId:body.cityId,
-    vendorId:req.user.id
+    cityId:body.cityId
+  }
+
+  if (user.userType == "user") {
+    data.vendorId = body.vendorId
+  } else {
+    data.vendorId = user.id
   }
 
   if (body.image != null) {
@@ -172,7 +184,6 @@ router.get('/:id', async function(req, res, next) {
       },
       {
         model:model.Vendor,
-        exclude:["password"]
       }
       ]
     });

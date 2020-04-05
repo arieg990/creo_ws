@@ -364,4 +364,14 @@ function isUser(req, res, next) {
   }
 }
 
-module.exports = {google,local,bearer,isLoggedIn,isVendor, isUser};
+function isUserOrVendor(req, res, next) {
+  if (req.user.dataValues.userType == "user") {
+    return next();
+  } if (req.user.dataValues.userType == "vendor") {
+    return next();
+  } else {
+    res.status(200).json(response(400,"restricted",null));
+  }
+}
+
+module.exports = {google,local,bearer,isLoggedIn,isVendor, isUser, isUserOrVendor};

@@ -15,6 +15,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   var perPage = 10;
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.perPage)
+  var where = {}
 
   if (offset > 1) {
     page = offset-1
@@ -22,6 +23,10 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
 
   if (limit > 10) {
     perPage = limit
+  }
+
+  if(req.query.categoryId != null) {
+    where.categoryId = req.query.categoryId
   }
 
   try{
@@ -32,11 +37,10 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       include:[
       {model:model.Address},
       {model:model.SocialMedia},
-      {model:model.Contact}
+      {model:model.Contact},
+      {model:model.Gallery}
       ],
-      where: {
-        categoryId:req.query.categoryId
-      }
+      where: where
     });
 
     var paging = {
@@ -190,7 +194,8 @@ router.get('/:id', async function(req, res, next) {
       include:[
       {model:model.Address},
       {model:model.SocialMedia},
-      {model:model.Contact}
+      {model:model.Contact},
+      {model:model.Gallery}
       ]
     });
 
