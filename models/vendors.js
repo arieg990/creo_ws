@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
   const vendors = sequelize.define('Vendor', {
     name: DataTypes.STRING,
     description: DataTypes.TEXT,
-    picture: DataTypes.STRING,
+    imageUrl: DataTypes.STRING,
+    url: DataTypes.STRING,
     rating: DataTypes.INTEGER
   },{
     tableName: 'vendors',

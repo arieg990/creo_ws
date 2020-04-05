@@ -3,6 +3,8 @@ var router = express.Router();
 var model = require('../models');
 var response = require('../config/constant').response;
 var auth = require('../config/auth');
+const crypto = require('crypto');
+const cryptoLocal = require('../config/crypto');
 
 /* GET users listing. */
 router.get('/list', auth.isLoggedIn, async function(req, res, next) {

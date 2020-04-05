@@ -3,6 +3,10 @@ var router = express.Router();
 var model = require('../models');
 var response = require('../config/constant').response;
 var auth = require('../config/auth');
+const crypto = require('crypto');
+const cryptoLocal = require('../config/crypto');
+const constant = require('../config/constant.json');
+var path = constant.path.vendors
 
 /* GET users listing. */
 router.get('/list', auth.isLoggedIn, async function(req, res, next) {
@@ -46,11 +50,24 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
 
 router.post('/', async function(req, res, next) {
   var body = req.body;
+  var url = req.protocol + '://' + req.get('host')
   var data = {
-    email: body.email,
     name:body.name,
-    typeId: body.typeId,
+    categoryId: body.categoryId,
     description: body.description
+  }
+
+  if (body.image != null) {
+
+
+    var decode = cryptoLocal.decodeBase64Image(body.image)
+    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+      console.log(err)
+    });
+
+    data.imageUrl = path + img
+    data.url = url
   }
 
   try{
@@ -65,11 +82,24 @@ router.post('/', async function(req, res, next) {
 
 router.put('/', async function(req, res, next) {
   var body = req.body;
+  var url = req.protocol + '://' + req.get('host')
   var data = {
     name:body.name,
-    phone:body.phone,
-    typeId: body.typeId,
+    categoryId: body.categoryId,
     description: body.description
+  }
+
+  if (body.image != null) {
+
+
+    var decode = cryptoLocal.decodeBase64Image(body.image)
+    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+      console.log(err)
+    });
+
+    data.imageUrl = path + img
+    data.url = url
   }
 
   try{

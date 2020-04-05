@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     price: DataTypes.FLOAT(6),
     capacity: DataTypes.INTEGER,
+    imageUrl: DataTypes.STRING,
+    url: DataTypes.STRING
   },{
     tableName: 'packages',
     freezeTableName: true,

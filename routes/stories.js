@@ -3,6 +3,8 @@ var router = express.Router();
 var model = require('../models');
 var response = require('../config/constant').response;
 var auth = require('../config/auth');
+const crypto = require('crypto');
+const cryptoLocal = require('../config/crypto');
 var constant = require('../config/constant.json');
 var path = constant.path.stories
 

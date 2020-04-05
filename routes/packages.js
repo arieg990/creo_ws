@@ -3,6 +3,10 @@ var router = express.Router();
 var model = require('../models');
 var response = require('../config/constant').response;
 var auth = require('../config/auth');
+const crypto = require('crypto');
+const cryptoLocal = require('../config/crypto');
+const constant = require('../config/constant.json');
+var path = constant.path.packages
 
 /* GET users listing. */
 router.get('/list', async function(req, res, next) {
@@ -60,6 +64,7 @@ router.get('/list', async function(req, res, next) {
 
 router.post('/', auth.isVendor, async function(req, res, next) {
   var body = req.body;
+  var url = req.protocol + '://' + req.get('host')
   var data = {
     name: body.name,
     price:body.price,
@@ -67,6 +72,19 @@ router.post('/', auth.isVendor, async function(req, res, next) {
     provinceId:body.provinceId,
     cityId:body.cityId,
     vendorId:req.user.id
+  }
+
+  if (body.image != null) {
+
+
+    var decode = cryptoLocal.decodeBase64Image(body.image)
+    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+      console.log(err)
+    });
+
+    data.imageUrl = path + img
+    data.url = url
   }
 
   try{
@@ -81,6 +99,7 @@ router.post('/', auth.isVendor, async function(req, res, next) {
 
 router.put('/:id', auth.isVendor, async function(req, res, next) {
   var body = req.body;
+  var url = req.protocol + '://' + req.get('host')
   var data = {
     name: body.name,
     price:body.price,
@@ -88,6 +107,19 @@ router.put('/:id', auth.isVendor, async function(req, res, next) {
     provinceId:body.provinceId,
     cityId:body.cityId,
     vendorId:req.user.id
+  }
+
+  if (body.image != null) {
+
+
+    var decode = cryptoLocal.decodeBase64Image(body.image)
+    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+      console.log(err)
+    });
+
+    data.imageUrl = path + img
+    data.url = url
   }
 
   try{
