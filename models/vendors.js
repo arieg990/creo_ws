@@ -45,6 +45,10 @@ module.exports = (sequelize, DataTypes) => {
     vendors.belongsTo(models.Category, {
       foreignKey: 'categoryId'
     })
+
+     vendors.hasMany(models.Gallery, {
+      foreignKey: 'vendorId'
+    })
   };
   return vendors;
 };
