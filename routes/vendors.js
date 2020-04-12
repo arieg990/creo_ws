@@ -10,9 +10,9 @@ var path = constant.path.vendors
 
 function includeTable(table) {
   var include = []
-  if (include > 0) {
+  if (table.length > 0) {
       for (var i = 0; i < table.length; i++) {
-        if (table[i] == "adress") {
+        if (table[i] == "address") {
           var Address = {model:model.Address}
           include.push(Address)
         } else if (table[i] == "socialMedia") {
@@ -27,6 +27,8 @@ function includeTable(table) {
         }
       }
     }
+    console.log(include)
+    console.log("test")
 
     return include;
 }
@@ -54,8 +56,10 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   }
 
   if (req.query.include != null) {
-    var table = req.query.include
+    var table = req.query.include.split(",")
     include = includeTable(table)
+    console.log(table)
+    console.log(include)
   }
 
   try{
