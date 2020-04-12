@@ -15,7 +15,8 @@ router.get('/list', async function(req, res, next) {
   var page = 0;
   var perPage = 10;
   var offset = parseInt(req.query.page)
-  var limit = parseInt(req.query.perPage)
+  var limit = parseInt(req.query.limit)
+  var orderDirection = req.query.orderDirection
 
   if (offset > 1) {
     page = offset-1
@@ -25,10 +26,15 @@ router.get('/list', async function(req, res, next) {
     perPage = limit
   }
 
+  if (orderDirection == null) {
+    orderDirection = "ASC"
+  }
+
   try{
     var list = await model.Category.findAll({
       offset: page*perPage,
       limit:perPage,
+      order: "id "+orderDirection
     });
 
     var paging = {
@@ -78,7 +84,7 @@ router.put('/:id', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var data = {
-    category: body.category,
+    name: body.name,
     color:body.color
   }
 
@@ -118,7 +124,7 @@ router.delete('/', auth.isUser, async function(req, res, next) {
 
     var update = await model.Category.destroy({
       where: {
-        category:body.category
+        name:body.name
       }
     });
 
