@@ -6,6 +6,7 @@ var auth = require('../config/auth');
 const crypto = require('crypto');
 const cryptoLocal = require('../config/crypto');
 const constant = require('../config/constant.json');
+const Sequelize = require("sequelize")
 var path = constant.path.vendors
 
 function includeTable(table) {
@@ -24,7 +25,13 @@ function includeTable(table) {
         } else if (table[i] == "gallery") {
           var Gallery = {model:model.Gallery}
           include.push(Gallery)
-        }
+        } 
+
+        var review = {
+            model:model.Review,
+            attributes: []
+          }
+          include.push(review)
       }
     }
 
@@ -56,15 +63,19 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   if (req.query.include != null) {
     var table = req.query.include.split(",")
     include = includeTable(table)
-    console.log(table)
-    console.log(include)
   }
 
   try{
     var list = await model.Vendor.findAll({
       offset:page*perPage,
       limit:perPage,
-      attributes: { exclude: ['password'] },
+      attributes: { 
+        exclude: ['password'],
+        include: [
+        [Sequelize.fn("COUNT", "Reviews.id"), "reviewCount"],
+        [Sequelize.fn("SUM", "Reviews.rating"), "reviewRating"]
+        ]
+         },
       include:include,
       where: where
     });
@@ -74,10 +85,10 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       "limitPerPage": perPage,
     }
 
-    for (var i = list.length - 1; i >= 0; i--) {
-      list[i].dataValues.reviewRating = 5
-      list[i].dataValues.reviewCount = 50
-    }
+    // for (var i = list.length - 1; i >= 0; i--) {
+    //   list[i].dataValues.reviewRating = 5
+    //   list[i].dataValues.reviewCount = 50
+    // }
 
     res.status(200).json(response(200,"vendors",list,paging));
   } catch(err) {
