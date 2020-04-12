@@ -10,7 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     imageUrl: DataTypes.STRING,
     url: DataTypes.STRING,
-    rating: DataTypes.INTEGER,
     isOfficial: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

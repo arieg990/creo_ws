@@ -29,7 +29,8 @@ function includeTable(table) {
 
         var review = {
             model:model.Review,
-            attributes: []
+            attributes: [],
+            group: ["id"]
           }
           include.push(review)
       }
@@ -69,16 +70,15 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
     var list = await model.Vendor.findAll({
       offset:page*perPage,
       limit:perPage,
+       subQuery: false,
       attributes: { 
-        exclude: ['password'],
         include: [
-        [Sequelize.fn("COUNT", "Reviews.id"), "reviewCount"],
-        [Sequelize.fn("SUM", "Reviews.rating"), "reviewRating"]
+        [Sequelize.fn("COUNT", Sequelize.col('Reviews.id')), "reviewCount"],
+        [Sequelize.fn("AVG", Sequelize.fn('COALESCE',(Sequelize.col("Reviews.rating")),0.0)), "reviewRating"],
         ]
          },
       include:include,
-      where: where,
-      group: ["id"]
+      where: where
     });
 
     var paging = {
