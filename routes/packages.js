@@ -43,9 +43,6 @@ router.get('/list', async function(req, res, next) {
       {
         model:model.Vendor,
         required: req.query.categoryId != null ? true :false,
-        include: [
-        {model:model.Category}
-        ],
         where: where
       }
       ]

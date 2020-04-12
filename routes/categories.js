@@ -87,7 +87,7 @@ router.put('/:id', auth.isUser, async function(req, res, next) {
 
     var decode = cryptoLocal.decodeBase64Image(body.image)
     var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    require("fs").writeFile("~/public/"+path+img, decode.data, function(err) {
       console.log(err)
     });
 

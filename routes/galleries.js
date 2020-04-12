@@ -61,7 +61,8 @@ router.post('/', async function(req, res, next) {
   var url = req.protocol + '://' + req.get('host')
   var data = {
     vendorId: body.vendorId,
-    url:url
+    url:url,
+    isMain: body.isMain
   }
 
   if (body.image != null) {
@@ -91,7 +92,8 @@ router.put('/', async function(req, res, next) {
   var path = constant.path.categories
   var data = {
     vendorId: body.vendorId,
-    url:url
+    url:url,
+    isMain: body.isMain
   }
 
   if (body.image != null) {

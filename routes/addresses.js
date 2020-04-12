@@ -60,7 +60,9 @@ router.post('/', async function(req, res, next) {
     provinceId:body.provinceId,
     cityId:body.cityId,
     postalCodeId:body.postalCodeId,
-    subDistrict:body.subDistrictId
+    subDistrict:body.subDistrictId,
+    isMain: body.isMain,
+    projectId: body.projectId
   }
 
   try{
@@ -83,6 +85,8 @@ router.put('/:id', async function(req, res, next) {
     cityId:body.cityId,
     postalCodeId:body.postalCodeId,
     subDistrict:body.subDistrictId
+    isMain: body.isMain,
+    projectId: body.projectId
   }
 
   if (req.user.type == "customer") {

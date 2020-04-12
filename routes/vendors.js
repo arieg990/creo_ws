@@ -8,6 +8,29 @@ const cryptoLocal = require('../config/crypto');
 const constant = require('../config/constant.json');
 var path = constant.path.vendors
 
+function includeTable(table) {
+  var include = []
+  if (include > 0) {
+      for (var i = 0; i < table.length; i++) {
+        if (table[i] == "adress") {
+          var Address = {model.model.Address}
+          include.push(Address)
+        } else if (table[i] == "socialMedia") {
+          var SocialMedia = {model:model.SocialMedia}
+          include.push(SocialMedia)
+        } else if (table[i] == "contact") {
+          var Contact = {model:model.Contact}
+          include.push(Contact)
+        } else if (table[i] == "gallery") {
+          var Gallery = {model:model.Gallery}
+          include.push(Gallery)
+        }
+      }
+    }
+
+    return include;
+}
+
 /* GET users listing. */
 router.get('/list', auth.isLoggedIn, async function(req, res, next) {
 
@@ -16,6 +39,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.perPage)
   var where = {}
+  var include = []
 
   if (offset > 1) {
     page = offset-1
@@ -29,17 +53,17 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
     where.categoryId = req.query.categoryId
   }
 
+  if (req.query.include != null) {
+    var table = req.query.include
+    include = includeTable(table)
+  }
+
   try{
     var list = await model.Vendor.findAll({
       offset:page*perPage,
       limit:perPage,
       attributes: { exclude: ['password'] },
-      include:[
-      {model:model.Address},
-      {model:model.SocialMedia},
-      {model:model.Contact},
-      {model:model.Gallery}
-      ],
+      include:include,
       where: where
     });
 
@@ -61,7 +85,8 @@ router.post('/', async function(req, res, next) {
   var data = {
     name:body.name,
     categoryId: body.categoryId,
-    description: body.description
+    description: body.description,
+    isOfficial: body.isOfficial
   }
 
   if (body.image != null) {
@@ -93,7 +118,8 @@ router.put('/', async function(req, res, next) {
   var data = {
     name:body.name,
     categoryId: body.categoryId,
-    description: body.description
+    description: body.description,
+    isOfficial: body.isOfficial
   }
 
   if (body.image != null) {
