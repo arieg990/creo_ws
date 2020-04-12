@@ -12,31 +12,24 @@ var path = constant.path.vendors
 function includeTable(table) {
   var include = []
   if (table.length > 0) {
-      for (var i = 0; i < table.length; i++) {
-        if (table[i] == "address") {
-          var Address = {model:model.Address}
-          include.push(Address)
-        } else if (table[i] == "socialMedia") {
-          var SocialMedia = {model:model.SocialMedia}
-          include.push(SocialMedia)
-        } else if (table[i] == "contact") {
-          var Contact = {model:model.Contact}
-          include.push(Contact)
-        } else if (table[i] == "gallery") {
-          var Gallery = {model:model.Gallery}
-          include.push(Gallery)
-        } 
-
-        var review = {
-            model:model.Review,
-            attributes: [],
-            group: ["id"]
-          }
-          include.push(review)
-      }
+    for (var i = 0; i < table.length; i++) {
+      if (table[i] == "address") {
+        var Address = {model:model.Address}
+        include.push(Address)
+      } else if (table[i] == "socialMedia") {
+        var SocialMedia = {model:model.SocialMedia}
+        include.push(SocialMedia)
+      } else if (table[i] == "contact") {
+        var Contact = {model:model.Contact}
+        include.push(Contact)
+      } else if (table[i] == "gallery") {
+        var Gallery = {model:model.Gallery}
+        include.push(Gallery)
+      } 
     }
+  }
 
-    return include;
+  return include;
 }
 
 /* GET users listing. */
@@ -61,22 +54,30 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
     where.categoryId = req.query.categoryId
   }
 
+
   if (req.query.include != null) {
     var table = req.query.include.split(",")
     include = includeTable(table)
   }
 
+  var review = {
+    model:model.Review,
+    attributes: [],
+    group: ["id"]
+  }
+  include.push(review)
+
   try{
     var list = await model.Vendor.findAll({
       offset:page*perPage,
       limit:perPage,
-       subQuery: false,
+      subQuery: false,
       attributes: { 
         include: [
         [Sequelize.fn("COUNT", Sequelize.col('Reviews.id')), "reviewCount"],
         [Sequelize.fn("AVG", Sequelize.fn('COALESCE',(Sequelize.col("Reviews.rating")),0.0)), "reviewRating"],
         ]
-         },
+      },
       include:include,
       where: where
     });
