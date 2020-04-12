@@ -34,7 +34,9 @@ router.get('/list', async function(req, res, next) {
     var list = await model.Category.findAll({
       offset: page*perPage,
       limit:perPage,
-      order: "id "+orderDirection
+      order: [
+      ['id',orderDirection]
+      ]
     });
 
     var paging = {
@@ -44,7 +46,8 @@ router.get('/list', async function(req, res, next) {
 
     res.status(200).json(response(200,"categories",list,paging));
   } catch(err) {
-    res.status(200).json(response(400,"categorie",err));
+    console.log(err)
+    res.status(200).json(response(400,"categories",err));
   }
 
 });
