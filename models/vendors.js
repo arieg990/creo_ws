@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     imageUrl: DataTypes.STRING,
     url: DataTypes.STRING,
     rating: DataTypes.INTEGER,
-    isOfficial: DataTypes.isOfficial
+    isOfficial: DataTypes.BOOLEAN
   },{
     tableName: 'vendors',
     hooks: {
