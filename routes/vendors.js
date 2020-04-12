@@ -77,7 +77,8 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
         ]
          },
       include:include,
-      where: where
+      where: where,
+      group: ["id"]
     });
 
     var paging = {
