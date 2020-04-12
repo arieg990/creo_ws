@@ -27,8 +27,6 @@ function includeTable(table) {
         }
       }
     }
-    console.log(include)
-    console.log("test")
 
     return include;
 }
@@ -76,8 +74,14 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       "limitPerPage": perPage,
     }
 
+    for (var i = list.length - 1; i >= 0; i--) {
+      list[i].dataValues.reviewRating = 5
+      list[i].dataValues.reviewCount = 50
+    }
+
     res.status(200).json(response(200,"vendors",list,paging));
   } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"vendors",err));
   }
 
