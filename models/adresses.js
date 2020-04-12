@@ -6,7 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.TEXT,
     lat: DataTypes.STRING,
     lng: DataTypes.STRING,
-    isMain: DataTypes.BOOLEAN
+    isMain: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
   },{
     tableName: 'addresses',
     freezeTableName: true,
@@ -53,7 +56,7 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     addresses.belongsTo(models.Vendor,{
-      foreignKey: 'vendor_id',
+      foreignKey: 'vendorId',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });
