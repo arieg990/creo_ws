@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.TEXT,
     lat: DataTypes.STRING,
     lng: DataTypes.STRING,
+    isMain: DataTypes.BOOLEAN
   },{
     tableName: 'addresses',
     freezeTableName: true,

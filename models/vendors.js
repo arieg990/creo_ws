@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     imageUrl: DataTypes.STRING,
     url: DataTypes.STRING,
-    rating: DataTypes.INTEGER
+    rating: DataTypes.INTEGER,
+    isOfficial: DataTypes.isOfficial
   },{
     tableName: 'vendors',
     hooks: {

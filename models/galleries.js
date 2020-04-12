@@ -4,6 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const galleries = sequelize.define('Gallery', {
     imageUrl: DataTypes.STRING,
     url: DataTypes.STRING,
+    isMain: DataTypes.BOOLEAN
   },{
     tableName: 'galleries',
     freezeTableName: true,
