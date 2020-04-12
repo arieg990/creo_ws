@@ -54,7 +54,7 @@ router.post('/', auth.isUser, async function(req, res, next) {
   var url = req.protocol + '://' + req.get('host')
 
   var data = {
-    category: body.category,
+    name: body.name,
     color:body.color,
     url:url
   }
