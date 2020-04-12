@@ -13,17 +13,17 @@ function includeTable(table) {
   if (include > 0) {
       for (var i = 0; i < table.length; i++) {
         if (table[i] == "adress") {
-          var Address = {model.model.Address}
-          include.push(Address)
+          // var Address = {model.model.Address}
+          // include.push(Address)
         } else if (table[i] == "socialMedia") {
-          var SocialMedia = {model:model.SocialMedia}
-          include.push(SocialMedia)
+          // var SocialMedia = {model:model.SocialMedia}
+          // include.push(SocialMedia)
         } else if (table[i] == "contact") {
-          var Contact = {model:model.Contact}
-          include.push(Contact)
+          // var Contact = {model:model.Contact}
+          // include.push(Contact)
         } else if (table[i] == "gallery") {
-          var Gallery = {model:model.Gallery}
-          include.push(Gallery)
+          // var Gallery = {model:model.Gallery}
+          // include.push(Gallery)
         }
       }
     }
