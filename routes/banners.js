@@ -4,6 +4,7 @@ var model = require('../models');
 var response = require('../config/constant').response;
 const crypto = require('crypto');
 const cryptoLocal = require('../config/crypto');
+const {uploadFile} = require('../config/uploadFile');
 var constant = require('../config/constant.json');
 var auth = require('../config/auth');
 var path = constant.path.banners
@@ -60,11 +61,18 @@ router.post('/', auth.isUser, async function(req, res, next) {
 
     var decode = cryptoLocal.decodeBase64Image(body.image)
     var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    data.imageUrl = path + img
+    // data.imageUrl = path + img
+
+    var upload = uploadFile(path+img,decode)
+    if (upload) {
+      console.log("dapet")
+    } else {
+      console.log("kagak")
+    }
   }
 
   try{

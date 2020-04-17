@@ -1,6 +1,6 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.renameColumn('customers','picture', 'imageUrl');
+    return queryInterface.renameColumn('users','role', 'roleId');
   }
 };

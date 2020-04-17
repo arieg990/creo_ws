@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     postal_codes.belongsTo(models.City,{
       foreignKey: 'cityId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "city"
     });
   };
   return postal_codes;

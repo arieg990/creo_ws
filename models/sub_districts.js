@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
     sub_districts.belongsTo(models.City,{
       foreignKey: 'cityId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "city"
     });
   };
   return sub_districts;

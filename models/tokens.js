@@ -21,14 +21,17 @@ module.exports = (sequelize, DataTypes) => {
 
     tokens.belongsTo(models.Customer,{
       foreignKey: 'customerId',
+      as: "customer"
     });
 
     tokens.belongsTo(models.VendorUser,{
       foreignKey: 'vendorUserId',
+      as: "vendorUser"
     });
 
     tokens.belongsTo(models.User,{
       foreignKey: 'userId',
+      as: "user"
     });
   };
   return tokens;

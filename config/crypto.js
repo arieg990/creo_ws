@@ -25,7 +25,6 @@ const base64Encode= (val) => {
 
 function decodeBase64Image(dataString) 
 {
-	console.log('masuk')
 	var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
 	var response = {};
 	var imageTypeRegularExpression      = /\/(.*?)$/;

@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     galleries.belongsTo(models.Vendor,{
       foreignKey: 'vendorId',
       onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: "vendor"
     });
   };
   return galleries;

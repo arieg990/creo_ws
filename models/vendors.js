@@ -30,31 +30,38 @@ module.exports = (sequelize, DataTypes) => {
 
   vendors.associate = function(models) {
     vendors.hasMany(models.Address,{
-      foreignKey: 'vendorId'
+      foreignKey: 'vendorId',
+      as: "addresses"
     });
 
     vendors.hasMany(models.Package,{
-      foreignKey: 'vendorId'
+      foreignKey: 'vendorId',
+      as: "packages"
     });
 
     vendors.hasMany(models.SocialMedia,{
-      foreignKey: 'vendorId'
+      foreignKey: 'vendorId',
+      as: "socialMedia"
     });
 
     vendors.hasMany(models.Contact,{
-      foreignKey: 'vendorId'
+      foreignKey: 'vendorId',
+      as: "contacts"
     });
 
     vendors.belongsTo(models.Category, {
-      foreignKey: 'categoryId'
+      foreignKey: 'categoryId',
+      as: "category"
     })
 
      vendors.hasMany(models.Gallery, {
-      foreignKey: 'vendorId'
+      foreignKey: 'vendorId',
+      as: "galleries"
     })
 
      vendors.hasMany(models.Review, {
-      foreignKey: 'vendorId'
+      foreignKey: 'vendorId',
+      as: "reviews"
     })
   };
   return vendors;

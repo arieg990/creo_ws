@@ -28,37 +28,43 @@ module.exports = (sequelize, DataTypes) => {
     addresses.belongsTo(models.Province,{
       foreignKey: 'provinceId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "province"
     });
 
     addresses.belongsTo(models.City,{
       foreignKey: 'cityId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "city"
     });
 
     addresses.belongsTo(models.PostalCode,{
       foreignKey: 'postalCodeId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "postalCode"
     });
 
     addresses.belongsTo(models.SubDistrict,{
       foreignKey: 'subDistrictId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "subDistrict"
     });
 
     addresses.belongsTo(models.Customer,{
       foreignKey: 'customerId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "customer"
     });
 
     addresses.belongsTo(models.Vendor,{
       foreignKey: 'vendorId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "vendor"
     });
   };
   return addresses;

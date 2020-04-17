@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     projects.hasMany(models.Gallery,{
       foreignKey: 'projectId',
       onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      onDelete: 'CASCADE',
+      as: "galleries"
     });
   };
   return projects;

@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
   codes.associate = function(models) {
 
     codes.belongsTo(models.CategoryCode,{
-      foreignKey: 'categoryCode',
+      foreignKey: 'categoryCodeId',
+      as: "categoryCode"
     });
   };
   return codes;

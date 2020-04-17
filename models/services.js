@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     services.belongsTo(models.Package,{
       foreignKey: 'packageId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "package"
     });
   };
   return services;

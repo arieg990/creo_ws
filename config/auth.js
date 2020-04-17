@@ -129,7 +129,7 @@ function local(passport) {
       model.VendorUser.findOne({
         where: { email: username },
         include: [
-        {model:model.Role}
+        {model:model.Role, as:'role'}
         ]
       }).then((user) => {
         if (!user) {
@@ -200,7 +200,7 @@ function local(passport) {
       model.User.findOne({
         where: { email: username },
         include: [
-        {model:model.Role}
+        {model:model.Role, as:"role"}
         ]
       }).then((user) => {
         if (!user) {

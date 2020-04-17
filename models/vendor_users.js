@@ -65,7 +65,8 @@ module.exports = (sequelize, DataTypes) => {
 
   vendorUsers.associate = function(models) {
     vendorUsers.belongsTo(models.Role,{
-      foreignKey: 'role'
+      foreignKey: 'roleId',
+      as: "role"
     });
   };
 

@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "creative-event-organizer",
+  "private_key_id": "e0a7366b345b90d183656703ea869636bbd13475",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDgyTEmvuVfxoY1\n2FTn6GbHLyTcqtVEfbtXvKDo7myxHLLBWdvLRTTdTIUjMg60HCvUePS/HXArjUHU\nYBKLe3bXUeJbecfrDS8MvLIVESk2xTl551YnmTtNU4JiUPwpwItth95AunZuSbN+\ne7Jt6prU5V/X1mrrhTHKigoO72FiMlDKyg9O0gsiJt15m9TB9r8ZvB51k2drVcx3\n8AfQpG9EK8lW2ShLfj4euXq1/8TafnShyNMuiubMsZ5kkL147b4C+jUO1xuCAFkH\nO3mMI116X3g3K3wKE0B1sikWPNU6wiQtSA+kgWbPDlBZ+pwGGyfs4n+4cS2bcoN7\n7ILOaqnzAgMBAAECggEAAbXjBVzB6Xlc9eKIPUS6XEncDNlriqKVGKuE4yQS69zm\nvh9QbSenXNQjVgUgZOqrKYOk6e78tqAgpmld8SjGp6HMYds3eoiDP9epvtl+exe2\n6POqAKtWVUkzsbE7Ef6qMPJ61JRDdXH8umAqyri6/+OIJKzRhURIs8/A5T2ZSJvk\nwZdlsT+wQyaq00kbyHmWDtFP2k4kEwoEgjFMCA57Njn7ApWZ8NmM5JAQoEv2f1lU\n48WMQZG5WrDkAUYJGDlXLlMcJt8jI0xRLDgJ5n0FQQAfmY7MxBJDKcQwQ6sCCOsd\n4bKBweUWhTvA2xR1+oF5f2zQ4ALZB9g0NRSIr9vEEQKBgQD14ILqju5Z5RNtOsAe\ncnuPpTuGppjR7i27lKmfw+tzp31/WUWzGHNuM+gFiwYNTKyGVIGrh431Yw6tkxIv\n0zQEUst6PaSplNUGc9SwDVpLaUaJaXH2l4gcxuKeHIinjWlF11ELMAcV4gX1d4LI\ndf2FGDwYqGa/dwf3JkhZmjA88QKBgQDqCmKdg3rP944jN9wJRhpahZyi40JBhIBV\nxacbOjKOhkCE8HroUGjVTPApKaV7VXDkCJMQFNoTVhtR22GDz+dOkrjHC0LDoZQB\np+CxtsePaY58fl0BlieI5dBMEBl1OPKcuXR/6Tz2+ov6xXTEihUc5t3KlZlFFFTB\nk1KpBzulIwKBgA+Wo1Yxp6TlZBzpu6JyiajqxeJcj5XHrviUjUiGyFe1x7waMdQP\n+cmD2vL3BHQ1Zz7A/tOcLYDgPd79UwrbLhIUGbhvThA+Ul8tWs+qmQ3s577wg3wp\n0URZy6ZQks1kpsb5xraZ3ekiQlR0tkL1UBRvG+hITPNYnZWqxK2BnAtRAoGBAME1\nV5n/S+jZzm6Gk9DYHbNzMA9Mm4ro7uVgKYcRsWD1tdfJiz2z/Ady36Srq+A4ddza\ns0WIYUurPxyBhmxBuwujloVDZ5eHEV+YjqdHZFGha66cxv0jT3n1dtMES2/5VlhJ\nxcI+80RVLDAWyEHkWG+mq5ytiX18vkeb7pZ50SSPAoGAdvdGIUIb/t6hCm5wjJZ8\nXdk+8ZotY862aVb71qHfpBwBI7Es3kYMJxIJNT7B0+xVnwITstOpL2N5L4WZ7lQ8\nxgnMQVfFW3QMx/fMwaxYtnRiobwPM9B3Wq33T/ueni7bLWHVzGNh2hHhOQGX7xfg\nlh/AXBDkKmEBMfEkNuk8g08=\n-----END PRIVATE KEY-----\n",
+  "client_email": "creative-event-organizer@creative-event-organizer.iam.gserviceaccount.com",
+  "client_id": "114853328421848347216",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/creative-event-organizer%40creative-event-organizer.iam.gserviceaccount.com"
+}

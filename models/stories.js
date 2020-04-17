@@ -17,7 +17,8 @@ module.exports = (sequelize, DataTypes) => {
 
     stories.belongsTo(models.User,{
       foreignKey: 'userId',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "user"
     });
   };
   return stories;

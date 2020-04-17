@@ -8,15 +8,18 @@ module.exports = (sequelize, DataTypes) => {
     reviews.belongsTo(models.Customer,{
       foreignKey: 'customerId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "customer"
     });
 
     reviews.belongsTo(models.Vendor,{
       foreignKey: 'vendorId',
+      as: "vendor"
     });
 
     reviews.belongsTo(models.Package,{
       foreignKey: 'packageId',
+      as: "package"
     });
   };
   return reviews;

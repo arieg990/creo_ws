@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
   socialMedia.associate = function(models) {
 
     socialMedia.belongsTo(models.Code,{
-      foreignKey: 'code',
+      foreignKey: 'codeId',
+      as: "code"
     });
   };
   return socialMedia;

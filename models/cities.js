@@ -11,17 +11,20 @@ module.exports = (sequelize, DataTypes) => {
   cities.associate = function(models) {
 
     cities.hasMany(models.PostalCode,{
-      foreignKey: 'cityId'
+      foreignKey: 'cityId',
+      as:'postalCodes'
     });
 
     cities.hasMany(models.SubDistrict,{
-      foreignKey: 'cityId'
+      foreignKey: 'cityId',
+      as:'subDistricts'
     });
 
     cities.belongsTo(models.Province,{
       foreignKey: 'provinceId',
       onDelete: 'CASCADE',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "province"
     });
   };
   return cities;

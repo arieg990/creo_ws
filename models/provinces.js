@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
 
   provinces.associate = function(models) {
     provinces.hasMany(models.City,{
-      foreignKey: 'provinceId'
+      foreignKey: 'provinceId',
+      as: "cities"
     });
   };
   return provinces;

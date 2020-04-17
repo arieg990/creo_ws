@@ -19,7 +19,8 @@ module.exports = (sequelize, DataTypes) => {
 
     banners.belongsTo(models.User,{
       foreignKey: 'userId',
-      onUpdate: 'CASCADE'
+      onUpdate: 'CASCADE',
+      as: "user"
     });
   };
   return banners;
