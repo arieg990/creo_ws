@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     imageUrl3: DataTypes.STRING,
     url3: DataTypes.STRING,
     imageUrl4: DataTypes.STRING,
-    url4: DataTypes.STRING
+    url4: DataTypes.STRING,
+    isMain: DataTypes.BOOLEAN
   },{
     tableName: 'packages',
     freezeTableName: true,
