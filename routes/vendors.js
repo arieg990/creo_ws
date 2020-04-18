@@ -26,7 +26,7 @@ function includeTable(table) {
         var Gallery = {model:model.Gallery,as:"galleries", where:{isMain:true}}
         include.push(Gallery)
       } else if (table[i] == "package") {
-        var Package = {model:model.Package, as:"packages"}
+        var Package = {model:model.Package, as:"packages",where:{isMain:true}}
         include.push(Package)
       }
     }
