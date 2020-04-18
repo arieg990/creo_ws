@@ -14,18 +14,21 @@ function includeTable(table) {
   if (table.length > 0) {
     for (var i = 0; i < table.length; i++) {
       if (table[i] == "address") {
-        var Address = {model:model.Address}
+        var Address = {model:model.Address, as:"addresses"}
         include.push(Address)
       } else if (table[i] == "socialMedia") {
-        var SocialMedia = {model:model.SocialMedia}
+        var SocialMedia = {model:model.SocialMedia, as:"socialMedia"}
         include.push(SocialMedia)
       } else if (table[i] == "contact") {
-        var Contact = {model:model.Contact}
+        var Contact = {model:model.Contact, as:"contacts"}
         include.push(Contact)
       } else if (table[i] == "gallery") {
-        var Gallery = {model:model.Gallery}
+        var Gallery = {model:model.Gallery,as:"galleries"}
         include.push(Gallery)
-      } 
+      } else if (table[i] == "package") {
+        var Package = {model:model.Package, as:"packages"}
+        include.push(Package)
+      }
     }
   }
 
@@ -63,7 +66,8 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   var review = {
     model:model.Review,
     attributes: [],
-    group: ["id"]
+    group: ["id"],
+    as:"reviews"
   }
   include.push(review)
 
@@ -242,7 +246,8 @@ router.get('/:id', async function(req, res, next) {
       {model:model.Address},
       {model:model.SocialMedia},
       {model:model.Contact},
-      {model:model.Gallery}
+      {model:model.Gallery},
+      {model:model.Package}
       ]
     });
 
