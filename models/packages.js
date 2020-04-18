@@ -5,8 +5,14 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     price: DataTypes.INTEGER,
     capacity: DataTypes.INTEGER,
-    imageUrl: DataTypes.STRING,
-    url: DataTypes.STRING
+    imageUrl1: DataTypes.STRING,
+    url1: DataTypes.STRING,
+    imageUrl2: DataTypes.STRING,
+    url2: DataTypes.STRING,
+    imageUrl3: DataTypes.STRING,
+    url3: DataTypes.STRING,
+    imageUrl4: DataTypes.STRING,
+    url4: DataTypes.STRING
   },{
     tableName: 'packages',
     freezeTableName: true,
