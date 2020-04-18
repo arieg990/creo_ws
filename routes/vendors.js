@@ -63,19 +63,10 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
     include = includeTable(table)
   }
 
-  var review = {
-    model:model.Review,
-    attributes: [],
-    group: ["vendorId"],
-    as:"reviews"
-  }
-  include.push(review)
-
   try{
     var list = await model.Vendor.findAll({
       offset:page*perPage,
       limit:perPage,
-      include:include,
       where: where
     });
 
