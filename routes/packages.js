@@ -69,6 +69,7 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
     price:body.price,
     capacity:body.capacity,
     provinceId:body.provinceId,
+    isMain: body.isMain,
     cityId:body.cityId
   }
 
@@ -110,6 +111,7 @@ router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
     price:body.price,
     capacity:body.capacity,
     provinceId:body.provinceId,
+    isMain: body.isMain,
     cityId:body.cityId
   }
 

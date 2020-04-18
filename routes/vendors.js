@@ -14,7 +14,42 @@ function includeTable(table) {
   if (table.length > 0) {
     for (var i = 0; i < table.length; i++) {
       if (table[i] == "address") {
-        var Address = {model:model.Address, as:"addresses",where:{isMain:true},required: false}
+        var Address = {
+          attributes:{
+            include: [
+            [Sequelize.literal('`addresses->city`.`name`'),'cityName'],
+            [Sequelize.literal('`addresses->province`.`name`'),'provinceName'],
+            [Sequelize.literal('`addresses->postalCode`.`postalCode`'),'postalCodeArea'],
+            [Sequelize.literal('`addresses->subDistrict`.`name`'),'SubDistrictName']
+            ]
+          },
+          model:model.Address, 
+          include: [
+          {
+            model: model.City,
+            as:"city",
+            attributes: []
+          },
+          {
+            model: model.Province,
+            as:"province",
+            attributes: []
+          },
+          {
+            model:model.PostalCode,
+            as:"postalCode",
+            attributes: []
+          },
+          {
+            model:model.SubDistrict,
+            as:"subDistrict",
+            attributes: []
+          }
+          ],
+          as:"addresses",
+          where:{isMain:true},
+          required: false
+        }
         include.push(Address)
       } else if (table[i] == "socialMedia") {
         var SocialMedia = {model:model.SocialMedia, as:"socialMedia"}
@@ -68,6 +103,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       offset:page*perPage,
       limit:perPage,
       include:include,
+      subQuery:false,
       where: where
     });
 

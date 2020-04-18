@@ -3,7 +3,7 @@
 module.exports = (sequelize, DataTypes) => {
   const addresses = sequelize.define('Address', {
     name: DataTypes.STRING,
-    address: DataTypes.TEXT,
+    detail: DataTypes.TEXT,
     lat: DataTypes.STRING,
     lng: DataTypes.STRING,
     isMain: {

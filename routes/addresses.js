@@ -56,13 +56,15 @@ router.post('/', async function(req, res, next) {
   var body = req.body;
   var data = {
     name: body.name,
-    address:body.address,
+    detail:body.detail,
     provinceId:body.provinceId,
     cityId:body.cityId,
     postalCodeId:body.postalCodeId,
     subDistrict:body.subDistrictId,
     isMain: body.isMain,
-    projectId: body.projectId
+    projectId: body.projectId,
+    vendorId: body.vendorId,
+    customerId: body.customerId
   }
 
   try{
@@ -80,13 +82,15 @@ router.put('/:id', async function(req, res, next) {
   var user = user.datalavues
   var data = {
     name: body.name,
-    address:body.address,
+    detail:body.detail,
     provinceId:body.provinceId,
     cityId:body.cityId,
     postalCodeId:body.postalCodeId,
     subDistrict:body.subDistrictId,
     isMain: body.isMain,
-    projectId: body.projectId
+    projectId: body.projectId,
+    vendorId: body.vendorId,
+    customerId: body.customerId
   }
 
   if (req.user.type == "customer") {
