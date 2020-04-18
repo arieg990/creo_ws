@@ -67,7 +67,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
     var list = await model.Vendor.findAll({
       offset:page*perPage,
       limit:perPage,
-      include:include
+      include:include,
       where: where
     });
 
