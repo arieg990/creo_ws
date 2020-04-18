@@ -55,7 +55,7 @@ router.post('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     postalCode: body.postalCode,
-    provinceId:body.provinceId
+    subDistrictId:body.subDistrictId
   }
 
   try{
@@ -72,7 +72,7 @@ router.put('/:id', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     postalCode: body.postalCode,
-    provinceId:body.provinceId
+    subDistrictId:body.subDistrictId
   }
 
   try{

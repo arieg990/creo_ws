@@ -55,7 +55,7 @@ router.post('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     name: body.name,
-    city_id:body.city_id
+    cityId:body.cityId
   }
 
   try{
@@ -72,7 +72,7 @@ router.put('/:id', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     name: body.name,
-    city_id:body.city_id
+    cityId:body.cityId
   }
 
   try{

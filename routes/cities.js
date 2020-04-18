@@ -23,18 +23,7 @@ router.get('/list', async function(req, res, next) {
   try{
     var list = await model.City.findAll({
       offset:page*perPage,
-      limit:perPage,
-      include: [
-      {
-        model: model.Province
-      },
-      {
-        model:model.PostalCode
-      },
-      {
-        model:model.SubDistrict
-      }
-      ]
+      limit:perPage
     });
 
     var paging = {
@@ -44,6 +33,7 @@ router.get('/list', async function(req, res, next) {
 
     res.status(200).json(response(200,"cities",list, paging));
   } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"cities",err));
   }
 

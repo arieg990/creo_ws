@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   postal_codes.associate = function(models) {
-    postal_codes.belongsTo(models.City,{
-      foreignKey: 'cityId',
+    postal_codes.belongsTo(models.SubDistrict,{
+      foreignKey: 'subDistrictId',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
-      as: "city"
+      as: "subDistrict"
     });
   };
   return postal_codes;
