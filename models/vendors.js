@@ -8,8 +8,10 @@ module.exports = (sequelize, DataTypes) => {
   const vendors = sequelize.define('Vendor', {
     name: DataTypes.STRING,
     description: DataTypes.TEXT,
-    imageUrl: DataTypes.STRING,
-    url: DataTypes.STRING,
+    avatarImageUrl: DataTypes.STRING,
+    avatarUrl: DataTypes.STRING,
+    backgroundImageUrl: DataTypes.STRING,
+    backgroundUrl: DataTypes.STRING,
     isOfficial: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

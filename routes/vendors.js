@@ -92,11 +92,10 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
     where.categoryId = req.query.categoryId
   }
 
-
   if (req.query.include != null) {
-    var table = req.query.include.split(",")
-    include = includeTable(table)
+    include = includeTable(req.query.include)
   }
+
 
   try{
     var list = await model.Vendor.findAll({
@@ -146,17 +145,30 @@ router.post('/', async function(req, res, next) {
     isOfficial: body.isOfficial
   }
 
-  if (body.image != null) {
+  if (body.avatarImage != null) {
 
 
-    var decode = cryptoLocal.decodeBase64Image(body.image)
+    var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
     var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     require("fs").writeFile("public/"+path+img, decode.data, function(err) {
       console.log(err)
     });
 
-    data.imageUrl = path + img
-    data.url = url
+    data.avatarImageUrl = path + img
+    data.avatarUrl = url
+  }
+
+  if (body.backgroundImage != null) {
+
+
+    var decode = cryptoLocal.decodeBase64Image(body.backgroundImage)
+    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+      console.log(err)
+    });
+
+    data.backgroundImageUrl = path + img
+    data.backgroundUrl = url
   }
 
   try{
@@ -179,17 +191,30 @@ router.put('/', async function(req, res, next) {
     isOfficial: body.isOfficial
   }
 
-  if (body.image != null) {
+  if (body.avatarImage != null) {
 
 
-    var decode = cryptoLocal.decodeBase64Image(body.image)
+    var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
     var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     require("fs").writeFile("public/"+path+img, decode.data, function(err) {
       console.log(err)
     });
 
-    data.imageUrl = path + img
-    data.url = url
+    data.avatarImageUrl = path + img
+    data.avatarUrl = url
+  }
+
+  if (body.backgroundImage != null) {
+
+
+    var decode = cryptoLocal.decodeBase64Image(body.backgroundImage)
+    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+      console.log(err)
+    });
+
+    data.backgroundImageUrl = path + img
+    data.backgroundUrl = url
   }
 
   try{

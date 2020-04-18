@@ -23,21 +23,7 @@ router.get('/list', async function(req, res, next) {
   try{
     var list = await model.Address.findAll({
       offset:page*perPage,
-      limit:perPage,
-      include: [
-      {
-        model: model.City
-      },
-      {
-        model: model.Province
-      },
-      {
-        model:model.PostalCode
-      },
-      {
-        model:model.SubDistrict
-      }
-      ]
+      limit:perPage
     });
 
     var paging = {
