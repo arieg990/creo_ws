@@ -21,7 +21,8 @@ function includeTable(table) {
             [Sequelize.literal('`addresses->province`.`name`'),'provinceName'],
             [Sequelize.literal('`addresses->postalCode`.`postalCode`'),'postalCodeArea'],
             [Sequelize.literal('`addresses->subDistrict`.`name`'),'SubDistrictName']
-            ]
+            ],
+            exclude: ["vendorId","customerId"]
           },
           model:model.Address, 
           include: [
