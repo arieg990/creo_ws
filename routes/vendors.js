@@ -14,7 +14,7 @@ function includeTable(table) {
   if (table.length > 0) {
     for (var i = 0; i < table.length; i++) {
       if (table[i] == "address") {
-        var Address = {model:model.Address, as:"addresses"}
+        var Address = {model:model.Address, as:"addresses",where:{isMain:true},required: false}
         include.push(Address)
       } else if (table[i] == "socialMedia") {
         var SocialMedia = {model:model.SocialMedia, as:"socialMedia"}
@@ -23,7 +23,7 @@ function includeTable(table) {
         var Contact = {model:model.Contact, as:"contacts"}
         include.push(Contact)
       } else if (table[i] == "gallery") {
-        var Gallery = {model:model.Gallery,as:"galleries"}
+        var Gallery = {model:model.Gallery,as:"galleries", where:{isMain:true}}
         include.push(Gallery)
       } else if (table[i] == "package") {
         var Package = {model:model.Package, as:"packages"}
@@ -66,7 +66,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   var review = {
     model:model.Review,
     attributes: [],
-    group: ["id"],
+    group: ["vendorId"],
     as:"reviews"
   }
   include.push(review)
@@ -75,13 +75,6 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
     var list = await model.Vendor.findAll({
       offset:page*perPage,
       limit:perPage,
-      subQuery: false,
-      attributes: { 
-        include: [
-        [Sequelize.fn("COUNT", Sequelize.col('Reviews.id')), "reviewCount"],
-        [Sequelize.fn("AVG", Sequelize.fn('COALESCE',(Sequelize.col("Reviews.rating")),0.0)), "reviewRating"],
-        ]
-      },
       include:include,
       where: where
     });
@@ -91,10 +84,21 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       "limitPerPage": perPage,
     }
 
-    // for (var i = list.length - 1; i >= 0; i--) {
-    //   list[i].dataValues.reviewRating = 5
-    //   list[i].dataValues.reviewCount = 50
-    // }
+    for (var i = list.length - 1; i >= 0; i--) {
+
+      var review = await model.Review.findOne({
+        attributes: [
+        [Sequelize.fn("COUNT", Sequelize.col('id')), "reviewCount"],
+        [Sequelize.fn("AVG", Sequelize.fn('COALESCE',(Sequelize.col("rating")),0.0)), "reviewRating"]
+        ],
+        where :{
+          vendorId: list[i].dataValues.id
+        }
+      })
+
+      list[i].dataValues.reviewRating = review.dataValues.reviewRating != null ? review.dataValues.reviewRating : 0
+      list[i].dataValues.reviewCount = review.dataValues.reviewCount != null ? review.dataValues.reviewCount : 0
+    }
 
     res.status(200).json(response(200,"vendors",list,paging));
   } catch(err) {
