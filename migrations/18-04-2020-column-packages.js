@@ -1,5 +1,5 @@
 'use strict';
-var promise = require('Promise')
+var promise = require('promise')
 module.exports = {
 	up: (queryInterface, Sequelize) => {
 		return Promise.all([ 
