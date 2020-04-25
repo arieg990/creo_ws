@@ -293,7 +293,11 @@ function bearer(passport) {
   passport.use(new BearerStrategy(
     function(token, done) {
 
-      model.Token.findByPk(token).then((tkn) => {
+      model.Token.findOne({
+        where: {
+          token : token
+        }
+      }).then((tkn) => {
         if(!tkn)
           return done(true, false,{})
 
