@@ -7,8 +7,6 @@ module.exports = (sequelize, DataTypes) => {
   const tokens = sequelize.define('Token', {
     token: {
       type:DataTypes.STRING,
-      primaryKey:true,
-      unique: true
     },
   }, {});
 
