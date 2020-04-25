@@ -293,7 +293,9 @@ function bearer(passport) {
             return done(null, false, { "message": "Token expired.",
               "path": "authorization",
               "value": token });
-          })
+          }).catch((err) => {
+        console.log("2"err)
+      })
         } else {
           if (tkn.customerId != null) {
             model.Customer.findByPk(tkn.customerId).then((user) => {
@@ -305,7 +307,9 @@ function bearer(passport) {
              user.dataValues.userType = "customer"
              return done(null, user)
 
-           })
+           }).catch((err) => {
+        console.log("3"err)
+      })
           } else if(tkn.vendorUserId != null) {
             model.VendorUser.findByPk(tkn.vendorUserId).then((user) => {
               if (!user) 
@@ -316,7 +320,9 @@ function bearer(passport) {
              user.dataValues.userType = "vendor"
              return done(null, user)
 
-           })
+           }).catch((err) => {
+        console.log("4"err)
+      })
         } else {
             model.User.findByPk(tkn.userId).then((user) => {
               if (!user) 
@@ -327,9 +333,13 @@ function bearer(passport) {
              user.dataValues.userType = "user"
              return done(null, user)
 
-           })
+           }).catch((err) => {
+        console.log("5"err)
+      })
           }
         }
+      }).catch((err) => {
+        console.log("1"err)
       })
     }
     ));
