@@ -296,17 +296,13 @@ router.delete('/', async function(req, res, next) {
 
 router.get('/:id', async function(req, res, next) {
 
+  var include = includeTable(["address","socialMedia","contact","gallery","package"])
+
   try{
 
     var list = await model.Vendor.findByPk(req.params.id,{
       attributes: { exclude: ['password'] },
-      include:[
-      {model:model.Address},
-      {model:model.SocialMedia},
-      {model:model.Contact},
-      {model:model.Gallery},
-      {model:model.Package}
-      ]
+      include:include
     });
 
     res.status(200).json(response(200,"vendor",list));
