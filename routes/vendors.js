@@ -296,18 +296,58 @@ router.delete('/', async function(req, res, next) {
 
 router.get('/:id', async function(req, res, next) {
 
-  var include = includeTable(["address","socialMedia","contact","gallery","package"])
-
   try{
 
     var list = await model.Vendor.findByPk(req.params.id,{
-      attributes: { exclude: ['password'] },
-      include:include
+      include:[
+      {
+        model:model.Address,
+        as:"addresses",
+        limit:5
+      },
+      {
+        model:model.SocialMedia,
+        as:"socialMedia"
+      },
+      {
+        model:model.Contact,
+        as:"contacts"
+      },
+      {
+        model:model.Gallery,
+        as:"galleries",
+        limit:5
+      },
+      {
+        model:model.Package,
+        as:"packages",
+        limit:5
+      },
+      {
+        model:model.Review,
+        as:"reviews",
+        limit:5
+      }
+      ]
     });
+
+    var review = await model.Review.findOne({
+      attributes: [
+      [Sequelize.fn("COUNT", Sequelize.col('id')), "reviewCount"],
+      [Sequelize.fn("AVG", Sequelize.fn('COALESCE',(Sequelize.col("rating")),0.0)), "reviewRating"]
+      ],
+      where :{
+        vendorId: list.dataValues.id
+      }
+    })
+
+    list.dataValues.reviewRating = review.dataValues.reviewRating != null ? review.dataValues.reviewRating : 0
+    list.dataValues.reviewCount = review.dataValues.reviewCount != null ? review.dataValues.reviewCount : 0
 
     res.status(200).json(response(200,"vendor",list));
 
   } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"vendor",err));
   }
 
