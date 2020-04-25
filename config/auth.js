@@ -89,23 +89,28 @@ function local(passport) {
           },
         }).then((oldToken) => {
           if (oldToken) {
-            model.Token.update(tokenSave,{
+
+            model.Token.destroy({
               where: {
-                customerId: user.dataValues.id
+                customerId:user.dataValues.id
               }
-            }).then((tkn) => {
-              if (!tkn) {
-                return done(null, false, { "message": "Failed update token.",
-                  "path": "token",
-                  "value": tokenValue });
-              }
+            }).then((del) => {
+              if (del) {
+                model.Token.create(tokenSave).then((tkn) => {
+                  if (!tkn) {
+                    return done(null, false, { "message": "Failed save token.",
+                      "path": "token",
+                      "value": tokenValue });
+                  }
 
-              var array = {
-                user:user,
-                token:tokenValue
-              }
+                  var array = {
+                    user:user,
+                    token:tkn.token
+                  }
 
-              return done(null, array)
+                  return done(null, array)
+                })
+              }
             })
           } else {
             model.Token.create(tokenSave).then((tkn) => {
@@ -160,23 +165,27 @@ function local(passport) {
           },
         }).then((oldToken) => {
           if (oldToken) {
-            model.Token.update(tokenSave,{
+            model.Token.destroy({
               where: {
-                vendorUserId: user.dataValues.id
+                vendorUserId:user.dataValues.id
               }
-            }).then((tkn) => {
-              if (!tkn) {
-                return done(null, false, { "message": "Failed update token.",
-                  "path": "token",
-                  "value": tokenValue });
-              }
+            }).then((del) => {
+              if (del) {
+                model.Token.create(tokenSave).then((tkn) => {
+                  if (!tkn) {
+                    return done(null, false, { "message": "Failed save token.",
+                      "path": "token",
+                      "value": tokenValue });
+                  }
 
-              var array = {
-                user:user,
-                token:tokenValue
-              }
+                  var array = {
+                    user:user,
+                    token:tkn.token
+                  }
 
-              return done(null, array)
+                  return done(null, array)
+                })
+              }
             })
           } else {
             model.Token.create(tokenSave).then((tkn) => {
@@ -231,23 +240,27 @@ function local(passport) {
           },
         }).then((oldToken) => {
           if (oldToken) {
-            model.Token.update(tokenSave,{
+            model.Token.destroy({
               where: {
-                userId: user.dataValues.id
+                userId:user.dataValues.id
               }
-            }).then((tkn) => {
-              if (!tkn) {
-                return done(null, false, { "message": "Failed update token.",
-                  "path": "token",
-                  "value": tokenValue });
-              }
+            }).then((del) => {
+              if (del) {
+                model.Token.create(tokenSave).then((tkn) => {
+                  if (!tkn) {
+                    return done(null, false, { "message": "Failed save token.",
+                      "path": "token",
+                      "value": tokenValue });
+                  }
 
-              var array = {
-                user:user,
-                token:tokenValue
-              }
+                  var array = {
+                    user:user,
+                    token:tkn.token
+                  }
 
-              return done(null, array)
+                  return done(null, array)
+                })
+              }
             })
           } else {
             model.Token.create(tokenSave).then((tkn) => {
@@ -294,8 +307,8 @@ function bearer(passport) {
               "path": "authorization",
               "value": token });
           }).catch((err) => {
-        console.log("2 "+err)
-      })
+            console.log("2 "+err)
+          })
         } else {
           if (tkn.customerId != null) {
             model.Customer.findByPk(tkn.customerId).then((user) => {
@@ -308,41 +321,41 @@ function bearer(passport) {
              return done(null, user)
 
            }).catch((err) => {
-        console.log("3 "+err)
-      })
-          } else if(tkn.vendorUserId != null) {
-            model.VendorUser.findByPk(tkn.vendorUserId).then((user) => {
-              if (!user) 
-               return done(null, false, { "message": "User not found",
-                "path": "authorization",
-                "value": token })
+            console.log("3 "+err)
+          })
+         } else if(tkn.vendorUserId != null) {
+          model.VendorUser.findByPk(tkn.vendorUserId).then((user) => {
+            if (!user) 
+             return done(null, false, { "message": "User not found",
+              "path": "authorization",
+              "value": token })
 
-             user.dataValues.userType = "vendor"
-             return done(null, user)
+           user.dataValues.userType = "vendor"
+           return done(null, user)
 
-           }).catch((err) => {
-        console.log("4 "+err)
-      })
-        } else {
-            model.User.findByPk(tkn.userId).then((user) => {
-              if (!user) 
-               return done(null, false, { "message": "User not found",
-                "path": "authorization",
-                "value": token })
+         }).catch((err) => {
+          console.log("4 "+err)
+        })
+       } else {
+        model.User.findByPk(tkn.userId).then((user) => {
+          if (!user) 
+           return done(null, false, { "message": "User not found",
+            "path": "authorization",
+            "value": token })
 
-             user.dataValues.userType = "user"
-             return done(null, user)
+         user.dataValues.userType = "user"
+         return done(null, user)
 
-           }).catch((err) => {
+       }).catch((err) => {
         console.log("5 "+err)
       })
-          }
-        }
-      }).catch((err) => {
-        console.log("1 "+err)
-      })
-    }
-    ));
+     }
+   }
+ }).catch((err) => {
+  console.log("1 "+err)
+})
+}
+));
 }
 
 function isLoggedIn(req, res, next) {
