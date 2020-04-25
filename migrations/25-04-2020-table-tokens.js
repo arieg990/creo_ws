@@ -6,7 +6,7 @@ module.exports = {
 			queryInterface.changeColumn('tokens','token', {
 				type:Sequelize.STRING
 			}),
-			queryInterface.addColumn('tokens','id', id: {
+			queryInterface.addColumn('tokens','id', {
             type: Sequelize.INTEGER,
             autoIncrement: true,
             primaryKey: true
