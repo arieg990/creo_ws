@@ -53,16 +53,16 @@ function includeTable(table) {
         }
         include.push(Address)
       } else if (table[i] == "socialMedia") {
-        var SocialMedia = {model:model.SocialMedia, as:"socialMedia"}
+        var SocialMedia = {model:model.SocialMedia, as:"socialMedia",required: false}
         include.push(SocialMedia)
       } else if (table[i] == "contact") {
-        var Contact = {model:model.Contact, as:"contacts"}
+        var Contact = {model:model.Contact, as:"contacts",required: false}
         include.push(Contact)
       } else if (table[i] == "gallery") {
-        var Gallery = {model:model.Gallery,as:"galleries", where:{isMain:true}}
+        var Gallery = {model:model.Gallery,as:"galleries", where:{isMain:true},required: false}
         include.push(Gallery)
       } else if (table[i] == "package") {
-        var Package = {model:model.Package, as:"packages", where:{isMain:true}}
+        var Package = {model:model.Package, as:"packages", where:{isMain:true},required: false}
         include.push(Package)
       }
     }
@@ -303,29 +303,35 @@ router.get('/:id', async function(req, res, next) {
       {
         model:model.Address,
         as:"addresses",
+        required: false,
         limit:5
       },
       {
         model:model.SocialMedia,
+        required: false,
         as:"socialMedia"
       },
       {
         model:model.Contact,
+        required: false,
         as:"contacts"
       },
       {
         model:model.Gallery,
         as:"galleries",
+        required: false,
         limit:5
       },
       {
         model:model.Package,
         as:"packages",
+        required: false,
         limit:5
       },
       {
         model:model.Review,
         as:"reviews",
+        required: false,
         limit:5
       }
       ]
