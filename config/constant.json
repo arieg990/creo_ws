@@ -8,7 +8,7 @@
 		"stories":"uploads/stories/images/",
 		"galleries":"uploads/galleries/images/",
 		"vendors":"uploads/vendors/images/",
-		"packages":"uploads/packages/images/",
+		"packages":"uploads/packages/images/"
 	},
 	"url":{
 		"googleStorage":"https://storage.cloud.google.com/creative-event-organizer"
