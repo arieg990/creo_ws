@@ -5,6 +5,8 @@ var response = require('../config/constant').response;
 var auth = require('../config/auth');
 const crypto = require('crypto');
 const cryptoLocal = require('../config/crypto');
+const {uploadFile} = require('../config/uploadFile');
+var urlGoogle = constant.url.googleStorage
 
 /* GET users listing. */
 router.get('/list', auth.isLoggedIn, async function(req, res, next) {
@@ -50,7 +52,7 @@ router.post('/', async function(req, res, next) {
 		phone:body.phone,
 		gender:body.gender,
     role:body.role
-	}
+  }
 
   try{
     var list = await model.User.create(data);
@@ -91,15 +93,23 @@ router.put('/profile', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var path = constant.path.users
+  var data = {}
 
   var decode = cryptoLocal.decodeBase64Image(body.image)
-  var img = crypto.randomBytes(32).toString('hex')+'.'+decode.type;
-  require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-  });
+  var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-  var data = {
-    imageUrl: path + img,
-    url:url
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url = urlGoogle
+     data.imageUrl = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
 
   try{

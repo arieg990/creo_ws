@@ -4,10 +4,11 @@ var model = require('../models');
 var response = require('../config/constant').response;
 const crypto = require('crypto');
 const cryptoLocal = require('../config/crypto');
-const {uploadFile} = require('../config/uploadFile');
 var constant = require('../config/constant.json');
 var auth = require('../config/auth');
 var path = constant.path.banners
+const {uploadFile} = require('../config/uploadFile');
+var urlGoogle = constant.url.googleStorage
 
 /* GET users listing. */
 router.get('/list', auth.isUser, async function(req, res, next) {
@@ -53,27 +54,28 @@ router.post('/', auth.isUser, async function(req, res, next) {
 		publishDate:body.publishDate,
 		publishEndDate:body.publishEndDate,
 		startDate:body.startDate,
-    endDate:body.endDate,
-    url:url
+    endDate:body.endDate
 	}
 
   if (body.image != null) {
 
-    var decode = cryptoLocal.decodeBase64Image(body.image)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
     // });
 
     // data.imageUrl = path + img
 
-    var upload = uploadFile(path+img,decode)
+    var upload = await uploadFile(path+img,decode)
     if (upload) {
-      console.log("dapet")
-    } else {
-      console.log("kagak")
-    }
+     data.imageUrl = path + img
+     data.url = urlGoogle
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
 
   try{
     var list = await model.Banner.create(data);
@@ -95,20 +97,28 @@ router.put('/', auth.isUser, async function(req, res, next) {
     publishDate:body.publishDate,
     publishEndDate:body.publishEndDate,
     startDate:body.startDate,
-    endDate:body.endDate,
-    url:url
+    endDate:body.endDate
   }
 
   if (body.image != null) {
 
-    var decode = cryptoLocal.decodeBase64Image(body.image)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    data.imageUrl = path + img
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url = urlGoogle
+     data.imageUrl = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
 
   try{
 

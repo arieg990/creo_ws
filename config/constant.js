@@ -17,25 +17,38 @@ function data(data) {
   return data;
 }
 
+function error(err) {
+  var error = []
+  if (err === "image") {
+    error.push({
+      "message":"Failed upload image to google",
+      "path":"image",
+      "value":""
+    })
+  }
+
+  return error
+}
+
 function response(code,type,list, page = null, token = null) {
 	var response;
 	if (code == 200) {
     response = {
-          "data":{
-            [type]: list
-          },
-          "status": status(code,"ok")
-      }
+      "data":{
+        [type]: list
+      },
+      "status": status(code,"ok")
+    }
 
-    	if (page != null) {
-    		response.data = Object.assign({ paging: page }, response.data);
-    	}
+    if (page != null) {
+      response.data = Object.assign({ paging: page }, response.data);
+    }
 
-      if (token != null) {
-        response.data = Object.assign({ token: token }, response.data);
-      }
+    if (token != null) {
+      response.data = Object.assign({ token: token }, response.data);
+    }
 
-	} else if(code == 400) {
+  } else if(code == 400) {
     var message;
 
     if (list instanceof Sequelize.ForeignKeyConstraintError) {
@@ -60,19 +73,19 @@ function response(code,type,list, page = null, token = null) {
       message = list
     }
 
-		response = {
-      		"error":message,
-      		"status": status(code,"error")
-    	}
-
-	} else if(code == 401) {
     response = {
-          "error":list,
-          "status": status(code,"unauthorized")
-      }
+      "error":message,
+      "status": status(code,"error")
+    }
+
+  } else if(code == 401) {
+    response = {
+      "error":list,
+      "status": status(code,"unauthorized")
+    }
   }
 
   return response;
 }
 
-module.exports = {response};
+module.exports = {response,error};

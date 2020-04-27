@@ -6,6 +6,8 @@ var model = require('../models');
 var response = require('../config/constant').response;
 var auth = require('../config/auth');
 var constant = require('../config/constant.json');
+const {uploadFile} = require('../config/uploadFile');
+var urlGoogle = constant.url.googleStorage
 
 /* GET users listing. */
 router.get('/list', auth.isLoggedIn, async function(req, res, next) {
@@ -98,16 +100,24 @@ router.put('/profile/:id', auth.isLoggedIn, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var path = constant.path.customers
+  var id = req.params.id
+  var data = {}
 
   var decode = cryptoLocal.decodeBase64Image(body.image)
-  var img = crypto.randomBytes(32).toString('hex')+'.'+decode.type;
-  require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-  });
-  var id = req.params.id
+  var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-  var data = {
-    imageUrl: path + img,
-    url:url
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url = urlGoogle
+     data.imageUrl = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
 
   if (user.userType == "customer") {

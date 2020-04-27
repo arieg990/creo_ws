@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var model = require('../models');
 var response = require('../config/constant').response;
+var error = require('../config/constant').error;
 var auth = require('../config/auth');
 const Sequelize = require('sequelize');
 const crypto = require('crypto');
@@ -9,6 +10,7 @@ const cryptoLocal = require('../config/crypto');
 const {uploadFile} = require('../config/uploadFile');
 const constant = require('../config/constant.json');
 var path = constant.path.categories
+var urlGoogle = constant.url.googleStorage
 
 /* GET users listing. */
 router.get('/list', async function(req, res, next) {
@@ -59,37 +61,37 @@ router.post('/', auth.isUser, async function(req, res, next) {
 
   var data = {
     name: body.name,
-    color:body.color,
-    url:url
+    color:body.color
   }
-  console.log("kena")
 
-  if (body.image != null) {
+  try{
+    if (body.image != null) {
 
-    var decode = cryptoLocal.decodeBase64Image(body.image)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
     // });
 
     // data.imageUrl = path + img
 
-    var upload = uploadFile(path+img,decode)
+    var upload = await uploadFile(path+img,decode)
     if (upload) {
-      console.log("dapet")
-    } else {
-      console.log("kagak")
-    }
-  }
+     data.imageUrl = path + img
+     data.url = urlGoogle
+   } else {
 
-  try{
-    var list = await model.Category.create(data);
-
-    res.status(200).json(response(200,"category",list));
-  } catch(err) {
-    res.status(200).json(response(400,"category",err));
+    res.status(200).json(response(400,"category",error("image")));
   }
-  
+}
+
+var list = await model.Category.create(data);
+
+res.status(200).json(response(200,"category",list));
+} catch(err) {
+  res.status(200).json(response(400,"category",err));
+}
+
 });
 
 router.put('/:id', auth.isUser, async function(req, res, next) {
@@ -102,16 +104,23 @@ router.put('/:id', auth.isUser, async function(req, res, next) {
 
   if (body.image != null) {
 
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    var decode = cryptoLocal.decodeBase64Image(body.image)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("~/public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+    // data.imageUrl = path + img
 
-    data.imageUrl = path + img
-    data.url = url
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.imageUrl = path + img
+     data.url = urlGoogle
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
 
   try{
 

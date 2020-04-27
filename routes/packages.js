@@ -7,6 +7,8 @@ const crypto = require('crypto');
 const cryptoLocal = require('../config/crypto');
 const constant = require('../config/constant.json');
 var path = constant.path.packages
+const {uploadFile} = require('../config/uploadFile');
+var urlGoogle = constant.url.googleStorage
 
 /* GET users listing. */
 router.get('/list', async function(req, res, next) {
@@ -79,27 +81,94 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
     data.vendorId = user.vendorId
   }
 
-  if (body.image != null) {
-
+  if (body.image1 != null) {
 
     var decode = cryptoLocal.decodeBase64Image(body.image)
     var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    data.imageUrl = path + img
-    data.url = url
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url1 = urlGoogle
+     data.imageUrl1 = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
 
-  try{
-    var list = await model.Package.create(data);
+if (body.image2 != null) {
 
-    res.status(200).json(response(200,"package",list));
-  } catch(err) {
-    res.status(200).json(response(400,"package",err));
+  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
+
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url2 = urlGoogle
+     data.imageUrl2 = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
-  
+}
+
+if (body.image3 != null) {
+
+  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
+
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url3 = urlGoogle
+     data.imageUrl3 = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
+  }
+}
+
+if (body.image4 != null) {
+
+  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
+
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url4 = urlGoogle
+     data.imageUrl4 = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
+  }
+}
+
+try{
+  var list = await model.Package.create(data);
+
+  res.status(200).json(response(200,"package",list));
+} catch(err) {
+  res.status(200).json(response(400,"package",err));
+}
+
 });
 
 router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
@@ -115,18 +184,85 @@ router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
     cityId:body.cityId
   }
 
-  if (body.image != null) {
-
+  if (body.image1 != null) {
 
     var decode = cryptoLocal.decodeBase64Image(body.image)
     var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    data.imageUrl = path + img
-    data.url = url
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url1 = urlGoogle
+     data.imageUrl1 = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
+
+if (body.image2 != null) {
+
+  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
+
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url2 = urlGoogle
+     data.imageUrl2 = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
+  }
+}
+
+if (body.image3 != null) {
+
+  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
+
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url3 = urlGoogle
+     data.imageUrl3 = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
+  }
+}
+
+if (body.image4 != null) {
+
+  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
+
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url4 = urlGoogle
+     data.imageUrl4 = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
+  }
+}
 
   try{
 

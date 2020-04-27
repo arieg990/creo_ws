@@ -8,6 +8,8 @@ const cryptoLocal = require('../config/crypto');
 const constant = require('../config/constant.json');
 const Sequelize = require("sequelize")
 var path = constant.path.vendors
+const {uploadFile} = require('../config/uploadFile');
+var urlGoogle = constant.url.googleStorage
 
 function includeTable(table) {
   var include = []
@@ -148,29 +150,43 @@ router.post('/', async function(req, res, next) {
 
   if (body.avatarImage != null) {
 
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+    // data.imageUrl = path + img
 
-    data.avatarImageUrl = path + img
-    data.avatarUrl = url
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.avatarUrl = urlGoogle
+     data.avatarImageUrl = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
 
   if (body.backgroundImage != null) {
 
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    var decode = cryptoLocal.decodeBase64Image(body.backgroundImage)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+    // data.imageUrl = path + img
 
-    data.backgroundImageUrl = path + img
-    data.backgroundUrl = url
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.backgroundUrl = urlGoogle
+     data.backgroundImageUrl = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
 
   try{
     var list = await model.Vendor.create(data);
@@ -194,29 +210,43 @@ router.put('/', async function(req, res, next) {
 
   if (body.avatarImage != null) {
 
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+    // data.imageUrl = path + img
 
-    data.avatarImageUrl = path + img
-    data.avatarUrl = url
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.avatarUrl = urlGoogle
+     data.avatarImageUrl = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
 
   if (body.backgroundImage != null) {
 
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    var decode = cryptoLocal.decodeBase64Image(body.backgroundImage)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+    // data.imageUrl = path + img
 
-    data.backgroundImageUrl = path + img
-    data.backgroundUrl = url
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.backgroundUrl = urlGoogle
+     data.backgroundImageUrl = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
 
   try{
 

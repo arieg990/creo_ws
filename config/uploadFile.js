@@ -1,27 +1,25 @@
 var {Storage} = require('@google-cloud/storage');
 var gcs = new Storage({
-  projectId: 'creative-event-organizer',
-  keyFilename: 'google-service.json'
+	keyFilename: './google-service.json'
 })
 
-var bucket = gcs.bucket('creo')
+var bucket = gcs.bucket('creative-event-organizer')
 
 
-function uploadFile(pathFile, base64File) {
+async function uploadFile(pathFile, base64File) {
 	var file = bucket.file(pathFile)
 
-	file.save(base64File.data, {
-		metada: {contentType:base64File.type},
-		public:true,
-		validation: 'md5'
-	}, function(error) {
-		if (error) {
-			console.log(error)
-			return false
-		} else {
-			return true
-		}
-	})
+	try {
+		await file.save(base64File.data, {
+			metada: {contentType:base64File.type},
+			public:true,
+			validation: 'md5'
+		})
+		return true
+	} catch(err) {
+		console.log(err)
+		return false
+	}
 }
 
 module.exports = {uploadFile};

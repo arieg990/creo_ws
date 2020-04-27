@@ -7,6 +7,8 @@ const cryptoLocal = require('../config/crypto');
 var constant = require('../config/constant.json');
 var auth = require('../config/auth');
 var path = constant.path.galleries
+const {uploadFile} = require('../config/uploadFile');
+var urlGoogle = constant.url.googleStorage
 
 /* GET users listing. */
 router.get('/list', async function(req, res, next) {
@@ -67,14 +69,23 @@ router.post('/', async function(req, res, next) {
 
   if (body.image != null) {
 
-    var decode = cryptoLocal.decodeBase64Image(body.image)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    data.imageUrl = path + img
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url = urlGoogle
+     data.imageUrl = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
 
   try{
     var list = await model.Gallery.create(data);
@@ -98,14 +109,23 @@ router.put('/', async function(req, res, next) {
 
   if (body.image != null) {
 
-    var decode = cryptoLocal.decodeBase64Image(body.image)
-    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-      console.log(err)
-    });
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
+    //   console.log(err)
+    // });
 
-    data.imageUrl = path + img
+    // data.imageUrl = path + img
+
+    var upload = await uploadFile(path+img,decode)
+    if (upload) {
+     data.url = urlGoogle
+     data.imageUrl = path + img
+   } else {
+
+    res.status(200).json(response(400,"category",error("image")));
   }
+}
 
   try{
 
