@@ -5,6 +5,7 @@ var response = require('../config/constant').response;
 var auth = require('../config/auth');
 const crypto = require('crypto');
 const cryptoLocal = require('../config/crypto');
+var constant = require('../config/constant.json');
 const {uploadFile} = require('../config/uploadFile');
 var urlGoogle = constant.url.googleStorage
 
