@@ -11,7 +11,7 @@ async function uploadFile(pathFile, base64File) {
 
 	try {
 		await file.save(base64File.data, {
-			metada: {contentType:base64File.type},
+			metadata: {contentType:base64File.type},
 			public:true,
 			validation: 'md5'
 		})
