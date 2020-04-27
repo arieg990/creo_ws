@@ -11,6 +11,6 @@
 		"packages":"uploads/packages/images/"
 	},
 	"url":{
-		"googleStorage":"https://storage.cloud.google.com/creative-event-organizer"
+		"googleStorage":"https://storage.googleapis.com/creative-event-organizer"
 	}
 }
