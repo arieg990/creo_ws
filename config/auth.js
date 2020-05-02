@@ -108,7 +108,7 @@ function local(passport) {
 
                   var array = {
                     user:user,
-                    token:tkn.token
+                    token:tokenSave.token
                   }
 
                   return done(null, array)
@@ -125,7 +125,7 @@ function local(passport) {
 
               var array = {
                 user:user,
-                token:tkn.token
+                token:tokenSave.token
               }
 
               return done(null, array)
@@ -183,7 +183,7 @@ function local(passport) {
 
                   var array = {
                     user:user,
-                    token:tkn.token
+                    token:tokenSave.token
                   }
 
                   return done(null, array)
@@ -200,7 +200,7 @@ function local(passport) {
 
               var array = {
                 user:user,
-                token:tkn.token
+                token:tokenSave.token
               }
 
               return done(null, array)
@@ -258,7 +258,7 @@ function local(passport) {
 
                   var array = {
                     user:user,
-                    token:tkn.token
+                    token:tokenSave.token
                   }
 
                   return done(null, array)
@@ -275,7 +275,7 @@ function local(passport) {
 
               var array = {
                 user:user,
-                token:tkn.token
+                token:tokenSave.token
               }
 
               return done(null, array)
