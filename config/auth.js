@@ -5,6 +5,8 @@ const passport = require('passport');
 var response = require('./constant').response;
 const model = require('../models') 
 var crypto = require('crypto');
+var jwt = require('jsonwebtoken');
+var cryptoLocal = require('./randomString');
 
 function google(passport) {
   passport.serializeUser((user, done) => {
@@ -41,7 +43,7 @@ function google(passport) {
 }
 
 function local(passport) {
-  var tokenValue = crypto.randomBytes(32).toString('hex');
+  var tokenValue = cryptoLocal.generateAlphanumeric(128);
 
   passport.serializeUser(function(user, done) {
     done(null, user.id);

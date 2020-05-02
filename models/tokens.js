@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   const tokens = sequelize.define('Token', {
     token: {
       type:DataTypes.STRING,
-    },
+      unique: true
+        },
   }, {});
 
   tokens.prototype.isExpired = function(token) {
