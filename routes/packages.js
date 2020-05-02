@@ -6,6 +6,7 @@ var auth = require('../config/auth');
 const crypto = require('crypto');
 const cryptoLocal = require('../config/crypto');
 const constant = require('../config/constant.json');
+const Sequelize = require("sequelize")
 var path = constant.path.packages
 const {uploadFile} = require('../config/uploadFile');
 var urlGoogle = constant.url.googleStorage
@@ -27,25 +28,32 @@ router.get('/list', async function(req, res, next) {
     perPage = limit
   }
 
-  if(req.query.categoryId != null) {
-    where.categoryId = req.query.categoryId
+  if(req.query.vendorId != null) {
+    where.vendorId = req.query.vendorId
   }
 
   try{
     var list = await model.Package.findAll({
       offset:page*perPage,
       limit:perPage,
+      where: where,
+      subQuery:false,
+      attributes:{
+            include: [
+            [Sequelize.literal('`city`.`name`'),'cityName'],
+            [Sequelize.literal('`province`.`name`'),'provinceName']
+            ]
+          },
       include: [
       {
-        model: model.City
+        model: model.City,
+        as:"city",
+        attributes: []
       },
       {
-        model: model.Province
-      },
-      {
-        model:model.Vendor,
-        required: req.query.categoryId != null ? true :false,
-        where: where
+        model: model.Province,
+        as:"province",
+        attributes: []
       }
       ]
     });
@@ -55,8 +63,25 @@ router.get('/list', async function(req, res, next) {
       "limitPerPage": perPage,
     }
 
+    for (var i = list.length - 1; i >= 0; i--) {
+
+      var review = await model.Review.findOne({
+        attributes: [
+        [Sequelize.fn("COUNT", Sequelize.col('id')), "reviewCount"],
+        [Sequelize.fn("AVG", Sequelize.fn('COALESCE',(Sequelize.col("rating")),0.0)), "reviewRating"]
+        ],
+        where :{
+          vendorId: list[i].dataValues.id
+        }
+      })
+
+      list[i].dataValues.reviewRating = review.dataValues.reviewRating != null ? review.dataValues.reviewRating : 0
+      list[i].dataValues.reviewCount = review.dataValues.reviewCount != null ? review.dataValues.reviewCount : 0
+    }
+
     res.status(200).json(response(200,"packages",list, paging));
   } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"packages",err));
   }
 
@@ -305,15 +330,32 @@ router.get('/:id', async function(req, res, next) {
   try{
 
     var list = await model.Package.findByPk(req.params.id,{
+     subQuery:false, 
+     attributes:{
+            include: [
+            [Sequelize.literal('`city`.`name`'),'cityName'],
+            [Sequelize.literal('`province`.`name`'),'provinceName']
+            ]
+          },
       include: [
       {
-        model: model.City
+        model: model.City,
+        as:"city",
+        attributes: []
       },
       {
-        model: model.Province
+        model: model.Province,
+        as:"province",
+        attributes: []
+      },
+      {
+        model: model.Service,
+        as:"services"
       },
       {
         model:model.Vendor,
+        required: req.query.categoryId != null ? true :false,
+        as:"vendor"
       }
       ]
     });
@@ -321,6 +363,7 @@ router.get('/:id', async function(req, res, next) {
     res.status(200).json(response(200,"package",list));
 
   } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"package",err));
   }
 

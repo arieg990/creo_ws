@@ -348,6 +348,7 @@ function bearer(passport) {
             "value": token })
 
          user.dataValues.userType = "user"
+         console.log("masuk")
          return done(null, user)
 
        }).catch((err) => {
