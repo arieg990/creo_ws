@@ -5,6 +5,9 @@ const passport = require('passport');
 var response = require('./constant').response;
 const model = require('../models') 
 var crypto = require('crypto');
+const env = process.env.NODE_ENV || 'development';
+const config = require('./config.json')[env];
+var jwt = require('jsonwebtoken');
 var cryptoLocal = require('./randomString');
 
 function google(passport) {
@@ -42,7 +45,6 @@ function google(passport) {
 }
 
 function local(passport) {
-  var tokenValue = cryptoLocal.generateAlphanumeric(128);
 
   passport.serializeUser(function(user, done) {
     done(null, user.id);
@@ -80,7 +82,7 @@ function local(passport) {
         user.dataValues.userType = "customer"
 
         var tokenSave = {
-          token:tokenValue,
+          token: jwt.sign(user.dataValues, config.secret),
           customerId: user.dataValues.id
         }
 
@@ -101,7 +103,7 @@ function local(passport) {
                   if (!tkn) {
                     return done(null, false, { "message": "Failed save token.",
                       "path": "token",
-                      "value": tokenValue });
+                      "value": jwt.sign(user.dataValues, config.secret) });
                   }
 
                   var array = {
@@ -118,7 +120,7 @@ function local(passport) {
               if (!tkn) {
                 return done(null, false, { "message": "Failed save token.",
                   "path": "token",
-                  "value": tokenValue });
+                  "value": tokenSave.token });
               }
 
               var array = {
@@ -156,7 +158,7 @@ function local(passport) {
         user.dataValues.userType = "vendor"
 
         var tokenSave = {
-          token:tokenValue,
+          token: jwt.sign(user.dataValues, config.secret),
           vendorUserId: user.dataValues.id
         }
 
@@ -176,7 +178,7 @@ function local(passport) {
                   if (!tkn) {
                     return done(null, false, { "message": "Failed save token.",
                       "path": "token",
-                      "value": tokenValue });
+                      "value": tokenSave.token });
                   }
 
                   var array = {
@@ -193,7 +195,7 @@ function local(passport) {
               if (!tkn) {
                 return done(null, false, { "message": "Failed save token.",
                   "path": "token",
-                  "value": tokenValue });
+                  "value": tokenSave.token });
               }
 
               var array = {
@@ -231,7 +233,7 @@ function local(passport) {
         user.dataValues.userType = "user"
 
         var tokenSave = {
-          token:tokenValue,
+          token: jwt.sign(user.dataValues, config.secret),
           userId: user.dataValues.id
         }
 
@@ -251,7 +253,7 @@ function local(passport) {
                   if (!tkn) {
                     return done(null, false, { "message": "Failed save token.",
                       "path": "token",
-                      "value": tokenValue });
+                      "value": tokenSave.token });
                   }
 
                   var array = {
@@ -268,7 +270,7 @@ function local(passport) {
               if (!tkn) {
                 return done(null, false, { "message": "Failed save token.",
                   "path": "token",
-                  "value": tokenValue });
+                  "value": tokenSave.token });
               }
 
               var array = {
@@ -294,19 +296,38 @@ function bearer(passport) {
   passport.use(new BearerStrategy(
     function(token, done) {
 
-      model.Token.findOne({
-        where: {
-          token : token
+      var verify = jwt.verify(token,config.secret)
+      var where =  {}
+
+      if (!verify) {
+         return done(null, false, { "message": "Token not found.",
+              "path": "authorization",
+              "value": token });
+      }
+
+      if (verify.userType == "customer") {
+        where = {
+          customerId: verify.id
         }
+      } else if (verify.userType == "vendor") {
+        where = {
+          vendorUserId: verify.id
+        }
+      } if (verify.userType == "user") {
+        where = {
+          userId: verify.id
+        }
+      }
+
+      model.Token.findOne({
+        where: where
       }).then((tkn) => {
         if(!tkn)
           return done(true, false,{})
 
         if(tkn.isExpired(tkn)) {
           model.Token.destroy({
-            where: {
-              token:token
-            }
+            where: where
           }).then((deleted) => {
             return done(null, false, { "message": "Token expired.",
               "path": "authorization",
