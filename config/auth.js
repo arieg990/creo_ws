@@ -5,7 +5,6 @@ const passport = require('passport');
 var response = require('./constant').response;
 const model = require('../models') 
 var crypto = require('crypto');
-var jwt = require('jsonwebtoken');
 var cryptoLocal = require('./randomString');
 
 function google(passport) {
