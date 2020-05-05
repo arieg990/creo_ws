@@ -5,8 +5,7 @@ const passport = require('passport');
 var response = require('./constant').response;
 const model = require('../models') 
 var crypto = require('crypto');
-const env = process.env.NODE_ENV || 'development';
-const config = require('./config.json')[env];
+var cryptoLocal = require('./crypto');
 
 function google(passport) {
   passport.serializeUser((user, done) => {
@@ -43,9 +42,6 @@ function google(passport) {
 }
 
 function local(passport) {
-  var tokenValue = crypto.randomBytes(32).toString('hex');
-  var currentMillis = new Date().getTime();
- const hmac = crypto.createHmac('sha256', config.secret);
 
   passport.deserializeUser(function(id, done) {
     model.users.findById(id, function(err, user) {
@@ -59,6 +55,9 @@ function local(passport) {
     passReqToCallback:true
   },
   (req,username, password, done) => {
+    var tokenValue = crypto.randomBytes(32).toString('hex');
+  var currentMillis = new Date().getTime();
+  
     if (req.body.type == "customer") {
       model.Customer.findOne({
         where: { email: username }
@@ -78,8 +77,10 @@ function local(passport) {
         delete user.dataValues.password
         user.dataValues.userType = "customer"
 
-        tokenValue = tokenValue+hmac.update(user.dataValues.userType+"-"+
-          user.dataValues.id+"-"+currentMillis).digest('hex');
+        var digestString = cryptoLocal.hmacHash(user.dataValues.userType+"-"+
+          user.dataValues.id+"-"+currentMillis)
+
+        tokenValue = tokenValue+digestString;
 
         var tokenSave = {
           token:tokenValue,
@@ -157,8 +158,11 @@ function local(passport) {
         delete user.dataValues.password
         user.dataValues.userType = "vendor"
 
-        tokenValue = tokenValue+hmac.update(user.dataValues.userType+"-"+
-          user.dataValues.id+"-"+currentMillis).digest('hex');
+
+        var digestString = cryptoLocal.hmacHash(user.dataValues.userType+"-"+
+          user.dataValues.id+"-"+currentMillis)
+
+        tokenValue = tokenValue+digestString;
 
         var tokenSave = {
           token:tokenValue,
@@ -235,8 +239,10 @@ function local(passport) {
         delete user.dataValues.password
         user.dataValues.userType = "user"
 
-        tokenValue = tokenValue+hmac.update(user.dataValues.userType+"-"+
-          user.dataValues.id+"-"+currentMillis).digest('hex');
+        var digestString = cryptoLocal.hmacHash(user.dataValues.userType+"-"+
+          user.dataValues.id+"-"+currentMillis)
+
+        tokenValue = tokenValue+digestString;
 
         var tokenSave = {
           token:tokenValue,
