@@ -7,8 +7,6 @@ const model = require('../models')
 var crypto = require('crypto');
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config.json')[env];
-var jwt = require('jsonwebtoken');
-var cryptoLocal = require('./randomString');
 
 function google(passport) {
   passport.serializeUser((user, done) => {
@@ -45,10 +43,9 @@ function google(passport) {
 }
 
 function local(passport) {
-
-  passport.serializeUser(function(user, done) {
-    done(null, user.id);
-  });
+  var tokenValue = crypto.randomBytes(32).toString('hex');
+  var currentMillis = new Date().getTime();
+ const hmac = crypto.createHmac('sha256', config.secret);
 
   passport.deserializeUser(function(id, done) {
     model.users.findById(id, function(err, user) {
@@ -81,8 +78,11 @@ function local(passport) {
         delete user.dataValues.password
         user.dataValues.userType = "customer"
 
+        tokenValue = tokenValue+hmac.update(user.dataValues.userType+"-"+
+          user.dataValues.id+"-"+currentMillis).digest('hex');
+
         var tokenSave = {
-          token: jwt.sign(user.dataValues, config.secret),
+          token:tokenValue,
           customerId: user.dataValues.id
         }
 
@@ -103,12 +103,12 @@ function local(passport) {
                   if (!tkn) {
                     return done(null, false, { "message": "Failed save token.",
                       "path": "token",
-                      "value": jwt.sign(user.dataValues, config.secret) });
+                      "value": tokenValue });
                   }
 
                   var array = {
                     user:user,
-                    token:tokenSave.token
+                    token:tkn.token
                   }
 
                   return done(null, array)
@@ -120,12 +120,12 @@ function local(passport) {
               if (!tkn) {
                 return done(null, false, { "message": "Failed save token.",
                   "path": "token",
-                  "value": tokenSave.token });
+                  "value": tokenValue });
               }
 
               var array = {
                 user:user,
-                token:tokenSave.token
+                token:tkn.token
               }
 
               return done(null, array)
@@ -157,8 +157,11 @@ function local(passport) {
         delete user.dataValues.password
         user.dataValues.userType = "vendor"
 
+        tokenValue = tokenValue+hmac.update(user.dataValues.userType+"-"+
+          user.dataValues.id+"-"+currentMillis).digest('hex');
+
         var tokenSave = {
-          token: jwt.sign(user.dataValues, config.secret),
+          token:tokenValue,
           vendorUserId: user.dataValues.id
         }
 
@@ -178,12 +181,12 @@ function local(passport) {
                   if (!tkn) {
                     return done(null, false, { "message": "Failed save token.",
                       "path": "token",
-                      "value": tokenSave.token });
+                      "value": tokenValue });
                   }
 
                   var array = {
                     user:user,
-                    token:tokenSave.token
+                    token:tkn.token
                   }
 
                   return done(null, array)
@@ -195,12 +198,12 @@ function local(passport) {
               if (!tkn) {
                 return done(null, false, { "message": "Failed save token.",
                   "path": "token",
-                  "value": tokenSave.token });
+                  "value": tokenValue });
               }
 
               var array = {
                 user:user,
-                token:tokenSave.token
+                token:tkn.token
               }
 
               return done(null, array)
@@ -232,8 +235,11 @@ function local(passport) {
         delete user.dataValues.password
         user.dataValues.userType = "user"
 
+        tokenValue = tokenValue+hmac.update(user.dataValues.userType+"-"+
+          user.dataValues.id+"-"+currentMillis).digest('hex');
+
         var tokenSave = {
-          token: jwt.sign(user.dataValues, config.secret),
+          token:tokenValue,
           userId: user.dataValues.id
         }
 
@@ -253,12 +259,12 @@ function local(passport) {
                   if (!tkn) {
                     return done(null, false, { "message": "Failed save token.",
                       "path": "token",
-                      "value": tokenSave.token });
+                      "value": tokenValue });
                   }
 
                   var array = {
                     user:user,
-                    token:tokenSave.token
+                    token:tkn.token
                   }
 
                   return done(null, array)
@@ -270,12 +276,12 @@ function local(passport) {
               if (!tkn) {
                 return done(null, false, { "message": "Failed save token.",
                   "path": "token",
-                  "value": tokenSave.token });
+                  "value": tokenValue });
               }
 
               var array = {
                 user:user,
-                token:tokenSave.token
+                token:tkn.token
               }
 
               return done(null, array)
@@ -296,38 +302,19 @@ function bearer(passport) {
   passport.use(new BearerStrategy(
     function(token, done) {
 
-      var verify = jwt.verify(token,config.secret)
-      var where =  {}
-
-      if (!verify) {
-         return done(null, false, { "message": "Token not found.",
-              "path": "authorization",
-              "value": token });
-      }
-
-      if (verify.userType == "customer") {
-        where = {
-          customerId: verify.id
-        }
-      } else if (verify.userType == "vendor") {
-        where = {
-          vendorUserId: verify.id
-        }
-      } if (verify.userType == "user") {
-        where = {
-          userId: verify.id
-        }
-      }
-
       model.Token.findOne({
-        where: where
+        where: {
+          token : token
+        }
       }).then((tkn) => {
         if(!tkn)
           return done(true, false,{})
 
         if(tkn.isExpired(tkn)) {
           model.Token.destroy({
-            where: where
+            where: {
+              token:token
+            }
           }).then((deleted) => {
             return done(null, false, { "message": "Token expired.",
               "path": "authorization",
@@ -370,7 +357,6 @@ function bearer(passport) {
             "value": token })
 
          user.dataValues.userType = "user"
-         console.log("masuk")
          return done(null, user)
 
        }).catch((err) => {
