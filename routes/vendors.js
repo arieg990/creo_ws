@@ -87,7 +87,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
     page = offset-1
   }
 
-  if (limit > 10) {
+  if (limit > 1) {
     perPage = limit
   }
 
