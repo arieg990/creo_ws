@@ -3,7 +3,7 @@
 module.exports = (sequelize, DataTypes) => {
   const banners = sequelize.define('Banner', {
     title: DataTypes.STRING,
-    Description: DataTypes.TEXT,
+    description: DataTypes.TEXT,
     imageUrl: DataTypes.STRING,
     publishDate: DataTypes.DATE,
     publishEndDate: DataTypes.DATE,
