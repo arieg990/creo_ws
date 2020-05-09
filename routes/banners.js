@@ -11,7 +11,7 @@ const {uploadFile} = require('../config/uploadFile');
 var urlGoogle = constant.url.googleStorage
 
 /* GET users listing. */
-router.get('/list', auth.isUser, async function(req, res, next) {
+router.get('/list', async function(req, res, next) {
 
   var page = 0;
   var perPage = 10;
@@ -30,7 +30,6 @@ router.get('/list', auth.isUser, async function(req, res, next) {
     var list = await model.Banner.findAll({
       offset:page*perPage,
       limit:perPage,
-      attributes: { exclude: ['password'] }
     });
 
     var paging = {
@@ -40,6 +39,7 @@ router.get('/list', auth.isUser, async function(req, res, next) {
 
     res.status(200).json(response(200,"banners",list,paging));
   } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"banners",err));
   }
 
@@ -155,7 +155,7 @@ router.delete('/', auth.isUser, async function(req, res, next) {
   
 });
 
-router.get('/:id', auth.isUser, async function(req, res, next) {
+router.get('/:id', async function(req, res, next) {
 
   try{
 
