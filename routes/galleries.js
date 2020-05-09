@@ -28,21 +28,19 @@ router.get('/list', async function(req, res, next) {
   }
 
 
-  if(req.query.categoryId != null) {
-    where.categoryId = req.query.categoryId
+  if(req.query.type != null) {
+    if (type == "vendor") {
+      where.vendorId = req.query.id
+    } else if (type == "package") {
+      where.packageId = req.query.id
+    }
   }
 
   try{
     var list = await model.Gallery.findAll({
       offset:page*perPage,
       limit:perPage,
-      include: [
-      {
-        model:model.Vendor,
-        required: req.query.categoryId != null ? true :false,
-        where: where
-      }
-      ]
+      where: where
     });
 
     var paging = {
@@ -63,29 +61,9 @@ router.post('/', async function(req, res, next) {
   var url = req.protocol + '://' + req.get('host')
   var data = {
     vendorId: body.vendorId,
-    url:url,
+    packageId: body.packageId,
     isMain: body.isMain
   }
-
-  if (body.image != null) {
-
-      var decode = cryptoLocal.decodeBase64Image(body.image)
-      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-    //   console.log(err)
-    // });
-
-    // data.imageUrl = path + img
-
-    var upload = await uploadFile(path+img,decode)
-    if (upload) {
-     data.url = urlGoogle
-     data.imageUrl = path + img
-   } else {
-
-    res.status(200).json(response(400,"category",error("image")));
-  }
-}
 
   try{
     var list = await model.Gallery.create(data);
@@ -103,29 +81,9 @@ router.put('/', async function(req, res, next) {
   var path = constant.path.categories
   var data = {
     vendorId: body.vendorId,
-    url:url,
+    packageId: body.packageId,
     isMain: body.isMain
   }
-
-  if (body.image != null) {
-
-      var decode = cryptoLocal.decodeBase64Image(body.image)
-      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
-    // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
-    //   console.log(err)
-    // });
-
-    // data.imageUrl = path + img
-
-    var upload = await uploadFile(path+img,decode)
-    if (upload) {
-     data.url = urlGoogle
-     data.imageUrl = path + img
-   } else {
-
-    res.status(200).json(response(400,"category",error("image")));
-  }
-}
 
   try{
 

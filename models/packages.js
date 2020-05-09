@@ -3,6 +3,7 @@
 module.exports = (sequelize, DataTypes) => {
   const packages = sequelize.define('Package', {
     name: DataTypes.STRING,
+    detail: DataTypes.TEXT,
     price: DataTypes.INTEGER,
     capacity: DataTypes.INTEGER,
     imageUrl1: DataTypes.STRING,
@@ -24,6 +25,11 @@ module.exports = (sequelize, DataTypes) => {
     packages.hasMany(models.Service,{
       foreignKey: 'packageId',
       as: "services"
+    });
+
+    packages.hasMany(models.Gallery,{
+      foreignKey: 'packageId',
+      as: "galleries"
     });
 
     packages.belongsTo(models.Province,{

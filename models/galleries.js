@@ -21,6 +21,13 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       as: "vendor"
     });
+
+    galleries.belongsTo(models.Package,{
+      foreignKey: 'packageId',
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+      as: "package"
+    });
   };
   return galleries;
 };
