@@ -35,9 +35,9 @@ function response(code,type,list, page = null, token = null) {
 	var response;
 
   if (Array.isArray(list)) {
-    if (list.length < 1) {
-      code = 404
-    } 
+    // if (list.length < 1) {
+    //   code = 404
+    // } 
     // else {
     //   if (Integer.isInteger(list[0])) {
     //     if (list[0] == 1) {
