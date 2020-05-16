@@ -3,6 +3,7 @@ var router = express.Router();
 var model = require('../models');
 var response = require('../config/constant').response;
 var invoiceGenerator = require('../config/constant').invoiceGenerator;
+const Sequelize = require("sequelize")
 const crypto = require('crypto');
 const cryptoLocal = require('../config/crypto');
 var constant = require('../config/constant.json');
@@ -31,11 +32,12 @@ router.get('/list', async function(req, res, next) {
     var list = await model.Booking.findAll({
       offset:page*perPage,
       limit:perPage,
+      subQuery:false,
       attributes:{
             include: [
-            [Sequelize.literal('`packages`.`name`'),'packageName'],
-            [Sequelize.literal('`packages`.`url1`'),'packageUrl'],
-            [Sequelize.literal('`packages`.`imageUrl1`'),'packageImageUrl']
+            [Sequelize.literal('`package`.`name`'),'packageName'],
+            [Sequelize.literal('`package`.`url1`'),'packageUrl'],
+            [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl']
 
             ]
           },
@@ -208,12 +210,13 @@ router.get('/:id', async function(req, res, next) {
     var list = await model.Booking.findByPk(req.params.id,{
       attributes:{
             include: [
-            [Sequelize.literal('`packages`.`name`'),'packageName'],
-            [Sequelize.literal('`packages`.`url1`'),'packageUrl'],
-            [Sequelize.literal('`packages`.`imageUrl1`'),'packageImageUrl']
+            [Sequelize.literal('`package`.`name`'),'packageName'],
+            [Sequelize.literal('`package`.`url1`'),'packageUrl'],
+            [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl']
 
             ]
           },
+      subQuery:false,
       include: [
         {
           model:model.Package,

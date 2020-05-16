@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     bookings.hasMany(models.Payment,{
       foreignKey: 'bookingId',
       onUpdate: 'CASCADE',
-      as: "payment"
+      as: "payments"
     });
 
     bookings.belongsTo(models.Code,{
