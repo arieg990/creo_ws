@@ -164,7 +164,7 @@ router.post('/', async function(req, res, next) {
      data.avatarImageUrl = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"vendor",error("image")));
   }
 }
 
@@ -184,7 +184,7 @@ router.post('/', async function(req, res, next) {
      data.backgroundImageUrl = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"vendor",error("image")));
   }
 }
 
@@ -224,7 +224,7 @@ router.put('/', async function(req, res, next) {
      data.avatarImageUrl = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"vendor",error("image")));
   }
 }
 
@@ -244,7 +244,7 @@ router.put('/', async function(req, res, next) {
      data.backgroundImageUrl = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"vendor",error("image")));
   }
 }
 
@@ -255,6 +255,12 @@ router.put('/', async function(req, res, next) {
         id:body.id
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.Vendor.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"vendor",update));
+    }
 
     res.status(200).json(response(200,"vendor",update));
 

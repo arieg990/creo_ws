@@ -196,7 +196,7 @@ try{
 
 });
 
-router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
+router.put('/', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var user = req.user.dataValues
@@ -285,7 +285,7 @@ if (body.image4 != null) {
      data.imageUrl4 = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"package",error("image")));
   }
 }
 
@@ -293,9 +293,15 @@ if (body.image4 != null) {
 
     var update = await model.Package.update(data, {
       where: {
-        id:req.params.id
+        id:body.id
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.Package.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"package",update));
+    }
 
     res.status(200).json(response(200,"package",update));
 

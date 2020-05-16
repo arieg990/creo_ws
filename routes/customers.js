@@ -67,9 +67,10 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/:id', auth.isLoggedIn, async function(req, res, next) {
+router.put('/', auth.isLoggedIn, async function(req, res, next) {
   var body = req.body;
-  var id = req.params.id
+  var id = req.body.id
+  var user = req.user.dataValues
   var data = {
     name:body.name,
     phone:body.phone,
@@ -88,6 +89,14 @@ router.put('/:id', auth.isLoggedIn, async function(req, res, next) {
       }
     });
 
+    if (update[0] == 1) {
+      update = await model.Customer.findByPk(id,{
+      attributes: { exclude: ['password'] },
+      });
+    } else {
+      return res.status(200).json(response(400,"customer",update));
+    }
+
     res.status(200).json(response(200,"customer",update));
 
   } catch(err) {
@@ -96,11 +105,11 @@ router.put('/:id', auth.isLoggedIn, async function(req, res, next) {
 
 });
 
-router.put('/profile/:id', auth.isLoggedIn, async function(req, res, next) {
+router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
   var body = req.body;
-  var url = req.protocol + '://' + req.get('host')
+  var user = req.user.dataValues
   var path = constant.path.customers
-  var id = req.params.id
+  var id = req.body.id
   var data = {}
 
   var decode = cryptoLocal.decodeBase64Image(body.image)
@@ -117,7 +126,7 @@ router.put('/profile/:id', auth.isLoggedIn, async function(req, res, next) {
      data.imageUrl = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"customer",error("image")));
   }
 
   if (user.userType == "customer") {
@@ -131,6 +140,14 @@ router.put('/profile/:id', auth.isLoggedIn, async function(req, res, next) {
         id:id
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.Customer.findByPk(id,{
+      attributes: { exclude: ['password'] },
+      });
+    } else {
+      return res.status(200).json(response(400,"customer",update));
+    }
 
     res.status(200).json(response(200,"customer",update));
 

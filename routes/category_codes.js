@@ -59,7 +59,7 @@ router.post('/', auth.isUser, async function(req, res, next) {
   
 });
 
-router.put('/:categoryCode', auth.isUser, async function(req, res, next) {
+router.put('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     name: body.name
@@ -69,9 +69,15 @@ router.put('/:categoryCode', auth.isUser, async function(req, res, next) {
 
     var update = await model.CategoryCode.update(data, {
       where: {
-        category:req.params.categoryCode
+        category:body.categoryCode
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.CategoryCode.findByPk(body.categoryCode);
+    } else {
+      return res.status(200).json(response(400,"categoryCode",update));
+    }
 
     res.status(200).json(response(200,"categoryCode",update));
 

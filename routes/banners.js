@@ -128,6 +128,12 @@ router.put('/', auth.isUser, async function(req, res, next) {
       }
     });
 
+    if (update[0] == 1) {
+      update = await model.Banner.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"banner",update));
+    }
+
     res.status(200).json(response(200,"banner",update));
 
   } catch(err) {

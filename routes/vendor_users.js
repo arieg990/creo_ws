@@ -88,6 +88,12 @@ router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
       }
     });
 
+    if (update[0] == 1) {
+      update = await model.VendorUser.findByPk(req.user.dataValues.id);
+    } else {
+      return res.status(200).json(response(400,"vendorUser",update));
+    }
+
     res.status(200).json(response(200,"vendorUser",update));
 
   } catch(err) {

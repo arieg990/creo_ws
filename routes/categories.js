@@ -94,7 +94,7 @@ res.status(200).json(response(200,"category",list));
 
 });
 
-router.put('/:id', auth.isUser, async function(req, res, next) {
+router.put('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var data = {
@@ -126,9 +126,15 @@ router.put('/:id', auth.isUser, async function(req, res, next) {
 
     var update = await model.Category.update(data, {
       where: {
-        id:req.params.id
+        id:body.id
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.Category.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"category",update));
+    }
 
     res.status(200).json(response(200,"category",update));
 

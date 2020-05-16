@@ -63,7 +63,7 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/:id', async function(req, res, next) {
+router.put('/', async function(req, res, next) {
   var body = req.body;
   var user = user.datalavues
   var data = {
@@ -89,9 +89,15 @@ router.put('/:id', async function(req, res, next) {
 
     var update = await model.Address.update(data, {
       where: {
-        id:req.params.id
+        id:body.id
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.Address.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"address",update));
+    }
 
     res.status(200).json(response(200,"address",update));
 

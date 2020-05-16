@@ -82,6 +82,12 @@ router.put('/', auth.isUser, async function(req, res, next) {
       }
     });
 
+    if (update[0] == 1) {
+      update = await model.User.findByPk(req.user.dataValues.id);
+    } else {
+      return res.status(200).json(response(400,"user",update));
+    }
+
     res.status(200).json(response(200,"user",update));
 
   } catch(err) {
@@ -120,6 +126,12 @@ router.put('/profile', auth.isUser, async function(req, res, next) {
         id:req.user.dataValues.id
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.User.findByPk(req.user.dataValues.id);
+    } else {
+      return res.status(200).json(response(400,"user",update));
+    }
 
     res.status(200).json(response(200,"user",update));
 

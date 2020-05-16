@@ -93,6 +93,12 @@ router.put('/', async function(req, res, next) {
       }
     });
 
+    if (update[0] == 1) {
+      update = await model.Gallery.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"gallery",update));
+    }
+
     res.status(200).json(response(200,"gallery",update));
 
   } catch(err) {

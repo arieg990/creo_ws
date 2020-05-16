@@ -68,7 +68,7 @@ router.post('/', auth.isUser, async function(req, res, next) {
   
 });
 
-router.put('/:id', auth.isUser, async function(req, res, next) {
+router.put('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     postalCode: body.postalCode,
@@ -79,9 +79,15 @@ router.put('/:id', auth.isUser, async function(req, res, next) {
 
     var update = await model.PostalCode.update(data, {
       where: {
-        id:req.params.id
+        id:body.id
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.PostalCode.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"postalCode",update));
+    }
 
     res.status(200).json(response(200,"postalCode",update));
 

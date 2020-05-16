@@ -126,6 +126,12 @@ router.put('/', async function(req, res, next) {
       }
     });
 
+    if (update[0] == 1) {
+      update = await model.Story.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"story",err));
+    }
+
     res.status(200).json(response(200,"story",update));
 
   } catch(err) {
@@ -157,9 +163,7 @@ router.get('/:id', async function(req, res, next) {
 
   try{
 
-    var list = await model.Story.findByPk(req.params.id,{
-      attributes: { exclude: ['password'] }
-    });
+    var list = await model.Story.findByPk(req.params.id);
 
     res.status(200).json(response(200,"story",list));
 

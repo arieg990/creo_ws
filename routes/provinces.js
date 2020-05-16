@@ -54,7 +54,7 @@ router.post('/', auth.isUser, async function(req, res, next) {
   
 });
 
-router.put('/:id', auth.isUser, async function(req, res, next) {
+router.put('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
     name: body.name,
@@ -62,11 +62,17 @@ router.put('/:id', auth.isUser, async function(req, res, next) {
 
   try{
 
-    var update = await model.Category.update(data, {
+    var update = await model.Province.update(data, {
       where: {
-        id:req.params.id
+        id:body.id
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.Province.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"province",update));
+    }
 
     res.status(200).json(response(200,"province",update));
 

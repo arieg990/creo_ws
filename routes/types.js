@@ -61,10 +61,9 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.post('/:type', async function(req, res, next) {
+router.post('/', async function(req, res, next) {
   var body = req.body;
   var data = {
-    type: body.type,
     name: body.name,
     category: body.category,
     color: body.color,
@@ -74,9 +73,15 @@ router.post('/:type', async function(req, res, next) {
 
     var update = await model.Type.update(data, {
       where: {
-        type:req.params.type
+        type:body.type
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.Type.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"type",update));
+    }
 
     res.status(200).json(response(200,"type",update));
 

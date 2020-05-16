@@ -56,8 +56,8 @@ function local(passport) {
   },
   (req,username, password, done) => {
     var tokenValue = crypto.randomBytes(32).toString('hex');
-  var currentMillis = new Date().getTime();
-  
+    var currentMillis = new Date().getTime();
+    
     if (req.body.type == "customer") {
       model.Customer.findOne({
         where: { email: username }
@@ -330,7 +330,9 @@ function bearer(passport) {
           })
         } else {
           if (tkn.customerId != null) {
-            model.Customer.findByPk(tkn.customerId).then((user) => {
+            model.Customer.findByPk(tkn.customerId,{
+              attributes: { exclude: ['password'] },
+            }).then((user) => {
               if (!user) 
                return done(null, false, { "message": "User not found",
                 "path": "authorization",
@@ -343,7 +345,9 @@ function bearer(passport) {
             console.log("3 "+err)
           })
          } else if(tkn.vendorUserId != null) {
-          model.VendorUser.findByPk(tkn.vendorUserId).then((user) => {
+          model.VendorUser.findByPk(tkn.vendorUserId,{
+            attributes: { exclude: ['password'] },
+          }).then((user) => {
             if (!user) 
              return done(null, false, { "message": "User not found",
               "path": "authorization",
@@ -356,7 +360,9 @@ function bearer(passport) {
           console.log("4 "+err)
         })
        } else {
-        model.User.findByPk(tkn.userId).then((user) => {
+        model.User.findByPk(tkn.userId,{
+          attributes: { exclude: ['password'] },
+        }).then((user) => {
           if (!user) 
            return done(null, false, { "message": "User not found",
             "path": "authorization",

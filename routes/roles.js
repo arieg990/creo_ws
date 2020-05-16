@@ -59,10 +59,9 @@ router.post('/', auth.isUser, async function(req, res, next) {
   
 });
 
-router.post('/:role', auth.isUser, async function(req, res, next) {
+router.put('/', auth.isUser, async function(req, res, next) {
   var body = req.body;
   var data = {
-    role: body.role,
     name: body.name
   }
 
@@ -70,9 +69,15 @@ router.post('/:role', auth.isUser, async function(req, res, next) {
 
     var update = await model.Role.update(data, {
       where: {
-        type:req.params.type
+        role:body.role
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.Role.findByPk(body.role);
+    } else {
+      return res.status(200).json(response(400,"role",update));
+    }
 
     res.status(200).json(response(200,"role",update));
 

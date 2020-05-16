@@ -60,7 +60,7 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/:id', async function(req, res, next) {
+router.put('/', async function(req, res, next) {
   var body = req.body;
   var data = {
     name: body.name,
@@ -72,9 +72,15 @@ router.put('/:id', async function(req, res, next) {
 
     var update = await model.SocialMedia.update(data, {
       where: {
-        id:req.params.id
+        id:body.id
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.SocialMedia.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"socialMedia",update));
+    }
 
     res.status(200).json(response(200,"socialMedia",update));
 

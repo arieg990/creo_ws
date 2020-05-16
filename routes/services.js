@@ -61,7 +61,7 @@ router.post('/', auth.isVendor, async function(req, res, next) {
   
 });
 
-router.put('/:id', auth.isVendor, async function(req, res, next) {
+router.put('/', auth.isVendor, async function(req, res, next) {
   var body = req.body;
   var data = {
     title: body.title,
@@ -73,9 +73,15 @@ router.put('/:id', auth.isVendor, async function(req, res, next) {
 
     var update = await model.Service.update(data, {
       where: {
-        id:req.params.id
+        id:body.id
       }
     });
+
+    if (update[0] == 1) {
+      update = await model.Service.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"service",update));
+    }
 
     res.status(200).json(response(200,"service",update));
 
