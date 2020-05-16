@@ -150,7 +150,7 @@ router.post('/', async function(req, res, next) {
 
   if (body.avatarImage != null) {
 
-      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
       var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
@@ -170,7 +170,7 @@ router.post('/', async function(req, res, next) {
 
   if (body.backgroundImage != null) {
 
-      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var decode = cryptoLocal.decodeBase64Image(body.backgroundImage)
       var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
@@ -210,7 +210,7 @@ router.put('/', async function(req, res, next) {
 
   if (body.avatarImage != null) {
 
-      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
       var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
@@ -230,7 +230,7 @@ router.put('/', async function(req, res, next) {
 
   if (body.backgroundImage != null) {
 
-      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var decode = cryptoLocal.decodeBase64Image(body.backgroundImage)
       var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)

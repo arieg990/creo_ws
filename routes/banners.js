@@ -73,7 +73,7 @@ router.post('/', auth.isUser, async function(req, res, next) {
      data.url = urlGoogle
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"banner",error("image")));
   }
 }
 
@@ -116,7 +116,7 @@ router.put('/', auth.isUser, async function(req, res, next) {
      data.imageUrl = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"banner",error("image")));
   }
 }
 
