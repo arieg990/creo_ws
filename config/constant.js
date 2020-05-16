@@ -33,7 +33,22 @@ function error(err) {
 
 function response(code,type,list, page = null, token = null) {
 	var response;
-	if (code == 200) {
+
+  if (Array.isArray(list)) {
+    if (list.length < 1) {
+      code = 404
+    } 
+    // else {
+    //   if (Integer.isInteger(list[0])) {
+    //     if (list[0] == 1) {
+
+    //     }
+    //   }
+    // }
+  }
+
+  if (code == 200) {
+
     response = {
       "data":{
         [type]: list
@@ -83,6 +98,11 @@ function response(code,type,list, page = null, token = null) {
     response = {
       "error":list,
       "status": status(code,"unauthorized")
+    }
+  } else if (code == 404) {
+    response = {
+      "error":list,
+      "status": status(code,"data empty")
     }
   }
 
