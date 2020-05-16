@@ -6,14 +6,27 @@ const crypto = require('crypto');
 
 module.exports = (sequelize, DataTypes) => {
   const vendors = sequelize.define('Vendor', {
-    name: DataTypes.STRING,
-    description: DataTypes.TEXT,
-    avatarImageUrl: DataTypes.STRING,
-    avatarUrl: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    avatarImageUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    avatarUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     backgroundImageUrl: DataTypes.STRING,
     backgroundUrl: DataTypes.STRING,
     isOfficial: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
       defaultValue: false
     }
   },{

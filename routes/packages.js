@@ -108,7 +108,7 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
 
   if (body.image1 != null) {
 
-    var decode = cryptoLocal.decodeBase64Image(body.image)
+    var decode = cryptoLocal.decodeBase64Image(body.image1)
     var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
@@ -128,7 +128,7 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
 
 if (body.image2 != null) {
 
-  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var decode = cryptoLocal.decodeBase64Image(body.image2)
   var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
@@ -148,7 +148,7 @@ if (body.image2 != null) {
 
 if (body.image3 != null) {
 
-  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var decode = cryptoLocal.decodeBase64Image(body.image3)
   var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
@@ -168,7 +168,7 @@ if (body.image3 != null) {
 
 if (body.image4 != null) {
 
-  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var decode = cryptoLocal.decodeBase64Image(body.image4)
   var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
@@ -211,7 +211,7 @@ router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
 
   if (body.image1 != null) {
 
-    var decode = cryptoLocal.decodeBase64Image(body.image)
+    var decode = cryptoLocal.decodeBase64Image(body.image1)
     var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
@@ -231,7 +231,7 @@ router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
 
 if (body.image2 != null) {
 
-  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var decode = cryptoLocal.decodeBase64Image(body.image2)
   var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
@@ -251,7 +251,7 @@ if (body.image2 != null) {
 
 if (body.image3 != null) {
 
-  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var decode = cryptoLocal.decodeBase64Image(body.image3)
   var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
@@ -271,7 +271,7 @@ if (body.image3 != null) {
 
 if (body.image4 != null) {
 
-  var decode = cryptoLocal.decodeBase64Image(body.image)
+  var decode = cryptoLocal.decodeBase64Image(body.image4)
   var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)

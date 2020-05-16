@@ -14,8 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    name:DataTypes.STRING,
-    picture: DataTypes.STRING
+    name:DataTypes.STRING
   }, {
     tableName: 'mst_codes',
   });

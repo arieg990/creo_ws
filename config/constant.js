@@ -1,5 +1,6 @@
 'use strict';
 const Sequelize = require('sequelize');
+const moment = require('moment');
 
 function status(code,message) {
   var status = {
@@ -88,4 +89,10 @@ function response(code,type,list, page = null, token = null) {
   return response;
 }
 
-module.exports = {response,error};
+function invoiceGenerator(number) {
+  var now = moment().format("YYYYMMDD")
+
+  return "CROINV/"+now+"/"+number
+}
+
+module.exports = {response,error, invoiceGenerator};
