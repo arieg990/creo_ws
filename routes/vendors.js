@@ -337,10 +337,42 @@ router.get('/:id', async function(req, res, next) {
     var list = await model.Vendor.findByPk(req.params.id,{
       include:[
       {
+
         model:model.Address,
         as:"addresses",
+        attributes:{
+            include: [
+            [Sequelize.literal('`city`.`name`'),'cityName'],
+            [Sequelize.literal('`province`.`name`'),'provinceName'],
+            [Sequelize.literal('`postalCode`.`postalCode`'),'postalCodeArea'],
+            [Sequelize.literal('`subDistrict`.`name`'),'subDistrictName']
+            ],
+            exclude: ["vendorId","customerId"]
+          },
         required: false,
-        limit:5
+        limit:5,
+        include: [
+          {
+            model: model.City,
+            as:"city",
+            attributes: []
+          },
+          {
+            model: model.Province,
+            as:"province",
+            attributes: []
+          },
+          {
+            model:model.PostalCode,
+            as:"postalCode",
+            attributes: []
+          },
+          {
+            model:model.SubDistrict,
+            as:"subDistrict",
+            attributes: []
+          }
+          ],
       },
       {
         model:model.SocialMedia,
@@ -370,7 +402,8 @@ router.get('/:id', async function(req, res, next) {
         required: false,
         limit:5
       }
-      ]
+      ],
+      subQuery:false,
     });
 
     var review = await model.Review.findOne({

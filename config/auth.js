@@ -413,9 +413,7 @@ function isUser(req, res, next) {
 }
 
 function isUserOrVendor(req, res, next) {
-  if (req.user.dataValues.userType == "user") {
-    return next();
-  } if (req.user.dataValues.userType == "vendor") {
+  if (req.user.dataValues.userType == "user" || req.user.dataValues.userType == "vendor") {
     return next();
   } else {
     res.status(200).json(response(400,"restricted",null));

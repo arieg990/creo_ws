@@ -27,10 +27,10 @@ module.exports = (sequelize, DataTypes) => {
       as: "services"
     });
 
-    packages.hasMany(models.Gallery,{
-      foreignKey: 'packageId',
-      as: "galleries"
-    });
+    // packages.hasMany(models.Gallery,{
+    //   foreignKey: 'packageId',
+    //   as: "galleries"
+    // });
 
     packages.belongsTo(models.Province,{
       foreignKey: 'provinceId',
