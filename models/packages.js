@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DOUBLE(13, 4),
       allowNull: false
     },
     capacity:  {

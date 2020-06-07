@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     invoiceNumber: DataTypes.STRING,
     note: DataTypes.TEXT,
     total: {
-      type: DataTypes.DOUBLE(12,6),
+      type: DataTypes.DOUBLE(13, 4),
       allowNull: false,
     },
     startDate: {

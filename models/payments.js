@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     total: {
-      type: DataTypes.DOUBLE(12,6),
+      type: DataTypes.DOUBLE(13, 4),
       allowNull: false,
     },
     expiredDate: {

@@ -2,7 +2,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.changeColumn('bookings','total', {
-      type: Sequelize.DOUBLE(12,6),
+      type: Sequelize.DOUBLE(13, 4),
       allowNull: false,
     });
   }
