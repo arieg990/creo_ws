@@ -34,23 +34,23 @@ router.get('/list', async function(req, res, next) {
       limit:perPage,
       subQuery:false,
       attributes:{
-            include: [
-            [Sequelize.literal('`package`.`name`'),'packageName'],
-            [Sequelize.literal('`package`.`url1`'),'packageUrl'],
-            [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl']
+        include: [
+        [Sequelize.literal('`package`.`name`'),'packageName'],
+        [Sequelize.literal('`package`.`url1`'),'packageUrl'],
+        [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl']
 
-            ]
-          },
+        ]
+      },
       include: [
-        {
-          model:model.Package,
-          as:'package',
-          attributes: []
-        },
-        {
-          model:model.Payment,
-          as:'payments'
-        }
+      {
+        model:model.Package,
+        as:'package',
+        attributes: []
+      },
+      {
+        model:model.Payment,
+        as:'payments'
+      }
       ]
     });
 
@@ -74,14 +74,14 @@ router.post('/', async function(req, res, next) {
   var repayment = 0
   var paymentBulk = []
 
-	var data = {
-		qty: body.qty,
-		note:body.note,
-		packageId:body.packageId,
+  var data = {
+    qty: body.qty,
+    note:body.note,
+    packageId:body.packageId,
     customerId:body.customerId,
-		startDate:body.startDate,
+    startDate:body.startDate,
     endDate:body.endDate
-	}
+  }
 
   try{
 
@@ -109,11 +109,11 @@ router.post('/', async function(req, res, next) {
     var booking = list.dataValues
 
     var locationData = {
-    detail:body.locationDetail,
-    bookingId:booking.id,
-    lat:body.lat,
-    lng:body.lng
-  }
+      detail:body.locationDetail,
+      bookingId:booking.id,
+      lat:body.lat,
+      lng:body.lng
+    }
 
     var location = await model.Location.create(locationData);
     booking.location = location
@@ -209,24 +209,32 @@ router.get('/:id', async function(req, res, next) {
 
     var list = await model.Booking.findByPk(req.params.id,{
       attributes:{
-            include: [
-            [Sequelize.literal('`package`.`name`'),'packageName'],
-            [Sequelize.literal('`package`.`url1`'),'packageUrl'],
-            [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl']
+        include: [
+        [Sequelize.literal('`package->vendor`.`name`'),'vendorName'],
+        [Sequelize.literal('`package`.`name`'),'packageName'],
+        [Sequelize.literal('`package`.`url1`'),'packageUrl'],
+        [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl']
 
-            ]
-          },
+        ]
+      },
       subQuery:false,
       include: [
+      {
+        model:model.Package,
+        as:'package',
+        attributes: [],
+        include: [
         {
-          model:model.Package,
-          as:'package',
+          model:model.Vendor,
+          as:'vendor',
           attributes: []
-        },
-        {
-          model:model.Payment,
-          as:'payments'
         }
+        ]
+      },
+      {
+        model:model.Payment,
+        as:'payments'
+      }
       ]
     });
 
