@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 
     contacts.belongsTo(models.Code,{
       foreignKey: 'code',
-      as: "c"
+      as: "contactType"
     });
   };
   return contacts;

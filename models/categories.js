@@ -2,11 +2,21 @@
 module.exports = (sequelize, DataTypes) => {
   const categories = sequelize.define('Category', {
     name: {
-      type:DataTypes.STRING,
+      type: DataTypes.STRING,
+      allowNull: false
     },
-    imageUrl: DataTypes.STRING,
-    url: DataTypes.STRING,
-    color:DataTypes.STRING
+    imageUrl: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    color:{
+      type: DataTypes.STRING,
+      allowNull: false
+    }
   }, {});
   categories.associate = function(models) {
 

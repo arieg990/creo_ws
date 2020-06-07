@@ -6,7 +6,10 @@ const crypto = require('crypto');
 
 module.exports = (sequelize, DataTypes) => {
   const users = sequelize.define('User', {
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     email: {
       type:DataTypes.STRING,
       validate: {
@@ -22,7 +25,10 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'Email address already in use!'
       },
     },
-    password: DataTypes.STRING,
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     phone: {
       type:DataTypes.STRING,
       validate: {
@@ -35,7 +41,8 @@ module.exports = (sequelize, DataTypes) => {
         msg: 'Phone Number already in use!'
       },
     },
-    picture: DataTypes.STRING,
+    imageUrl: DataTypes.STRING,
+    url:DataTypes.STRING,
     gender: {
       type: DataTypes.ENUM,
       values: ['male','female']

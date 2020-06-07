@@ -2,12 +2,30 @@
 
 module.exports = (sequelize, DataTypes) => {
   const packages = sequelize.define('Package', {
-    name: DataTypes.STRING,
-    detail: DataTypes.TEXT,
-    price: DataTypes.INTEGER,
-    capacity: DataTypes.INTEGER,
-    imageUrl1: DataTypes.STRING,
-    url1: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    detail: total: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    price: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    capacity:  {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    imageUrl1:  {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    url1:  {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     imageUrl2: DataTypes.STRING,
     url2: DataTypes.STRING,
     imageUrl3: DataTypes.STRING,

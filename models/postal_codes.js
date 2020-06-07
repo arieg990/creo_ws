@@ -2,7 +2,10 @@
 
 module.exports = (sequelize, DataTypes) => {
   const postal_codes = sequelize.define('PostalCode', {
-    postalCode: DataTypes.INTEGER,
+    postalCode: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
   },{
     tableName: 'postal_codes',
     freezeTableName: true,
@@ -10,7 +13,10 @@ module.exports = (sequelize, DataTypes) => {
 
   postal_codes.associate = function(models) {
     postal_codes.belongsTo(models.SubDistrict,{
-      foreignKey: 'subDistrictId',
+      foreignKey: {
+        name: 'subDistrictId',
+        allowNull: false
+      },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       as: "subDistrict"

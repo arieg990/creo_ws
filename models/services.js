@@ -6,8 +6,14 @@ const crypto = require('crypto');
 
 module.exports = (sequelize, DataTypes) => {
   const services = sequelize.define('Service', {
-    title: DataTypes.STRING,
-    detail: DataTypes.TEXT,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    detail: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
   },{
     tableName: 'services',
     freezeTableName: true,
@@ -16,7 +22,10 @@ module.exports = (sequelize, DataTypes) => {
   services.associate = function(models) {
 
     services.belongsTo(models.Package,{
-      foreignKey: 'packageId',
+      foreignKey: {
+        name: 'packageId',
+        allowNull: false
+      },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       as: "package"

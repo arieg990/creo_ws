@@ -2,14 +2,38 @@
 
 module.exports = (sequelize, DataTypes) => {
   const banners = sequelize.define('Banner', {
-    title: DataTypes.STRING,
-    description: DataTypes.TEXT,
-    imageUrl: DataTypes.STRING,
-    publishDate: DataTypes.DATE,
-    publishEndDate: DataTypes.DATE,
-    startDate: DataTypes.DATE,
-    endDate: DataTypes.DATE,
-    url: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    imageUrl:  {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    url:  {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    publishDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    publishEndDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    endDate: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
   },{
     tableName: 'banners',
     freezeTableName: true,
@@ -18,7 +42,10 @@ module.exports = (sequelize, DataTypes) => {
   banners.associate = function(models) {
 
     banners.belongsTo(models.User,{
-      foreignKey: 'userId',
+      foreignKey: {
+        name: 'userId',
+        allowNull: false
+      },
       onUpdate: 'CASCADE',
       as: "user"
     });

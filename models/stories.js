@@ -2,12 +2,30 @@
 
 module.exports = (sequelize, DataTypes) => {
   const stories = sequelize.define('Story', {
-    title: DataTypes.STRING,
-    description: DataTypes.TEXT,
-    imageUrl: DataTypes.STRING,
-    publishDate: DataTypes.DATE,
-    publishEndDate : DataTypes.DATE,
-    url: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    imageUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    publishDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    publishEndDate : {
+      type: DataTypes.DATE,
+      allowNull: false,
+    }
   },{
     tableName: 'stories',
     freezeTableName: true,

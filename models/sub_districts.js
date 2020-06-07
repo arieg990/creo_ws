@@ -6,7 +6,10 @@ const crypto = require('crypto');
 
 module.exports = (sequelize, DataTypes) => {
   const sub_districts = sequelize.define('SubDistrict', {
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   },{
     tableName: 'sub_districts',
     freezeTableName: true,
@@ -14,7 +17,10 @@ module.exports = (sequelize, DataTypes) => {
 
   sub_districts.associate = function(models) {
     sub_districts.belongsTo(models.City,{
-      foreignKey: 'cityId',
+      foreignKey: {
+        name:'cityId',
+        allowNull: false
+      },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
       as: "city"

@@ -2,7 +2,10 @@
 
 module.exports = (sequelize, DataTypes) => {
   const cities = sequelize.define('City', {
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   },{
     tableName: 'cities',
     freezeTableName: true,
@@ -11,12 +14,18 @@ module.exports = (sequelize, DataTypes) => {
   cities.associate = function(models) {
 
     cities.hasMany(models.PostalCode,{
-      foreignKey: 'cityId',
+      foreignKey: {
+        name: 'cityId',
+        allowNull:false
+      },
       as:'postalCodes'
     });
 
     cities.hasMany(models.SubDistrict,{
-      foreignKey: 'cityId',
+      foreignKey: {
+        name: 'cityId',
+        allowNull:false
+      },
       as:'subDistricts'
     });
 

@@ -2,10 +2,22 @@
 
 module.exports = (sequelize, DataTypes) => {
   const addresses = sequelize.define('Address', {
-    name: DataTypes.STRING,
-    detail: DataTypes.TEXT,
-    lat: DataTypes.STRING,
-    lng: DataTypes.STRING,
+    name:  {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    detail: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
+    lat: {
+      type: DataTypes.STRING,
+      allowNull: false
+    }
+    lng: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     isMain: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

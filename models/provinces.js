@@ -1,7 +1,10 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const provinces = sequelize.define('Province', {
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   },{
     tableName: 'provinces',
     freezeTableName: true,
@@ -9,7 +12,10 @@ module.exports = (sequelize, DataTypes) => {
 
   provinces.associate = function(models) {
     provinces.hasMany(models.City,{
-      foreignKey: 'provinceId',
+      foreignKey: {
+        name: 'provinceId',
+        allowNull: false
+      },
       as: "cities"
     });
   };

@@ -2,8 +2,14 @@
 
 module.exports = (sequelize, DataTypes) => {
   const galleries = sequelize.define('Gallery', {
-    imageUrl: DataTypes.STRING,
-    url: DataTypes.STRING,
+    imageUrl: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     isMain: {
       type: DataTypes.BOOLEAN,
       defaultValue: false

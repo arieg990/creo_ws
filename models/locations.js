@@ -2,10 +2,18 @@
 
 module.exports = (sequelize, DataTypes) => {
   const locations = sequelize.define('Location', {
-    detail: DataTypes.TEXT,
-    total: DataTypes.INTEGER,
-    lat: DataTypes.STRING,
-    lng: DataTypes.STRING,
+    detail: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    lat: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    lng: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   },{
     tableName: 'locations',
     freezeTableName: true,

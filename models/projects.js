@@ -2,8 +2,14 @@
 
 module.exports = (sequelize, DataTypes) => {
   const projects = sequelize.define('Project', {
-    title: DataTypes.STRING,
-    description: DataTypes.TEXT,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: false
+    },
   },{
     tableName: 'projects',
     freezeTableName: true,
@@ -12,7 +18,10 @@ module.exports = (sequelize, DataTypes) => {
   projects.associate = function(models) {
 
     projects.hasMany(models.Gallery,{
-      foreignKey: 'projectId',
+      foreignKey: {
+        name: 'projectId',
+        allowNull: false
+      },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
       as: "galleries"
