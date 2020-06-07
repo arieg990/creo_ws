@@ -35,6 +35,7 @@ router.get('/list', async function(req, res, next) {
       subQuery:false,
       attributes:{
         include: [
+        [Sequelize.literal('`status`.`name`'),'statusName'],
         [Sequelize.literal('`package`.`name`'),'packageName'],
         [Sequelize.literal('`package`.`url1`'),'packageUrl'],
         [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl']
@@ -50,6 +51,11 @@ router.get('/list', async function(req, res, next) {
       {
         model:model.Payment,
         as:'payments'
+      },
+      {
+        model:model.Code,
+        as:'status',
+        attributes: []
       }
       ]
     });
@@ -210,6 +216,7 @@ router.get('/:id', async function(req, res, next) {
     var list = await model.Booking.findByPk(req.params.id,{
       attributes:{
         include: [
+        [Sequelize.literal('`status`.`name`'),'statusName'],
         [Sequelize.literal('`package->vendor`.`name`'),'vendorName'],
         [Sequelize.literal('`package`.`name`'),'packageName'],
         [Sequelize.literal('`package`.`url1`'),'packageUrl'],
@@ -234,14 +241,20 @@ router.get('/:id', async function(req, res, next) {
       {
         model:model.Payment,
         as:'payments'
+      },
+      {
+        model:model.Code,
+        as:'status',
+        attributes: []
       }
       ]
     });
 
-    res.status(200).json(response(200,"banner",list));
+    res.status(200).json(response(200,"booking",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"banner",err));
+    console.log(err)
+    res.status(200).json(response(400,"booking",err));
   }
 
 });
