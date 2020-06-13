@@ -19,6 +19,7 @@ router.get('/list', async function(req, res, next) {
   var perPage = 10;
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.perPage)
+  var where = {}
 
   if (offset > 1) {
     page = offset-1
@@ -26,6 +27,10 @@ router.get('/list', async function(req, res, next) {
 
   if (limit >= 1) {
     perPage = limit
+  }
+
+  if (req.query.status) {
+    where.statusCode = req.query.status
   }
 
   try{
@@ -58,7 +63,8 @@ router.get('/list', async function(req, res, next) {
         as:'status',
         attributes: []
       }
-      ]
+      ],
+      where : where
     });
 
     var paging = {
