@@ -38,8 +38,9 @@ router.get('/list', async function(req, res, next) {
         [Sequelize.literal('`status`.`name`'),'statusName'],
         [Sequelize.literal('`package`.`name`'),'packageName'],
         [Sequelize.literal('`package`.`url1`'),'packageUrl'],
-        [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl']
-
+        [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl'],
+        [Sequelize.literal('`package`.`price`'),'packagePrice'],
+        [Sequelize.literal('`package`.`capacity`'),'packageCapacity']
         ]
       },
       include: [
@@ -220,7 +221,10 @@ router.get('/:id', async function(req, res, next) {
         [Sequelize.literal('`package->vendor`.`name`'),'vendorName'],
         [Sequelize.literal('`package`.`name`'),'packageName'],
         [Sequelize.literal('`package`.`url1`'),'packageUrl'],
-        [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl']
+        [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl'],
+        [Sequelize.literal('`package`.`price`'),'packagePrice'],
+        [Sequelize.literal('`package`.`capacity`'),'packageCapacity']
+
 
         ]
       },
@@ -241,6 +245,10 @@ router.get('/:id', async function(req, res, next) {
       {
         model:model.Payment,
         as:'payments'
+      },
+      {
+        model:model.Location,
+        as:'location'
       },
       {
         model:model.Code,
