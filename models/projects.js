@@ -26,6 +26,16 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       as: "galleries"
     });
+
+    projects.belongsTo(models.Booking, {
+      foreignKey: {
+        name: 'bookingId',
+        allowNull: false
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+      as: "booking"
+    })
   };
   return projects;
 };
