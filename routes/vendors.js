@@ -150,8 +150,8 @@ router.post('/', async function(req, res, next) {
 
   if (body.avatarImage != null) {
 
-      var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
-      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
+    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
     // });
@@ -168,10 +168,10 @@ router.post('/', async function(req, res, next) {
   }
 }
 
-  if (body.backgroundImage != null) {
+if (body.backgroundImage != null) {
 
-      var decode = cryptoLocal.decodeBase64Image(body.backgroundImage)
-      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+  var decode = cryptoLocal.decodeBase64Image(body.backgroundImage)
+  var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
     // });
@@ -188,14 +188,14 @@ router.post('/', async function(req, res, next) {
   }
 }
 
-  try{
-    var list = await model.Vendor.create(data);
+try{
+  var list = await model.Vendor.create(data);
 
-    res.status(200).json(response(200,"vendor",list));
-  } catch(err) {
-    res.status(200).json(response(400,"vendor",err));
-  }
-  
+  res.status(200).json(response(200,"vendor",list));
+} catch(err) {
+  res.status(200).json(response(400,"vendor",err));
+}
+
 });
 
 router.put('/', async function(req, res, next) {
@@ -210,8 +210,8 @@ router.put('/', async function(req, res, next) {
 
   if (body.avatarImage != null) {
 
-      var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
-      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+    var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
+    var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
     // });
@@ -228,10 +228,10 @@ router.put('/', async function(req, res, next) {
   }
 }
 
-  if (body.backgroundImage != null) {
+if (body.backgroundImage != null) {
 
-      var decode = cryptoLocal.decodeBase64Image(body.backgroundImage)
-      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+  var decode = cryptoLocal.decodeBase64Image(body.backgroundImage)
+  var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
     // require("fs").writeFile("public/"+path+img, decode.data, function(err) {
     //   console.log(err)
     // });
@@ -248,25 +248,25 @@ router.put('/', async function(req, res, next) {
   }
 }
 
-  try{
+try{
 
-    var update = await model.Vendor.update(data, {
-      where: {
-        id:body.id
-      }
-    });
-
-    if (update[0] == 1) {
-      update = await model.Vendor.findByPk(body.id);
-    } else {
-      return res.status(200).json(response(400,"vendor",update));
+  var update = await model.Vendor.update(data, {
+    where: {
+      id:body.id
     }
+  });
 
-    res.status(200).json(response(200,"vendor",update));
-
-  } catch(err) {
-    res.status(200).json(response(400,"vendor",err));
+  if (update[0] == 1) {
+    update = await model.Vendor.findByPk(body.id);
+  } else {
+    return res.status(200).json(response(400,"vendor",update));
   }
+
+  res.status(200).json(response(200,"vendor",update));
+
+} catch(err) {
+  res.status(200).json(response(400,"vendor",err));
+}
 
 });
 
@@ -341,38 +341,38 @@ router.get('/:id', async function(req, res, next) {
         model:model.Address,
         as:"addresses",
         attributes:{
-            include: [
-            [Sequelize.literal('`city`.`name`'),'cityName'],
-            [Sequelize.literal('`province`.`name`'),'provinceName'],
-            [Sequelize.literal('`postalCode`.`postalCode`'),'postalCodeArea'],
-            [Sequelize.literal('`subDistrict`.`name`'),'subDistrictName']
-            ],
-            exclude: ["vendorId","customerId"]
-          },
+          include: [
+          [Sequelize.literal('`city`.`name`'),'cityName'],
+          [Sequelize.literal('`province`.`name`'),'provinceName'],
+          [Sequelize.literal('`postalCode`.`postalCode`'),'postalCodeArea'],
+          [Sequelize.literal('`subDistrict`.`name`'),'subDistrictName']
+          ],
+          exclude: ["vendorId","customerId"]
+        },
         required: false,
         limit:5,
         include: [
-          {
-            model: model.City,
-            as:"city",
-            attributes: []
-          },
-          {
-            model: model.Province,
-            as:"province",
-            attributes: []
-          },
-          {
-            model:model.PostalCode,
-            as:"postalCode",
-            attributes: []
-          },
-          {
-            model:model.SubDistrict,
-            as:"subDistrict",
-            attributes: []
-          }
-          ],
+        {
+          model: model.City,
+          as:"city",
+          attributes: []
+        },
+        {
+          model: model.Province,
+          as:"province",
+          attributes: []
+        },
+        {
+          model:model.PostalCode,
+          as:"postalCode",
+          attributes: []
+        },
+        {
+          model:model.SubDistrict,
+          as:"subDistrict",
+          attributes: []
+        }
+        ],
       },
       {
         model:model.SocialMedia,
@@ -397,10 +397,57 @@ router.get('/:id', async function(req, res, next) {
         limit:5
       },
       {
+        model:model.Project,
+        as:"projects",
+        required:false,
+        limit:5,
+        attributes:{
+          include: [
+          [Sequelize.literal('`booking->location`.`detail`'),'locationDetail']
+          ]
+        },
+        include: [
+        {
+          model:model.Gallery,as:"galleries", 
+          where:{isMain:true},required: false
+        },
+        {
+          model:model.Booking,
+          as:"booking",
+          attributes: [],
+          include: [
+          {
+            model:model.Location,
+            as:'location',
+            attributes: []
+          }
+          ]
+        }
+        ]
+      },
+      {
         model:model.Review,
         as:"reviews",
+        attributes:{
+          include: [
+          [Sequelize.literal('`project`.`name`'),'projectName'],
+          [Sequelize.literal('`customer`.`name`'),'customerName']
+          ]
+        },
         required: false,
-        limit:5
+        limit:5,
+        include: [
+        {
+          model:model.Project,
+          as:"project",
+          attributes: []
+        },
+        {
+          model:model.Customer,
+          as:"customer",
+          attributes: []
+        }
+        ]
       }
       ],
       subQuery:false,

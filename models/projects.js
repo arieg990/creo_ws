@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const projects = sequelize.define('Project', {
-    title: {
+    name: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -25,6 +25,16 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
       as: "galleries"
+    });
+
+    projects.hasOne(models.Review,{
+      foreignKey: {
+        name: 'projectId',
+        allowNull: false
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+      as: "review"
     });
 
     projects.belongsTo(models.Booking, {

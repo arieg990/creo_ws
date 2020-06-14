@@ -33,6 +33,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       as: "package"
     });
+
+    reviews.belongsTo(models.Project,{
+      foreignKey: {
+        name: 'projectId',
+        allowNull: false
+      },
+      as: "project"
+    });
   };
   return reviews;
 };
