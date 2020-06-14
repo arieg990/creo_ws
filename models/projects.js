@@ -36,6 +36,17 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       as: "booking"
     })
+
+    projects.belongsTo(models.Vendor, {
+      foreignKey: {
+        name: 'vendorId',
+        allowNull: false
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+      as: "vendor"
+    })
+
   };
   return projects;
 };
