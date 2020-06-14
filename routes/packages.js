@@ -366,6 +366,19 @@ router.get('/:id', async function(req, res, next) {
       ]
     });
 
+    var review = await model.Review.findOne({
+      attributes: [
+      [Sequelize.fn("COUNT", Sequelize.col('id')), "reviewCount"],
+      [Sequelize.fn("AVG", Sequelize.fn('COALESCE',(Sequelize.col("rating")),0.0)), "reviewRating"]
+      ],
+      where :{
+        vendorId: list.dataValues.id
+      }
+    })
+
+    list.dataValues.reviewRating = review.dataValues.reviewRating != null ? review.dataValues.reviewRating : 0
+    list.dataValues.reviewCount = review.dataValues.reviewCount != null ? review.dataValues.reviewCount : 0
+
     res.status(200).json(response(200,"package",list));
 
   } catch(err) {
