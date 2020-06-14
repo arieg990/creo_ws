@@ -431,6 +431,7 @@ router.get('/:id', async function(req, res, next) {
         attributes:{
           include: [
           [Sequelize.literal('`project`.`name`'),'projectName'],
+          [Sequelize.literal('`project->booking->location`.`detail`'),'locationDetail'],
           [Sequelize.literal('`customer`.`name`'),'customerName']
           ]
         },
@@ -440,7 +441,21 @@ router.get('/:id', async function(req, res, next) {
         {
           model:model.Project,
           as:"project",
-          attributes: []
+          attributes: [],
+          include: [
+          {
+          model:model.Booking,
+          as:"booking",
+          attributes: [],
+          include: [
+          {
+            model:model.Location,
+            as:'location',
+            attributes: []
+          }
+          ]
+        }
+        ]
         },
         {
           model:model.Customer,
