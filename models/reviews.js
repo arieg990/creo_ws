@@ -6,7 +6,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     description:DataTypes.TEXT
-  }, {});
+  },{
+    tableName: 'reviews',
+    freezeTableName: true,
+  });
   reviews.associate = function(models) {
     reviews.belongsTo(models.Customer,{
       foreignKey: {

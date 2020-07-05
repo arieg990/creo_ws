@@ -5,7 +5,10 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.STRING,
     },
     color: DataTypes.STRING,
-  }, {});
+  }, {
+    tableName: 'types',
+    freezeTableName: true,
+  });
   types.associate = function(models) {
   };
   return types;
