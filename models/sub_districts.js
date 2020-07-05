@@ -33,6 +33,24 @@ module.exports = (sequelize, DataTypes) => {
       },
       as:'postalCode'
     });
+
+    sub_districts.hasMany(models.Village,{
+      foreignKey: {
+        name:'subDistrictId',
+        allowNull: false
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+      as: "villages"
+    });
+
+    sub_districts.hasOne(models.Village,{
+      foreignKey: {
+        name: 'subDistrictId',
+        allowNull:false
+      },
+      as:'village'
+    });
   };
 
   return sub_districts;

@@ -100,6 +100,11 @@ router.get('/getLocation', async function(req, res, next) {
             model:model.PostalCode,
             as:"postalCode",
             attributes: []
+          },
+          {
+            model:model.PostalCode,
+            as:"village",
+            attributes: []
           }
           ]
         }
