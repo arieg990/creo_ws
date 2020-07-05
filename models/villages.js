@@ -1,7 +1,14 @@
 'use strict';
 
+const Sequelize = require("sequelize")
+
 module.exports = (sequelize, DataTypes) => {
   const villages = sequelize.define('Village', {
+    id: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
+       primaryKey: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false

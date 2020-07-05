@@ -60,7 +60,12 @@ router.get('/getLocation', async function(req, res, next) {
   {
     '$city->subDistrict.name$': {
       [Sequelize.Op.like]:"%"+query+"%"
-    }
+    },
+  },
+  {
+    '$city->subDistrict->village.name$': {
+      [Sequelize.Op.like]:"%"+query+"%"
+    },
   })
 
   if (offset > 1) {
@@ -81,7 +86,8 @@ router.get('/getLocation', async function(req, res, next) {
         [Sequelize.literal('`city`.`name`'),'cityName'],
         [Sequelize.literal('`province`.`name`'),'provinceName'],
         [Sequelize.literal('`city->subDistrict`.`name`'),'subDistrictName'],
-        [Sequelize.literal('`city->subDistrict`.`id`'),'subDistrictId']
+        [Sequelize.literal('`city->subDistrict->village`.`id`'),'villageId'],
+        [Sequelize.literal('`city->subDistrict->village`.`name`'),'villageName']
         ],
         exclude: ["vendorId","customerId","name","createdAt","updatedAt"]
       },
@@ -102,7 +108,7 @@ router.get('/getLocation', async function(req, res, next) {
             attributes: []
           },
           {
-            model:model.PostalCode,
+            model:model.Village,
             as:"village",
             attributes: []
           }
