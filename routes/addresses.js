@@ -3,6 +3,7 @@ var router = express.Router();
 var model = require('../models');
 var response = require('../config/constant').response;
 var auth = require('../config/auth');
+const Sequelize = require("sequelize")
 
 /* GET users listing. */
 router.get('/list', async function(req, res, next) {
@@ -33,7 +34,89 @@ router.get('/list', async function(req, res, next) {
 
     res.status(200).json(response(200,"addresses",list, paging));
   } catch(err) {
-      res.status(200).json(response(400,"addresses",err));
+    res.status(200).json(response(400,"addresses",err));
+  }
+
+});
+
+router.get('/getLocation', async function(req, res, next) {
+
+  var page = 0;
+  var perPage = 10;
+  var offset = parseInt(req.query.page)
+  var limit = parseInt(req.query.perPage)
+  var query = req.query.q
+  var whereName = Sequelize.or(
+  {
+    name: {
+      [Sequelize.Op.like]:"%"+query+"%"
+    }
+  },
+  {
+    '$city.name$': {
+      [Sequelize.Op.like]:"%"+query+"%"
+    }
+  },
+  {
+    '$city->subDistrict.name$': {
+      [Sequelize.Op.like]:"%"+query+"%"
+    }
+  })
+
+  if (offset > 1) {
+    page = offset-1
+  }
+
+  if (limit >= 1) {
+    perPage = limit
+  }
+
+  try{
+    var list = await model.Province.findAll({
+      offset:page*perPage,
+      limit:perPage,
+      where: whereName,
+      attributes:{
+        include: [
+        [Sequelize.literal('`city`.`name`'),'cityName'],
+        [Sequelize.literal('`province`.`name`'),'provinceName'],
+        [Sequelize.literal('`city->subDistrict`.`name`'),'subDistrictName'],
+        [Sequelize.literal('`city->subDistrict`.`id`'),'subDistrictId']
+        ],
+        exclude: ["vendorId","customerId","name","createdAt","updatedAt"]
+      },
+      include : [
+      {
+        model: model.City,
+        as:"city",
+        attributes: [],
+        include: [
+        {
+          model:model.SubDistrict,
+          as:"subDistrict",
+          attributes: [],
+          include: [
+          {
+            model:model.PostalCode,
+            as:"postalCode",
+            attributes: []
+          }
+          ]
+        }
+        ]
+      }
+      ]
+    });
+
+    var paging = {
+      "currentPage": page+1,
+      "limitPerPage": perPage,
+    }
+
+    res.status(200).json(response(200,"addresses",list, paging));
+  } catch(err) {
+    console.log(err)
+    res.status(200).json(response(400,"addresses",err));
   }
 
 });
@@ -102,7 +185,7 @@ router.put('/', async function(req, res, next) {
     res.status(200).json(response(200,"address",update));
 
   } catch(err) {
-      res.status(200).json(response(400,"address",err));
+    res.status(200).json(response(400,"address",err));
   }
 
 });

@@ -25,6 +25,15 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
       as: "city"
     });
+
+    sub_districts.hasOne(models.PostalCode,{
+      foreignKey: {
+        name: 'subDistrictId',
+        allowNull:false
+      },
+      as:'postalCode'
+    });
   };
+
   return sub_districts;
 };

@@ -18,6 +18,14 @@ module.exports = (sequelize, DataTypes) => {
       },
       as: "cities"
     });
+
+    provinces.hasOne(models.City,{
+      foreignKey: {
+        name: 'provinceId',
+        allowNull: false
+      },
+      as: "city"
+    });
   };
   return provinces;
 };

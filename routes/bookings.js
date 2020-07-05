@@ -124,6 +124,7 @@ router.post('/', async function(req, res, next) {
     var locationData = {
       detail:body.locationDetail,
       bookingId:booking.id,
+      subDistrict: body.subDistrictId,
       lat:body.lat,
       lng:body.lng
     }

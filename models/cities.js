@@ -29,6 +29,14 @@ module.exports = (sequelize, DataTypes) => {
       as:'subDistricts'
     });
 
+    cities.hasOne(models.SubDistrict,{
+      foreignKey: {
+        name: 'cityId',
+        allowNull:false
+      },
+      as:'subDistrict'
+    });
+
     cities.belongsTo(models.Province,{
       foreignKey: 'provinceId',
       onDelete: 'CASCADE',
