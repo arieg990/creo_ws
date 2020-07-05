@@ -20,10 +20,10 @@
     "tokenLife": 86400000
   },
   "production": {
-    "username": "ba3afea3ce4a2c",
-    "password": "a82df41a",
-    "database": "heroku_2fbf3e37ec262ef",
-    "host": "us-cdbr-iron-east-01.cleardb.net",
+    "username": "endaltedd054apg5",
+    "password": "qfezeen3l82nbhxo",
+    "database": "tcyb15yqor59zhje",
+    "host": "qn66usrj1lwdk1cc.cbetxkdyhwsb.us-east-1.rds.amazonaws.com",
     "dialect": "mysql",
     "operatorsAliases": false,
     "secret":"0448051f186b7df890b5808da70ad908699dcde7aa0d7b0d4586d61243a8c1af",
