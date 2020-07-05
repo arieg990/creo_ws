@@ -91,7 +91,7 @@ router.post('/', async function(req, res, next) {
     qty: body.qty,
     note:body.note,
     packageId:body.packageId,
-    customerId:body.customerId,
+    customerId:req.user.id,
     startDate:body.startDate,
     endDate:body.endDate
   }
