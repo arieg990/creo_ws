@@ -33,6 +33,8 @@ router.get('/list', async function(req, res, next) {
     where.statusCode = req.query.status
   }
 
+  where.customerId = req.user.id
+
   try{
     var list = await model.Booking.findAll({
       offset:page*perPage,
@@ -205,7 +207,8 @@ router.delete('/', async function(req, res, next) {
 
     var update = await model.Booking.destroy({
       where: {
-        id:body.id
+        id:body.id,
+        customerId:req.user.id
       }
     });
 

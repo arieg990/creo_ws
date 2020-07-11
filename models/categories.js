@@ -17,7 +17,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     }
-  }, {});
+  }, {
+    tableName: 'categories',
+  });
   categories.associate = function(models) {
 
   };
