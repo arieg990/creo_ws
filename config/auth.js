@@ -397,7 +397,6 @@ function isLoggedIn(req, res, next) {
 }
 
 function isVendor(req, res, next) {
-  isLoggedIn(req,res,next)
   if (req.user.dataValues.userType == "vendor") {
     return next();
   } else {
@@ -406,7 +405,6 @@ function isVendor(req, res, next) {
 }
 
 function isUser(req, res, next) {
-  isLoggedIn(req,res,next)
   if (req.user.dataValues.userType == "user") {
     return next();
   } else {
@@ -415,7 +413,6 @@ function isUser(req, res, next) {
 }
 
 function isUserOrVendor(req, res, next) {
-  isLoggedIn(req,res,next)
   if (req.user.dataValues.userType == "user" || req.user.dataValues.userType == "vendor") {
     return next();
   } else {
