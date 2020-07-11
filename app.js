@@ -30,6 +30,7 @@ var storiesRouter = require('./routes/stories');
 var typesRouter = require('./routes/types');
 var usersRouter = require('./routes/users');
 var vendorsRouter = require('./routes/vendors');
+var vendorUsersRouter = require('./routes/vendor_users');
 
 var app = express();
 
@@ -79,6 +80,7 @@ app.use('/story',auth.isLoggedIn,storiesRouter);
 app.use('/type',auth.isLoggedIn,typesRouter);
 app.use('/user',usersRouter);
 app.use('/vendor',auth.isLoggedIn,vendorsRouter);
+app.use('/vendor_user',auth.isLoggedIn,vendorUsersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
