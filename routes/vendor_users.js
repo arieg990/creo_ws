@@ -44,7 +44,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
 
 });
 
-router.post('/', isUserOrVendor, async function(req, res, next) {
+router.post('/', auth.isUserOrVendor, async function(req, res, next) {
 	var body = req.body;
 	var data = {
 		email: body.email,
