@@ -190,6 +190,10 @@ router.post('/', async function(req, res, next) {
         model:model.Code,
         as:'status',
         attributes: []
+      },
+      {
+        model:model.Location,
+        as:'location'
       }
       ],
       where : {
