@@ -134,6 +134,7 @@ router.post('/', async function(req, res, next) {
     var location = await model.Location.create(locationData);
     booking.location = location
     var invoice = invoiceGenerator(booking.id)
+    booking.invoiceNumber = invoice
 
     paymentDP = {
       invoiceNumber:invoice,
@@ -163,7 +164,40 @@ router.post('/', async function(req, res, next) {
       }
     });
 
-    res.status(200).json(response(200,"booking",booking));
+    var data = await model.Booking.findOne({
+      subQuery:false,
+      attributes:{
+        include: [
+        [Sequelize.literal('`status`.`name`'),'statusName'],
+        [Sequelize.literal('`package`.`name`'),'packageName'],
+        [Sequelize.literal('`package`.`url1`'),'packageUrl'],
+        [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl'],
+        [Sequelize.literal('`package`.`price`'),'packagePrice'],
+        [Sequelize.literal('`package`.`capacity`'),'packageCapacity']
+        ]
+      },
+      include: [
+      {
+        model:model.Package,
+        as:'package',
+        attributes: []
+      },
+      {
+        model:model.Payment,
+        as:'payments'
+      },
+      {
+        model:model.Code,
+        as:'status',
+        attributes: []
+      }
+      ],
+      where : {
+        id:booking.id
+      }
+    });
+
+    res.status(200).json(response(200,"booking",data));
   } catch(err) {
     console.log(err)
     res.status(200).json(response(400,"booking",err));
