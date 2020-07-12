@@ -84,7 +84,7 @@ router.get('/getLocation', async function(req, res, next) {
       attributes:{
         include: [
         [Sequelize.literal('`city`.`name`'),'cityName'],
-        [Sequelize.literal('`province`.`name`'),'provinceName'],
+        [Sequelize.literal('`Province`.`name`'),'provinceName'],
         [Sequelize.literal('`city->subDistrict`.`name`'),'subDistrictName'],
         [Sequelize.literal('`city->subDistrict->village`.`id`'),'villageId'],
         [Sequelize.literal('`city->subDistrict->village`.`name`'),'villageName']
