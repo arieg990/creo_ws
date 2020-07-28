@@ -39,6 +39,9 @@ router.get('/list', async function(req, res, next) {
     var list = await model.Booking.findAll({
       offset:page*perPage,
       limit:perPage,
+      order:[
+      ["createdAt","DESC"]
+      ],
       subQuery:false,
       attributes:{
         include: [
