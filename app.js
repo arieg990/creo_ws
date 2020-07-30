@@ -19,6 +19,8 @@ var bannersRouter = require('./routes/banners');
 var bookingsRouter = require('./routes/bookings');
 var customersRouter = require('./routes/customers');
 var categoriesRouter = require('./routes/categories');
+var ccRouter = require('./routes/category_codes');
+var codeRouter = require('./routes/codes');
 var citiesRouter = require('./routes/cities');
 var galleriesRouter = require('./routes/galleries');
 var packagesRouter = require('./routes/packages');
@@ -31,6 +33,7 @@ var storiesRouter = require('./routes/stories');
 var typesRouter = require('./routes/types');
 var usersRouter = require('./routes/users');
 var vendorsRouter = require('./routes/vendors');
+var vendorUsersRouter = require('./routes/vendor_users');
 
 var app = express();
 
@@ -69,6 +72,8 @@ app.use('/booking',auth.isLoggedIn,bookingsRouter);
 app.use('/customer', customersRouter);
 // app.use('/roles', auth.isLoggedIn,rolesRouter);
 app.use('/category',auth.isLoggedIn,categoriesRouter);
+app.use('/categoryCode',auth.isLoggedIn,auth.isUser,ccRouter);
+app.use('/code',auth.isLoggedIn, auth.isUser,codeRouter);
 app.use('/city',auth.isLoggedIn,citiesRouter);
 app.use('/gallery',auth.isLoggedIn,galleriesRouter);
 app.use('/package',auth.isLoggedIn,packagesRouter);
@@ -81,6 +86,7 @@ app.use('/story',auth.isLoggedIn,storiesRouter);
 app.use('/type',auth.isLoggedIn,typesRouter);
 app.use('/user',usersRouter);
 app.use('/vendor',auth.isLoggedIn,vendorsRouter);
+app.use('/vendor_user',auth.isLoggedIn,vendorUsersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

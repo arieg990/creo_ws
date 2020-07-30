@@ -30,13 +30,13 @@ module.exports = (sequelize, DataTypes) => {
       as: "booking"
     });
 
-    locations.belongsTo(models.SubDistrict, {
+    locations.belongsTo(models.Village, {
       foreignKey: {
-        name: 'subDistrictId',
+        name: 'villageId',
         allowNull: false
       },
       onUpdate:'CASCADE',
-      as: "subDistrict"
+      as: "village"
     })
   };
   return locations;

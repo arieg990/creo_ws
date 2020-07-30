@@ -33,10 +33,15 @@ router.get('/list', async function(req, res, next) {
     where.statusCode = req.query.status
   }
 
+  where.customerId = req.user.id
+
   try{
     var list = await model.Booking.findAll({
       offset:page*perPage,
       limit:perPage,
+      order:[
+      ["createdAt","DESC"]
+      ],
       subQuery:false,
       attributes:{
         include: [
@@ -132,6 +137,7 @@ router.post('/', async function(req, res, next) {
     var location = await model.Location.create(locationData);
     booking.location = location
     var invoice = invoiceGenerator(booking.id)
+    booking.invoiceNumber = invoice
 
     paymentDP = {
       invoiceNumber:invoice,
@@ -161,7 +167,44 @@ router.post('/', async function(req, res, next) {
       }
     });
 
-    res.status(200).json(response(200,"booking",booking));
+    var data = await model.Booking.findOne({
+      subQuery:false,
+      attributes:{
+        include: [
+        [Sequelize.literal('`status`.`name`'),'statusName'],
+        [Sequelize.literal('`package`.`name`'),'packageName'],
+        [Sequelize.literal('`package`.`url1`'),'packageUrl'],
+        [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl'],
+        [Sequelize.literal('`package`.`price`'),'packagePrice'],
+        [Sequelize.literal('`package`.`capacity`'),'packageCapacity']
+        ]
+      },
+      include: [
+      {
+        model:model.Package,
+        as:'package',
+        attributes: []
+      },
+      {
+        model:model.Payment,
+        as:'payments'
+      },
+      {
+        model:model.Code,
+        as:'status',
+        attributes: []
+      },
+      {
+        model:model.Location,
+        as:'location'
+      }
+      ],
+      where : {
+        id:booking.id
+      }
+    });
+
+    res.status(200).json(response(200,"booking",data));
   } catch(err) {
     console.log(err)
     res.status(200).json(response(400,"booking",err));
@@ -205,7 +248,8 @@ router.delete('/', async function(req, res, next) {
 
     var update = await model.Booking.destroy({
       where: {
-        id:body.id
+        id:body.id,
+        customerId:req.user.id
       }
     });
 

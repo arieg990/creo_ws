@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.query("INSERT INTO `heroku_2fbf3e37ec262ef`.`mst_codes`"+
+    return queryInterface.sequelize.query("INSERT INTO `tcyb15yqor59zhje`.`mst_codes`"+
     	"(`code`, `name`, `createdAt`, `updatedAt`, `categoryCodeId`) VALUES ('PTSWTG', "+
     	"'Waiting', '2020-05-16 08:40:57', '2020-05-16 08:40:57', 'PTS'), ('PTSVRF', "+
     	"'Verification', '2020-05-16 08:40:57', '2020-05-16 08:40:57', 'PTS'), ('PTSVRD', "+

@@ -36,33 +36,24 @@ module.exports = (sequelize, DataTypes) => {
   },
   phone: {
     type:DataTypes.STRING,
-    validate: {
-     notEmpty: {
-      msg: "Phone Number cannot be empty"
-    }
   },
-  unique: {
-    args: true,
-    msg: 'Phone Number already in use!',
+  imageUrl: DataTypes.STRING,
+  url:DataTypes.STRING,
+  gender: {
+    type: DataTypes.ENUM,
+    values: ['male','female'],
+    allowNull: true
   },
-},
-imageUrl: DataTypes.STRING,
-url:DataTypes.STRING,
-gender: {
-  type: DataTypes.ENUM,
-  values: ['male','female'],
-  allowNull: false
-},
-dob: {
-  type: DataTypes.DATEONLY,
-  allowNull:false
-},
-pod: {
-  type: DataTypes.STRING(20),
-  allowNull:false
-},
-googleId: DataTypes.STRING,
-provider: DataTypes.STRING(20),
+  dob: {
+    type: DataTypes.DATEONLY,
+    allowNull:true
+  },
+  pod: {
+    type: DataTypes.STRING(20),
+    allowNull:true
+  },
+  googleId: DataTypes.STRING,
+  provider: DataTypes.STRING(20),
 
 },{
   tableName: 'customers',
