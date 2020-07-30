@@ -29,7 +29,7 @@ function decodeBase64Image(dataString)
 	var response = {};
 	var imageTypeRegularExpression      = /\/(.*?)$/;
 
-	if (matches.length !== 3) 
+	if (matches == null || matches.length !== 3) 
 	{
 		return new Error('Invalid input string');
 	}
