@@ -72,9 +72,18 @@ router.get('/list', async function(req, res, next) {
       where : where
     });
 
+    var count = await model.Booking.count({
+      where: {
+        customerId: req.user.id
+      }
+    })
+
+    var totalPage = Math.round(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     res.status(200).json(response(200,"bookings",list,paging));
