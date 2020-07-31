@@ -18,6 +18,7 @@ router.get('/list', async function(req, res, next) {
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.limit)
   var where = {}
+  var whereCount = {}
 
   if (offset > 1) {
     page = offset-1
@@ -31,8 +32,10 @@ router.get('/list', async function(req, res, next) {
   if(req.query.type != null) {
     if (type == "vendor") {
       where.vendorId = req.query.id
+      whereCount.vendorId = req.query.id
     } else if (type == "package") {
       where.packageId = req.query.id
+      whereCount.packageId = req.query.id
     }
   }
 
@@ -43,9 +46,16 @@ router.get('/list', async function(req, res, next) {
       where: where
     });
 
+    var count = await model.Gallery.count({
+      where:whereCount
+    })
+
+    var totalPage = Math.ceil(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     res.status(200).json(response(200,"galleries",list,paging));

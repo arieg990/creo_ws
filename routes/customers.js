@@ -35,9 +35,14 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       ]
     });
 
+    var count = await model.Customer.count()
+
+    var totalPage = Math.ceil(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     res.status(200).json(response(200,"customers",list,paging));

@@ -32,9 +32,14 @@ router.get('/list', async function(req, res, next) {
       limit:perPage,
     });
 
+    var count = await model.Banner.count()
+
+    var totalPage = Math.ceil(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     res.status(200).json(response(200,"banners",list,paging));

@@ -19,6 +19,7 @@ router.get('/list', async function(req, res, next) {
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.limit)
   var where = {}
+  var whereCount = {}
 
   if (offset > 1) {
     page = offset-1
@@ -30,6 +31,7 @@ router.get('/list', async function(req, res, next) {
 
   if(req.query.vendorId != null) {
     where.vendorId = req.query.vendorId
+    whereCount.vendorId = req.query.vendorId
   }
 
   try{
@@ -58,9 +60,16 @@ router.get('/list', async function(req, res, next) {
       ]
     });
 
+    var count = await model.Package.count({
+      where:whereCount
+    })
+
+    var totalPage = Math.ceil(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     for (var i = list.length - 1; i >= 0; i--) {
