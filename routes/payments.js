@@ -64,6 +64,15 @@ router.put('/upload', auth.isLoggedIn, async function(req, res, next) {
      data.url = urlGoogle
      data.imageUrl = path + img
      data.statusCode = "PTSVRF"
+
+      var update = await model.Booking.update({
+        statusCode:"BKSVDP"
+      }, {
+      where: {
+        id:body.bookingId
+      }
+    });
+
    } else {
     return res.status(200).json(response(400,"payment",error("image")));
   }
@@ -85,6 +94,15 @@ if (repayment.statusCode != "PTSVRD") {
      data.url = urlGoogle
      data.imageUrl = path + img
      data.statusCode = "PTSVRF"
+
+     var update = await model.Booking.update({
+        statusCode:"BKSWRP"
+      }, {
+      where: {
+        id:body.bookingId
+      }
+    });
+     
    } else {
     return res.status(200).json(response(400,"payment",error("image")));
   }
