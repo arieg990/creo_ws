@@ -15,6 +15,7 @@ var passportOneSessionPerUser=require('passport-one-session-per-user')
 var indexRouter = require('./routes/index');
 var addressesRouter = require('./routes/addresses');
 var authRouter = require('./routes/auth');
+var banksRouter = require('./routes/banks');
 var bannersRouter = require('./routes/banners');
 var bookingsRouter = require('./routes/bookings');
 var customersRouter = require('./routes/customers');
@@ -67,6 +68,7 @@ app.use(passport.authenticate('passport-one-session-per-user'))
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/address',auth.isLoggedIn, addressesRouter);
+app.use('/bank',auth.isLoggedIn, banksRouter);
 app.use('/banner',auth.isLoggedIn, bannersRouter);
 app.use('/booking',auth.isLoggedIn,bookingsRouter);
 app.use('/customer', customersRouter);

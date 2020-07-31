@@ -221,10 +221,9 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/', async function(req, res, next) {
+router.put('/', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
-  var path = constant.path.categories
   var data = {
     title: body.title,
     description:body.description,
@@ -243,6 +242,45 @@ router.put('/', async function(req, res, next) {
     });
 
     res.status(200).json(response(200,"booking",update));
+
+  } catch(err) {
+    res.status(200).json(response(400,"booking",err));
+  }
+
+});
+
+router.put('/updateStatus', auth.isUserOrVendor, async function(req, res, next) {
+  var body = req.body;
+  var user = req.user;
+  var url = req.protocol + '://' + req.get('host')
+  var where = {}
+  var data = {
+    statusCode: body.statusCode
+  }
+
+  if (typeof body.id == "undefined") {
+    var err = {
+        "message":"id not found",
+        "path":"id",
+        "value": null
+      }
+
+    return res.status(200).json(response(400,"booking",err));
+  }
+
+  where.id = body.id
+
+  if (user.userType == "vendor") {
+    where.vendorId = req.user.vendorId
+  } 
+
+  try{
+
+    var update = await model.Booking.update(data, {
+      where: where
+    });
+
+    res.status(200).json(response(200,"booking",update.get()));
 
   } catch(err) {
     res.status(200).json(response(400,"booking",err));
