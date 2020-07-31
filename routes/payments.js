@@ -66,11 +66,11 @@ router.put('/upload', auth.isLoggedIn, async function(req, res, next) {
      data.statusCode = "PTSVRF"
 
       var update = await model.Booking.update({
-        statusCode:"BKSVDP"
+        statusCode:"BKSVDP",
+        bankId: body.bankId
       }, {
       where: {
-        id:body.bookingId,
-        bankId: body.bankId
+        id:body.bookingId
       }
     });
 
@@ -95,11 +95,11 @@ router.put('/upload', auth.isLoggedIn, async function(req, res, next) {
      data.statusCode = "PTSVRF"
 
      var update = await model.Booking.update({
-        statusCode:"BKSVRP"
+        statusCode:"BKSVRP",
+        bankId: body.bankId
       }, {
       where: {
-        id:body.bookingId,
-        bankId: body.bankId
+        id:body.bookingId
       }
     });
 
