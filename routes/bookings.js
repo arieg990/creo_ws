@@ -78,7 +78,7 @@ router.get('/list', async function(req, res, next) {
       }
     })
 
-    var totalPage = Math.round(count/perPage)
+    var totalPage = Math.ceil(count/perPage)
 
     var paging = {
       "currentPage": page+1,
