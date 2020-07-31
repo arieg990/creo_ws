@@ -16,7 +16,7 @@ var urlGoogle = constant.url.googleStorage
 router.get('/list', async function(req, res, next) {
 
   var page = 0;
-  var perPage = 1;
+  var perPage = 10;
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.perPage)
   var where = {}
