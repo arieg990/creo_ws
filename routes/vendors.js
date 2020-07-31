@@ -79,7 +79,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   var page = 0;
   var perPage = 10;
   var offset = parseInt(req.query.page)
-  var limit = parseInt(req.query.perPage)
+  var limit = parseInt(req.query.limit)
   var where = {}
   var include = []
 
