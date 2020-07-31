@@ -69,7 +69,8 @@ router.put('/upload', auth.isLoggedIn, async function(req, res, next) {
         statusCode:"BKSVDP"
       }, {
       where: {
-        id:body.bookingId
+        id:body.bookingId,
+        bankId: body.bankId
       }
     });
 
@@ -97,7 +98,8 @@ router.put('/upload', auth.isLoggedIn, async function(req, res, next) {
         statusCode:"BKSVRP"
       }, {
       where: {
-        id:body.bookingId
+        id:body.bookingId,
+        bankId: body.bankId
       }
     });
 
