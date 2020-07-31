@@ -37,7 +37,7 @@ router.get('/list', async function(req, res, next) {
 
   try{
     var list = await model.Booking.findAll({
-      offset:page*perPage,
+      offset:page*perPage*2,
       limit:perPage*2,
       order:[
       ["createdAt","DESC"]
