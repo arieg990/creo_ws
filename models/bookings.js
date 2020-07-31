@@ -58,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: {
         name:'statusCode',
         allowNull: false,
-        defaultValue: 'BKSWTG'
+        defaultValue: 'BKSVTG'
       },
       onUpdate: 'CASCADE',
       as: "status"
