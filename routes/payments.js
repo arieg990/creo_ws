@@ -63,6 +63,7 @@ router.put('/upload', auth.isLoggedIn, async function(req, res, next) {
     if (upload) {
      data.url = urlGoogle
      data.imageUrl = path + img
+     data.statusCode = "PTSVRF"
    } else {
     return res.status(200).json(response(400,"payment",error("image")));
   }
@@ -83,6 +84,7 @@ if (repayment.statusCode != "PTSVRD") {
     if (upload) {
      data.url = urlGoogle
      data.imageUrl = path + img
+     data.statusCode = "PTSVRF"
    } else {
     return res.status(200).json(response(400,"payment",error("image")));
   }
