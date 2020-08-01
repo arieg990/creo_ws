@@ -400,7 +400,7 @@ function isVendor(req, res, next) {
   if (req.user.dataValues.userType == "vendor") {
     return next();
   } else {
-    res.status(200).json(response(400,"restricted",null));
+    return res.status(200).json(response(400,"restricted",null));
   }
 }
 
@@ -408,7 +408,7 @@ function isUser(req, res, next) {
   if (req.user.dataValues.userType == "user") {
     return next();
   } else {
-    res.status(200).json(response(400,"restricted",null));
+    return res.status(200).json(response(400,"restricted",null));
   }
 }
 
@@ -416,7 +416,7 @@ function isUserOrVendor(req, res, next) {
   if (req.user.dataValues.userType == "user" || req.user.dataValues.userType == "vendor") {
     return next();
   } else {
-    res.status(200).json(response(400,"restricted",null));
+    return res.status(200).json(response(400,"restricted",null));
   }
 }
 
