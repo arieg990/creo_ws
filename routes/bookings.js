@@ -298,7 +298,8 @@ router.put('/updateStatus', auth.isUserOrVendor, async function(req, res, next) 
       var insertData = {
         bookingId: body.id,
         title: body.title,
-        description: body.description
+        description: body.description,
+        vendorId: body.vendorId
       }
       console.log(insertData)
 
