@@ -451,7 +451,13 @@ router.get('/:id', async function(req, res, next) {
       },
       {
         model:model.Payment,
-        as:'payments'
+        as:'payments',
+        include: [
+        {
+          model:model.Bank,
+          as:'bank'
+        }
+        ]
       },
       {
         model:model.Location,
