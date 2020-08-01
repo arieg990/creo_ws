@@ -2,7 +2,7 @@
 
 module.exports = (sequelize, DataTypes) => {
   const projects = sequelize.define('Project', {
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -45,16 +45,6 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
       as: "booking"
-    })
-
-    projects.belongsTo(models.Vendor, {
-      foreignKey: {
-        name: 'vendorId',
-        allowNull: false
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE',
-      as: "vendor"
     })
 
   };

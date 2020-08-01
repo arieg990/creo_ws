@@ -61,7 +61,8 @@ router.get('/list', async function(req, res, next) {
       },
       {
         model:model.Payment,
-        as:'payments'
+        as:'payments',
+        required:false
       },
       {
         model:model.Code,
@@ -145,36 +146,6 @@ router.post('/', async function(req, res, next) {
 
     var location = await model.Location.create(locationData);
     booking.location = location
-    var invoice = invoiceGenerator(booking.id)
-    booking.invoiceNumber = invoice
-
-    paymentDP = {
-      invoiceNumber:invoice,
-      total:dp,
-      bookingId:booking.id,
-      expiredDate: new Date(),
-      paymentTypeCode: "PTTDP"
-    }
-
-    paymentRPT = {
-      invoiceNumber:invoice,
-      total:repayment,
-      bookingId:booking.id,
-      expiredDate: new Date(),
-      paymentTypeCode: "PTTRPT"
-    }
-    paymentBulk.push(paymentDP)
-    paymentBulk.push(paymentRPT)
-
-    await model.Payment.bulkCreate(paymentBulk)
-
-    var update = await model.Booking.update({
-      invoiceNumber:invoice
-    }, {
-      where: {
-        id:booking.id
-      }
-    });
 
     var data = await model.Booking.findOne({
       subQuery:false,
@@ -196,7 +167,8 @@ router.post('/', async function(req, res, next) {
       },
       {
         model:model.Payment,
-        as:'payments'
+        as:'payments',
+        required: false
       },
       {
         model:model.Code,
@@ -253,22 +225,36 @@ router.put('/updateStatus', auth.isUserOrVendor, async function(req, res, next) 
   var body = req.body;
   var user = req.user;
   var url = req.protocol + '://' + req.get('host')
+  var total = 0
+  var dp = 0
+  var bookingStatus = ""
+  var repayment = 0
   var where = {}
+  var err = []
+  var paymentBulk = []
   var data = {
     statusCode: body.statusCode
   }
 
   if (typeof body.id == "undefined") {
-    var err = {
-        "message":"id not found",
-        "path":"id",
-        "value": null
-      }
+    var errId = {
+      "message":"id not found",
+      "path":"id",
+      "value": null
+    }
+    err.push(errId)
 
     return res.status(200).json(response(400,"booking",err));
   }
 
   where.id = body.id
+
+  var booking = await model.Booking.findByPk(body.id, {
+    attributes: ["statusCode", "total"]
+  });
+  total = booking.get().total
+  bookingStatus = booking.get().statusCode
+      console.log(bookingStatus)
 
   if (user.userType == "vendor") {
     where.vendorId = req.user.vendorId
@@ -276,13 +262,120 @@ router.put('/updateStatus', auth.isUserOrVendor, async function(req, res, next) 
 
   try{
 
+    if (bookingStatus == "BKSVTG" && body.statusCode == "BKSWDP") {
+
+      if (typeof body.title == "undefined" || typeof body.description == "undefined") {
+        if (typeof body.title == "undefined") {
+          var errTitle = {
+            "message":"title not found",
+            "path":"title",
+            "value": null
+          }
+          err.push(errTitle)
+        }
+
+        if (typeof body.description == "undefined") {
+          var errTitle = {
+            "message":"description not found",
+            "path":"description",
+            "value": null
+          }
+          err.push(errTitle)
+        }
+
+        return res.status(200).json(response(400,"booking",err));
+      }
+
+      var insertData = {
+        bookingId: body.id,
+        title: body.title,
+        description: body.description
+      }
+      console.log(insertData)
+
+      var invoice = invoiceGenerator(body.id)
+      data.invoiceNumber = invoice
+
+      dp = total * 30 / 100
+      repayment = total - dp
+
+      paymentDP = {
+        invoiceNumber:invoice,
+        total:dp,
+        bookingId:body.id,
+        expiredDate: new Date(),
+        paymentTypeCode: "PTTDP"
+      }
+
+      paymentRPT = {
+        invoiceNumber:invoice,
+        total:repayment,
+        bookingId:body.id,
+        expiredDate: new Date(),
+        paymentTypeCode: "PTTRPT"
+      }
+      paymentBulk.push(paymentDP)
+      paymentBulk.push(paymentRPT)
+
+      var insertProject = await model.Project.create(insertData)
+      var insertPayment = await model.Payment.bulkCreate(paymentBulk)
+
+    }
+
     var update = await model.Booking.update(data, {
       where: where
     });
 
-    res.status(200).json(response(200,"booking",update.get()));
+    if (update[0] == 1) {
+      update = await model.Booking.findByPk(body.id,{
+        subQuery:false,
+        attributes:{
+          include: [
+          [Sequelize.literal('`status`.`name`'),'statusName'],
+          [Sequelize.literal('`package`.`name`'),'packageName'],
+          [Sequelize.literal('`package`.`url1`'),'packageUrl'],
+          [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl'],
+          [Sequelize.literal('`package`.`price`'),'packagePrice'],
+          [Sequelize.literal('`package`.`capacity`'),'packageCapacity']
+          ]
+        },
+        include: [
+        {
+          model:model.Package,
+          as:'package',
+          attributes: []
+        },
+        {
+          model:model.Payment,
+          as:'payments',
+          required: false
+        },
+        {
+          model:model.Code,
+          as:'status',
+          attributes: []
+        },
+        {
+          model:model.Location,
+          as:'location'
+        }
+        ]
+      });
+
+    } else {
+      var err = {
+        "message":"update failed",
+        "path":"id",
+        "value": body.id
+      }
+
+      return res.status(200).json(response(400,"booking",err));
+    }
+
+    res.status(200).json(response(200,"booking",update));
 
   } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"booking",err));
   }
 
