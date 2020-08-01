@@ -82,7 +82,14 @@ router.get('/list', async function(req, res, next) {
     });
 
     for (var i = 0; i < list.length; i++) {
-      list[i].get().payments = await list[i].getPayments()
+      list[i].get().payments = await list[i].getPayments({
+        include: [
+        {
+          model:model.Bank,
+          as:'bank'
+        }
+        ]
+      })
     }
 
     var count = await model.Booking.count({
@@ -301,7 +308,6 @@ router.put('/updateStatus', auth.isUserOrVendor, async function(req, res, next) 
         description: body.description,
         vendorId: body.vendorId
       }
-      console.log(insertData)
 
       var invoice = invoiceGenerator(body.id)
       data.invoiceNumber = invoice
