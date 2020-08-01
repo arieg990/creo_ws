@@ -439,7 +439,7 @@ router.get('/:id', async function(req, res, next) {
         as:"reviews",
         attributes:{
           include: [
-          [Sequelize.literal('`project`.`name`'),'projectName'],
+          [Sequelize.literal('`project`.`title`'),'projectName'],
           [Sequelize.literal('`project->booking->location`.`detail`'),'locationDetail'],
           [Sequelize.literal('`customer`.`name`'),'customerName']
           ]
