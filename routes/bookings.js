@@ -20,6 +20,7 @@ router.get('/list', async function(req, res, next) {
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.limit)
   var where = {}
+  var whereCount = {}
 
   if (offset > 1) {
     page = offset-1
@@ -31,26 +32,38 @@ router.get('/list', async function(req, res, next) {
 
   if (req.query.status) {
     where.statusCode = req.query.status
+    whereCount.statusCode = req.query.status
   }
 
-  where.customerId = req.user.id
+  // req.user.id = 1
+  // req.user.userType = "customer"
+
+  if (req.user.userType == "customer") {
+    where.customerId = req.user.id
+    whereCount.customerId = req.user.id
+  }
+
+  if (req.user.userType == "vendor") {
+    where.vendorId = req.user.vendorId
+    whereCount.vendorId = req.user.vendorId
+  }
 
   try{
     var list = await model.Booking.findAll({
-      offset:page*perPage*2,
-      limit:perPage*2,
+      offset:page*perPage,
+      limit:perPage,
       order:[
       ["createdAt","DESC"]
       ],
-      subQuery:false,
+      // subQuery:false,
       attributes:{
         include: [
-        [Sequelize.literal('`status`.`name`'),'statusName'],
-        [Sequelize.literal('`package`.`name`'),'packageName'],
-        [Sequelize.literal('`package`.`url1`'),'packageUrl'],
-        [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl'],
-        [Sequelize.literal('`package`.`price`'),'packagePrice'],
-        [Sequelize.literal('`package`.`capacity`'),'packageCapacity']
+        [Sequelize.col('status.name'),'statusName'],
+        [Sequelize.col('package.name'),'packageName'],
+        [Sequelize.col('package.url1'),'packageUrl'],
+        [Sequelize.col('package.imageUrl1'),'packageImageUrl'],
+        [Sequelize.col('package.price'),'packagePrice'],
+        [Sequelize.col('package.capacity'),'packageCapacity']
         ]
       },
       include: [
@@ -58,11 +71,6 @@ router.get('/list', async function(req, res, next) {
         model:model.Package,
         as:'package',
         attributes: []
-      },
-      {
-        model:model.Payment,
-        as:'payments',
-        required:false
       },
       {
         model:model.Code,
@@ -73,10 +81,12 @@ router.get('/list', async function(req, res, next) {
       where : where
     });
 
+    for (var i = 0; i < list.length; i++) {
+      list[i].get().payments = await list[i].getPayments()
+    }
+
     var count = await model.Booking.count({
-      where: {
-        customerId: req.user.id
-      }
+      where: whereCount
     })
 
     var totalPage = Math.ceil(count/perPage)
@@ -254,7 +264,6 @@ router.put('/updateStatus', auth.isUserOrVendor, async function(req, res, next) 
   });
   total = booking.get().total
   bookingStatus = booking.get().statusCode
-      console.log(bookingStatus)
 
   if (user.userType == "vendor") {
     where.vendorId = req.user.vendorId
