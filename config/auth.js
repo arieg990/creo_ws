@@ -389,7 +389,7 @@ function isLoggedIn(req, res, next) {
     if (err) { return res.status(200).json(response(401,"unauthorized",null)); }
     if (!user) { return res.status(200).json(response(401,"unauthorized",null)); }
 
-    req.user = user
+    req.user = user.get()
 
     return next();
   })(req, res, next)
@@ -397,7 +397,7 @@ function isLoggedIn(req, res, next) {
 }
 
 function isVendor(req, res, next) {
-  if (req.user.dataValues.userType == "vendor") {
+  if (req.user.userType == "vendor") {
     return next();
   } else {
     return res.status(200).json(response(400,"restricted",null));
@@ -405,7 +405,7 @@ function isVendor(req, res, next) {
 }
 
 function isUser(req, res, next) {
-  if (req.user.dataValues.userType == "user") {
+  if (req.user.userType == "user") {
     return next();
   } else {
     return res.status(200).json(response(400,"restricted",null));
@@ -413,7 +413,7 @@ function isUser(req, res, next) {
 }
 
 function isUserOrVendor(req, res, next) {
-  if (req.user.dataValues.userType == "user" || req.user.dataValues.userType == "vendor") {
+  if (req.user.userType == "user" || req.user.userType == "vendor") {
     return next();
   } else {
     return res.status(200).json(response(400,"restricted",null));

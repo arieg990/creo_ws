@@ -99,7 +99,7 @@ router.get('/list', async function(req, res, next) {
 router.post('/', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
-  var user = req.user.dataValues
+  var user = req.user
   var data = {
     name: body.name,
     price:body.price,
@@ -208,7 +208,7 @@ try{
 router.put('/', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
-  var user = req.user.dataValues
+  var user = req.user
   var data = {
     name: body.name,
     price:body.price,

@@ -75,7 +75,7 @@ router.post('/', async function(req, res, next) {
 router.put('/', auth.isLoggedIn, async function(req, res, next) {
   var body = req.body;
   var id = req.body.id
-  var user = req.user.dataValues
+  var user = req.user
   var data = {
     name:body.name,
     phone:body.phone,
@@ -112,7 +112,7 @@ router.put('/', auth.isLoggedIn, async function(req, res, next) {
 
 router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
   var body = req.body;
-  var user = req.user.dataValues
+  var user = req.user
   var path = constant.path.customers
   var id = req.body.id
   var data = {}

@@ -72,7 +72,7 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
 
 router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
-  var user = req.user.dataValues
+  var user = req.user
   var id = req.params.id
   var data = {
     name:body.name,
@@ -94,7 +94,7 @@ router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
     });
 
     if (update[0] == 1) {
-      update = await model.VendorUser.findByPk(req.user.dataValues.id);
+      update = await model.VendorUser.findByPk(req.user.id);
     } else {
       return res.status(200).json(response(400,"vendorUser",update));
     }
@@ -111,7 +111,7 @@ router.put('/profile/:id', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var path = constant.path.vendorUsers
-  var user = req.user.dataValues
+  var user = req.user
   var id = req.params.id
   var data = {}
 

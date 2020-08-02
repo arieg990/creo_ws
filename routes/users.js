@@ -83,12 +83,12 @@ router.put('/', auth.isUser, async function(req, res, next) {
 
     var update = await model.User.update(data, {
       where: {
-        id: req.user.dataValues.id
+        id: req.user.id
       }
     });
 
     if (update[0] == 1) {
-      update = await model.User.findByPk(req.user.dataValues.id);
+      update = await model.User.findByPk(req.user.id);
     } else {
       return res.status(200).json(response(400,"user",update));
     }
@@ -128,12 +128,12 @@ router.put('/profile', auth.isUser, async function(req, res, next) {
 
     var update = await model.User.update(data, {
       where: {
-        id:req.user.dataValues.id
+        id:req.user.id
       }
     });
 
     if (update[0] == 1) {
-      update = await model.User.findByPk(req.user.dataValues.id);
+      update = await model.User.findByPk(req.user.id);
     } else {
       return res.status(200).json(response(400,"user",update));
     }

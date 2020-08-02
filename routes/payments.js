@@ -11,7 +11,7 @@ var urlGoogle = constant.url.googleStorage
 
 router.put('/upload', async function(req, res, next) {
   var body = req.body;
-  var user = req.user.dataValues
+  var user = req.user
   var path = constant.path.customers
   var id
   var data = {}
