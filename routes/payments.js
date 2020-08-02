@@ -137,7 +137,7 @@ router.put('/updateStatus', auth.isUser, async function(req, res, next) {
 
   try {
 
-    if (typeof body.id == "undefined" || typeof body.statusCode == "undefined" || || typeof body.bankId == "undefined") {
+    if (typeof body.id == "undefined" || typeof body.statusCode == "undefined" || typeof body.bankId == "undefined") {
       if (typeof body.id == "undefined") {
         var errId = {
           "message":"id not found",
