@@ -137,7 +137,7 @@ router.put('/updateStatus', auth.isUser, async function(req, res, next) {
 
   try {
 
-    if (typeof body.id == "undefined" || typeof body.statusCode == "undefined") {
+    if (typeof body.id == "undefined" || typeof body.statusCode == "undefined" || || typeof body.bankId == "undefined") {
       if (typeof body.id == "undefined") {
         var errId = {
           "message":"id not found",
@@ -148,10 +148,20 @@ router.put('/updateStatus', auth.isUser, async function(req, res, next) {
         err.push(errId)
       }
 
-      if (typeof body.paymentStatusCode == "undefined") {
+      if (typeof body.statusCode == "undefined") {
         var errtype = {
           "message":"statusCode not found",
           "path":"statusCode",
+          "value": null
+        }
+
+        err.push(errtype)
+      }
+
+      if (typeof body.bankId == "undefined") {
+        var errtype = {
+          "message":"bankId not found",
+          "path":"bankId",
           "value": null
         }
 
@@ -177,7 +187,8 @@ router.put('/updateStatus', auth.isUser, async function(req, res, next) {
     var booking = await payment.getBooking()
 
     var data = {
-      statusCode: body.statusCode
+      statusCode: body.statusCode,
+      bankId: body.bankId
     }
 
     if (payment.paymentTypeCode == "PTTDP") {
