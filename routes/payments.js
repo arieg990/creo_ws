@@ -64,10 +64,10 @@ router.put('/upload', async function(req, res, next) {
      data.url = urlGoogle
      data.imageUrl = path + img
      data.statusCode = "PTSVRF"
+     data.bankId = body.bankId
 
      var update = await model.Booking.update({
       statusCode:"BKSVDP",
-      bankId: body.bankId
     }, {
       where: {
         id:body.bookingId
@@ -93,10 +93,10 @@ router.put('/upload', async function(req, res, next) {
      data.url = urlGoogle
      data.imageUrl = path + img
      data.statusCode = "PTSVRF"
+     data.bankId = body.bankId
 
      var update = await model.Booking.update({
       statusCode:"BKSVRP",
-      bankId: body.bankId
     }, {
       where: {
         id:body.bookingId
@@ -137,7 +137,7 @@ router.put('/updateStatus', auth.isUser, async function(req, res, next) {
 
   try {
 
-    if (typeof body.id == "undefined" || typeof body.statusCode == "undefined" || typeof body.bankId == "undefined") {
+    if (typeof body.id == "undefined" || typeof body.statusCode == "undefined") {
       if (typeof body.id == "undefined") {
         var errId = {
           "message":"id not found",
@@ -148,20 +148,10 @@ router.put('/updateStatus', auth.isUser, async function(req, res, next) {
         err.push(errId)
       }
 
-      if (typeof body.statusCode == "undefined") {
+      if (typeof body.paymentStatusCode == "undefined") {
         var errtype = {
           "message":"statusCode not found",
           "path":"statusCode",
-          "value": null
-        }
-
-        err.push(errtype)
-      }
-
-      if (typeof body.bankId == "undefined") {
-        var errtype = {
-          "message":"bankId not found",
-          "path":"bankId",
           "value": null
         }
 
@@ -187,8 +177,7 @@ router.put('/updateStatus', auth.isUser, async function(req, res, next) {
     var booking = await payment.getBooking()
 
     var data = {
-      statusCode: body.statusCode,
-      bankId: body.bankId
+      statusCode: body.statusCode
     }
 
     if (payment.paymentTypeCode == "PTTDP") {
