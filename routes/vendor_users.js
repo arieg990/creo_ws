@@ -15,7 +15,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   var page = 0;
   var perPage = 10;
   var offset = parseInt(req.query.page)
-  var limit = parseInt(req.query.perPage)
+  var limit = parseInt(req.query.limit)
 
   if (offset > 1) {
     page = offset-1
@@ -32,9 +32,14 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       attributes: { exclude: ['password'] }
     });
 
+    var count = await model.VendorUser.count()
+
+    var totalPage = Math.ceil(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     res.status(200).json(response(200,"vendorUsers",list,paging));
@@ -67,7 +72,7 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
 
 router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
-  var user = req.user.dataValues
+  var user = req.user
   var id = req.params.id
   var data = {
     name:body.name,
@@ -89,7 +94,7 @@ router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
     });
 
     if (update[0] == 1) {
-      update = await model.VendorUser.findByPk(req.user.dataValues.id);
+      update = await model.VendorUser.findByPk(req.user.id);
     } else {
       return res.status(200).json(response(400,"vendorUser",update));
     }
@@ -106,7 +111,7 @@ router.put('/profile/:id', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
   var path = constant.path.vendorUsers
-  var user = req.user.dataValues
+  var user = req.user
   var id = req.params.id
   var data = {}
 

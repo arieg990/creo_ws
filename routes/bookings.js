@@ -18,8 +18,9 @@ router.get('/list', async function(req, res, next) {
   var page = 0;
   var perPage = 10;
   var offset = parseInt(req.query.page)
-  var limit = parseInt(req.query.perPage)
+  var limit = parseInt(req.query.limit)
   var where = {}
+  var whereCount = {}
 
   if (offset > 1) {
     page = offset-1
@@ -31,9 +32,21 @@ router.get('/list', async function(req, res, next) {
 
   if (req.query.status) {
     where.statusCode = req.query.status
+    whereCount.statusCode = req.query.status
   }
 
-  where.customerId = req.user.id
+  // req.user.id = 1
+  // req.user.userType = "customer"
+
+  if (req.user.userType == "customer") {
+    where.customerId = req.user.id
+    whereCount.customerId = req.user.id
+  }
+
+  if (req.user.userType == "vendor") {
+    where.vendorId = req.user.vendorId
+    whereCount.vendorId = req.user.vendorId
+  }
 
   try{
     var list = await model.Booking.findAll({
@@ -42,15 +55,15 @@ router.get('/list', async function(req, res, next) {
       order:[
       ["createdAt","DESC"]
       ],
-      subQuery:false,
+      // subQuery:false,
       attributes:{
         include: [
-        [Sequelize.literal('`status`.`name`'),'statusName'],
-        [Sequelize.literal('`package`.`name`'),'packageName'],
-        [Sequelize.literal('`package`.`url1`'),'packageUrl'],
-        [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl'],
-        [Sequelize.literal('`package`.`price`'),'packagePrice'],
-        [Sequelize.literal('`package`.`capacity`'),'packageCapacity']
+        [Sequelize.col('status.name'),'statusName'],
+        [Sequelize.col('package.name'),'packageName'],
+        [Sequelize.col('package.url1'),'packageUrl'],
+        [Sequelize.col('package.imageUrl1'),'packageImageUrl'],
+        [Sequelize.col('package.price'),'packagePrice'],
+        [Sequelize.col('package.capacity'),'packageCapacity']
         ]
       },
       include: [
@@ -58,10 +71,6 @@ router.get('/list', async function(req, res, next) {
         model:model.Package,
         as:'package',
         attributes: []
-      },
-      {
-        model:model.Payment,
-        as:'payments'
       },
       {
         model:model.Code,
@@ -72,9 +81,27 @@ router.get('/list', async function(req, res, next) {
       where : where
     });
 
+    for (var i = 0; i < list.length; i++) {
+      list[i].get().payments = await list[i].getPayments({
+        include: [
+        {
+          model:model.Bank,
+          as:'bank'
+        }
+        ]
+      })
+    }
+
+    var count = await model.Booking.count({
+      where: whereCount
+    })
+
+    var totalPage = Math.ceil(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     res.status(200).json(response(200,"bookings",list,paging));
@@ -136,36 +163,6 @@ router.post('/', async function(req, res, next) {
 
     var location = await model.Location.create(locationData);
     booking.location = location
-    var invoice = invoiceGenerator(booking.id)
-    booking.invoiceNumber = invoice
-
-    paymentDP = {
-      invoiceNumber:invoice,
-      total:dp,
-      bookingId:booking.id,
-      expiredDate: new Date(),
-      paymentTypeCode: "PTTDP"
-    }
-
-    paymentRPT = {
-      invoiceNumber:invoice,
-      total:repayment,
-      bookingId:booking.id,
-      expiredDate: new Date(),
-      paymentTypeCode: "PTTRPT"
-    }
-    paymentBulk.push(paymentDP)
-    paymentBulk.push(paymentRPT)
-
-    await model.Payment.bulkCreate(paymentBulk)
-
-    var update = await model.Booking.update({
-      invoiceNumber:invoice
-    }, {
-      where: {
-        id:booking.id
-      }
-    });
 
     var data = await model.Booking.findOne({
       subQuery:false,
@@ -187,7 +184,8 @@ router.post('/', async function(req, res, next) {
       },
       {
         model:model.Payment,
-        as:'payments'
+        as:'payments',
+        required: false
       },
       {
         model:model.Code,
@@ -212,10 +210,9 @@ router.post('/', async function(req, res, next) {
   
 });
 
-router.put('/', async function(req, res, next) {
+router.put('/', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var url = req.protocol + '://' + req.get('host')
-  var path = constant.path.categories
   var data = {
     title: body.title,
     description:body.description,
@@ -236,6 +233,165 @@ router.put('/', async function(req, res, next) {
     res.status(200).json(response(200,"booking",update));
 
   } catch(err) {
+    res.status(200).json(response(400,"booking",err));
+  }
+
+});
+
+router.put('/updateStatus', auth.isUserOrVendor, async function(req, res, next) {
+  var body = req.body;
+  var user = req.user;
+  var url = req.protocol + '://' + req.get('host')
+  var total = 0
+  var dp = 0
+  var bookingStatus = ""
+  var repayment = 0
+  var where = {}
+  var err = []
+  var paymentBulk = []
+  var data = {
+    statusCode: body.statusCode
+  }
+
+  if (typeof body.id == "undefined") {
+    var errId = {
+      "message":"id not found",
+      "path":"id",
+      "value": null
+    }
+    err.push(errId)
+
+    return res.status(200).json(response(400,"booking",err));
+  }
+
+  where.id = body.id
+
+  var booking = await model.Booking.findByPk(body.id, {
+    attributes: ["statusCode", "total"]
+  });
+  total = booking.get().total
+  bookingStatus = booking.get().statusCode
+
+  if (user.userType == "vendor") {
+    where.vendorId = req.user.vendorId
+  } 
+
+  try{
+
+    if (bookingStatus == "BKSVTG" && body.statusCode == "BKSWDP") {
+
+      if (typeof body.title == "undefined" || typeof body.description == "undefined") {
+        if (typeof body.title == "undefined") {
+          var errTitle = {
+            "message":"title not found",
+            "path":"title",
+            "value": null
+          }
+          err.push(errTitle)
+        }
+
+        if (typeof body.description == "undefined") {
+          var errTitle = {
+            "message":"description not found",
+            "path":"description",
+            "value": null
+          }
+          err.push(errTitle)
+        }
+
+        return res.status(200).json(response(400,"booking",err));
+      }
+
+      var insertData = {
+        bookingId: body.id,
+        title: body.title,
+        description: body.description,
+        vendorId: body.vendorId
+      }
+
+      var invoice = invoiceGenerator(body.id)
+      data.invoiceNumber = invoice
+
+      dp = total * 30 / 100
+      repayment = total - dp
+
+      paymentDP = {
+        invoiceNumber:invoice,
+        total:dp,
+        bookingId:body.id,
+        expiredDate: new Date(),
+        paymentTypeCode: "PTTDP"
+      }
+
+      paymentRPT = {
+        invoiceNumber:invoice,
+        total:repayment,
+        bookingId:body.id,
+        expiredDate: new Date(),
+        paymentTypeCode: "PTTRPT"
+      }
+      paymentBulk.push(paymentDP)
+      paymentBulk.push(paymentRPT)
+
+      var insertProject = await model.Project.create(insertData)
+      var insertPayment = await model.Payment.bulkCreate(paymentBulk)
+
+    }
+
+    var update = await model.Booking.update(data, {
+      where: where
+    });
+
+    if (update[0] == 1) {
+      update = await model.Booking.findByPk(body.id,{
+        subQuery:false,
+        attributes:{
+          include: [
+          [Sequelize.literal('`status`.`name`'),'statusName'],
+          [Sequelize.literal('`package`.`name`'),'packageName'],
+          [Sequelize.literal('`package`.`url1`'),'packageUrl'],
+          [Sequelize.literal('`package`.`imageUrl1`'),'packageImageUrl'],
+          [Sequelize.literal('`package`.`price`'),'packagePrice'],
+          [Sequelize.literal('`package`.`capacity`'),'packageCapacity']
+          ]
+        },
+        include: [
+        {
+          model:model.Package,
+          as:'package',
+          attributes: []
+        },
+        {
+          model:model.Payment,
+          as:'payments',
+          required: false
+        },
+        {
+          model:model.Code,
+          as:'status',
+          attributes: []
+        },
+        {
+          model:model.Location,
+          as:'location'
+        }
+        ]
+      });
+
+    } else {
+      var err = {
+        "message":"update failed",
+        "path":"id",
+        "value": body.id
+      }
+
+      return res.status(200).json(response(400,"booking",err));
+    }
+
+    res.status(200).json(response(200,"booking",update));
+
+  } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"booking",err));
   }
 
@@ -295,7 +451,13 @@ router.get('/:id', async function(req, res, next) {
       },
       {
         model:model.Payment,
-        as:'payments'
+        as:'payments',
+        include: [
+        {
+          model:model.Bank,
+          as:'bank'
+        }
+        ]
       },
       {
         model:model.Location,

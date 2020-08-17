@@ -79,8 +79,9 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   var page = 0;
   var perPage = 10;
   var offset = parseInt(req.query.page)
-  var limit = parseInt(req.query.perPage)
+  var limit = parseInt(req.query.limit)
   var where = {}
+  var whereCount = {}
   var include = []
 
   if (offset > 1) {
@@ -93,6 +94,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
 
   if(req.query.categoryId != null) {
     where.categoryId = req.query.categoryId
+    whereCount.categoryId = req.query.categoryId
   }
 
   if (req.query.include != null) {
@@ -109,9 +111,16 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       where: where
     });
 
+    var count = await model.Vendor.count({
+      where:whereCount
+    })
+
+    var totalPage = Math.ceil(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     for (var i = list.length - 1; i >= 0; i--) {
@@ -430,7 +439,7 @@ router.get('/:id', async function(req, res, next) {
         as:"reviews",
         attributes:{
           include: [
-          [Sequelize.literal('`project`.`name`'),'projectName'],
+          [Sequelize.literal('`project`.`title`'),'projectName'],
           [Sequelize.literal('`project->booking->location`.`detail`'),'locationDetail'],
           [Sequelize.literal('`customer`.`name`'),'customerName']
           ]

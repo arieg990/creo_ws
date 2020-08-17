@@ -17,6 +17,7 @@ router.get('/list', async function(req, res, next) {
   var perPage = 10;
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.limit)
+  var user = req.user
   var where = {}
   var whereCount = {}
 
@@ -29,14 +30,8 @@ router.get('/list', async function(req, res, next) {
   }
 
 
-  if(req.query.type != null) {
-    if (type == "vendor") {
-      where.vendorId = req.query.id
-      whereCount.vendorId = req.query.id
-    } else if (type == "package") {
-      where.packageId = req.query.id
-      whereCount.packageId = req.query.id
-    }
+  if (user.userType == "customer") {
+    id = user.id
   }
 
   try{

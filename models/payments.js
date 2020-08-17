@@ -10,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DOUBLE(13, 4),
       allowNull: false,
     },
+    imageUrl: DataTypes.STRING,
+    url:DataTypes.STRING,
     expiredDate: {
       type: DataTypes.DATE,
       allowNull: false
@@ -48,6 +50,14 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
       as: "status"
     });
+
+    payments.belongsTo(models.Bank, {
+      foreignKey: {
+        name:'bankId'
+      },
+      onUpdate:'CASCADE',
+      as: 'bank'
+    })
   };
   return payments;
 };

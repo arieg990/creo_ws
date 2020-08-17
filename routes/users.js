@@ -15,7 +15,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   var page = 0;
   var perPage = 10;
   var offset = parseInt(req.query.page)
-  var limit = parseInt(req.query.perPage)
+  var limit = parseInt(req.query.limit)
 
   if (offset > 1) {
     page = offset-1
@@ -32,9 +32,14 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       attributes: { exclude: ['password'] }
     });
 
+    var count = await model.User.count()
+
+    var totalPage = Math.ceil(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     res.status(200).json(response(200,"users",list,paging));
@@ -78,12 +83,12 @@ router.put('/', auth.isUser, async function(req, res, next) {
 
     var update = await model.User.update(data, {
       where: {
-        id: req.user.dataValues.id
+        id: req.user.id
       }
     });
 
     if (update[0] == 1) {
-      update = await model.User.findByPk(req.user.dataValues.id);
+      update = await model.User.findByPk(req.user.id);
     } else {
       return res.status(200).json(response(400,"user",update));
     }
@@ -123,12 +128,12 @@ router.put('/profile', auth.isUser, async function(req, res, next) {
 
     var update = await model.User.update(data, {
       where: {
-        id:req.user.dataValues.id
+        id:req.user.id
       }
     });
 
     if (update[0] == 1) {
-      update = await model.User.findByPk(req.user.dataValues.id);
+      update = await model.User.findByPk(req.user.id);
     } else {
       return res.status(200).json(response(400,"user",update));
     }

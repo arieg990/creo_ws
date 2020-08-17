@@ -15,7 +15,7 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
   var page = 0;
   var perPage = 10;
   var offset = parseInt(req.query.page)
-  var limit = parseInt(req.query.perPage)
+  var limit = parseInt(req.query.limit)
 
   if (offset > 1) {
     page = offset-1
@@ -35,9 +35,14 @@ router.get('/list', auth.isLoggedIn, async function(req, res, next) {
       ]
     });
 
+    var count = await model.Customer.count()
+
+    var totalPage = Math.ceil(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     res.status(200).json(response(200,"customers",list,paging));
@@ -70,7 +75,7 @@ router.post('/', async function(req, res, next) {
 router.put('/', auth.isLoggedIn, async function(req, res, next) {
   var body = req.body;
   var id = req.body.id
-  var user = req.user.dataValues
+  var user = req.user
   var data = {
     name:body.name,
     phone:body.phone,
@@ -107,7 +112,7 @@ router.put('/', auth.isLoggedIn, async function(req, res, next) {
 
 router.put('/profile', auth.isLoggedIn, async function(req, res, next) {
   var body = req.body;
-  var user = req.user.dataValues
+  var user = req.user
   var path = constant.path.customers
   var id = req.body.id
   var data = {}

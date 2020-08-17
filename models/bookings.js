@@ -54,11 +54,17 @@ module.exports = (sequelize, DataTypes) => {
       as: "location"
     });
 
+    bookings.hasOne(models.Project,{
+      foreignKey: 'bookingId',
+      onUpdate: 'CASCADE',
+      as: "project"
+    });
+
     bookings.belongsTo(models.Code,{
       foreignKey: {
         name:'statusCode',
         allowNull: false,
-        defaultValue: 'BKSWTG'
+        defaultValue: 'BKSVTG'
       },
       onUpdate: 'CASCADE',
       as: "status"

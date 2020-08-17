@@ -9,7 +9,7 @@ router.get('/list', async function(req, res, next) {
   var page = 0;
   var perPage = 10;
   var offset = parseInt(req.query.page)
-  var limit = parseInt(req.query.perPage)
+  var limit = parseInt(req.query.limit)
 
   if (offset > 1) {
     page = offset-1
@@ -38,9 +38,14 @@ router.get('/list', async function(req, res, next) {
       ]
     });
 
+    var count = await model.SubDistrict.count()
+
+    var totalPage = Math.ceil(count/perPage)
+
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
+      "totalPage": totalPage
     }
 
     res.status(200).json(response(200,"subDistricts",list,paging));
