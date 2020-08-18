@@ -69,6 +69,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'roleId',
       as: "role"
     });
+
+    vendorUsers.belongsTo(models.Vendor, {
+      foreignKey: 'vendorId',
+      as: "vendor"
+    })
   };
 
   return vendorUsers;
