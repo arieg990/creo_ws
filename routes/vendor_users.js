@@ -176,7 +176,13 @@ router.get('/:id', auth.isLoggedIn, async function(req, res, next) {
   try{
 
     var list = await model.VendorUser.findByPk(req.params.id,{
-      attributes: { exclude: ['password'] }
+      attributes: { exclude: ['password'] },
+      include: [
+        {
+            model: model.Vendor,
+            as:"vendor"
+        }
+      ]
     });
 
     res.status(200).json(response(200,"vendorUser",list));
