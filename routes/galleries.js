@@ -30,6 +30,7 @@ router.get('/list', async function(req, res, next) {
 
 
   if(req.query.type != null) {
+    const type = req.query.type
     if (type == "vendor") {
       where.vendorId = req.query.id
       whereCount.vendorId = req.query.id
