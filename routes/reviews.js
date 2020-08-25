@@ -20,7 +20,7 @@ router.post('/', async function(req, res, next) {
 		},
 		include: [
 		{
-			model:model.ProjectId,
+			model:model.Project,
 			as:'project',
 		}
 		]
