@@ -74,7 +74,7 @@ router.put('/', auth.isUser, async function(req, res, next) {
 
     var update = await model.CategoryCode.update(data, {
       where: {
-        category:body.categoryCode
+        categoryCode:body.categoryCode
       }
     });
 
