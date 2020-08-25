@@ -131,7 +131,8 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
      data.imageUrl1 = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    console.log(err)
+    res.status(200).json(response(400,"package",error("image")));
   }
 }
 
@@ -151,7 +152,7 @@ if (body.image2 != null) {
      data.imageUrl2 = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"package",error("image")));
   }
 }
 
@@ -171,7 +172,7 @@ if (body.image3 != null) {
      data.imageUrl3 = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"package",error("image")));
   }
 }
 
@@ -200,6 +201,7 @@ try{
 
   res.status(200).json(response(200,"package",list));
 } catch(err) {
+    console.log(err)
   res.status(200).json(response(400,"package",err));
 }
 
@@ -234,7 +236,8 @@ router.put('/', auth.isUserOrVendor, async function(req, res, next) {
      data.imageUrl1 = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    console.log(err)
+    res.status(200).json(response(400,"package",error("image")));
   }
 }
 
@@ -254,7 +257,8 @@ if (body.image2 != null) {
      data.imageUrl2 = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    console.log(err)
+    res.status(200).json(response(400,"package",error("image")));
   }
 }
 
@@ -274,7 +278,7 @@ if (body.image3 != null) {
      data.imageUrl3 = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"package",error("image")));
   }
 }
 
@@ -315,7 +319,7 @@ if (body.image4 != null) {
     res.status(200).json(response(200,"package",update));
 
   } catch(err) {
-
+    console.log(err)
     res.status(200).json(response(400,"package",err));
   }
 
