@@ -202,6 +202,7 @@ try{
 
   res.status(200).json(response(200,"vendor",list));
 } catch(err) {
+  console.log(err)
   res.status(200).json(response(400,"vendor",err));
 }
 
