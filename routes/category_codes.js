@@ -87,6 +87,7 @@ router.put('/', auth.isUser, async function(req, res, next) {
     res.status(200).json(response(200,"categoryCode",update));
 
   } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"categoryCode",err));
   }
 

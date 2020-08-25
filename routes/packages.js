@@ -131,7 +131,6 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
      data.imageUrl1 = path + img
    } else {
 
-    console.log(err)
     res.status(200).json(response(400,"package",error("image")));
   }
 }
@@ -192,7 +191,7 @@ if (body.image4 != null) {
      data.imageUrl4 = path + img
    } else {
 
-    res.status(200).json(response(400,"category",error("image")));
+    res.status(200).json(response(400,"package",error("image")));
   }
 }
 
@@ -236,7 +235,6 @@ router.put('/', auth.isUserOrVendor, async function(req, res, next) {
      data.imageUrl1 = path + img
    } else {
 
-    console.log(err)
     res.status(200).json(response(400,"package",error("image")));
   }
 }
@@ -257,7 +255,6 @@ if (body.image2 != null) {
      data.imageUrl2 = path + img
    } else {
 
-    console.log(err)
     res.status(200).json(response(400,"package",error("image")));
   }
 }
