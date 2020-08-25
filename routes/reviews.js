@@ -14,27 +14,26 @@ router.post('/', async function(req, res, next) {
 	var user = req.user;
 
   try{
-  	var project = await model.Project.findOne({
+  	var booking = await model.Booking.findOne({
 		where: {
-			id: body.projectId
+			id: body.bookingId
 		},
 		include: [
 		{
-			model:model.Booking,
-			as:'booking',
-			attributes: ['packageId','vendorId']
+			model:model.ProjectId,
+			as:'project',
 		}
 		]
 	})
 
-  	project = project.get()
+  	booking = booking.get()
 	var data = {
 		rating: body.rating,
 		description:body.description,
-		projectId:body.projectId,
-		bookingId:project.bookingId,
-		vendorId:project.booking.vendorId,
-    	packageId:project.booking.packageId,
+		projectId:booking.project.id,
+		bookingId:booking.id,
+		vendorId:booking.vendorId,
+    	packageId:booking.packageId,
     	customerId: user.id
   }
 
