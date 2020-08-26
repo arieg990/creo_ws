@@ -107,12 +107,11 @@ router.put('/', auth.isUserOrVendor, async function(req, res, next) {
 
 });
 
-router.put('/profile/:id', auth.isUserOrVendor, async function(req, res, next) {
+router.put('/profile/', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
-  var url = req.protocol + '://' + req.get('host')
   var path = constant.path.vendorUsers
   var user = req.user
-  var id = req.params.id
+  var id = req.body.id
   var data = {}
 
   var decode = cryptoLocal.decodeBase64Image(body.image)
