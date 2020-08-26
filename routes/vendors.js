@@ -157,6 +157,7 @@ router.post('/', async function(req, res, next) {
     isOfficial: body.isOfficial
   }
 
+console.log(body)
   if (body.avatarImage != null) {
 
     var decode = cryptoLocal.decodeBase64Image(body.avatarImage)
