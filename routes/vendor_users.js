@@ -70,10 +70,10 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
   
 });
 
-router.put('/:id', auth.isUserOrVendor, async function(req, res, next) {
+router.put('/', auth.isUserOrVendor, async function(req, res, next) {
   var body = req.body;
   var user = req.user
-  var id = req.params.id
+  var id = req.body.id
   var data = {
     name:body.name,
     phone:body.phone,
