@@ -154,7 +154,24 @@ router.get('/:id', async function(req, res, next) {
 
   try{
 
-    var list = await model.Project.findByPk(req.params.id);
+    var list = await model.Project.findByPk(req.params.id,{
+      include: [
+      {
+        model:model.Booking,
+        as:"booking",
+        include: [
+        {
+          model: model.Customer,
+          as: 'customer',
+        },
+        {
+          model: model.Location,
+          as: 'location'
+        }
+        ]
+      }
+      ]
+    });
 
     res.status(200).json(response(200,"project",list));
 
