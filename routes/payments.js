@@ -3,6 +3,7 @@ var router = express.Router();
 const crypto = require('crypto');
 const cryptoLocal = require('../config/crypto');
 var model = require('../models');
+const Sequelize = require("sequelize")
 var response = require('../config/constant').response;
 var auth = require('../config/auth');
 var constant = require('../config/constant.json');
@@ -31,7 +32,25 @@ router.get('/list', async function(req, res, next) {
     var list = await model.Payment.findAll({
       offset:page*perPage,
       limit:perPage,
-      where: where
+      where: where,
+      attributes:{
+        include: [
+        [Sequelize.literal('`status`.`name`'),'statusName'],
+        [Sequelize.literal('`paymentType`.`name`'),'paymentTypeName']
+        ]
+      }
+      include: [
+      {
+        model:model.Code,
+        as:'status',
+        attributes:[]
+      },
+      {
+        model:model.Code,
+        as:'paymentType',
+        attributes:[]
+      }
+      ]
     });
 
     var count = await model.Payment.count({
@@ -258,7 +277,26 @@ router.get('/:id', async function(req, res, next) {
 
   try{
 
-    var list = await model.Payment.findByPk(req.params.id);
+    var list = await model.Payment.findByPk(req.params.id, {
+      attributes:{
+        include: [
+        [Sequelize.literal('`status`.`name`'),'statusName'],
+        [Sequelize.literal('`paymentType`.`name`'),'paymentTypeName']
+        ]
+      }
+      include: [
+      {
+        model:model.Code,
+        as:'status',
+        attributes:[]
+      },
+      {
+        model:model.Code,
+        as:'paymentType',
+        attributes:[]
+      }
+      ]
+    });
 
     res.status(200).json(response(200,"payment",list));
 
