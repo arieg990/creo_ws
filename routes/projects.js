@@ -68,7 +68,8 @@ router.get('/list', async function(req, res, next) {
     var paging = {
       "currentPage": page+1,
       "limitPerPage": perPage,
-      "totalPage": totalPage
+      "totalPage": totalPage,
+      "total": count
     }
 
     res.status(200).json(response(200,"projects",list,paging));
