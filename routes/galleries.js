@@ -70,6 +70,7 @@ router.get('/list', async function(req, res, next) {
 router.post('/', async function(req, res, next) {
 	var body = req.body;
   var url = req.protocol + '://' + req.get('host')
+  var err = []
   var data = {
     vendorId: body.vendorId,
     packageId: body.packageId,
@@ -77,13 +78,36 @@ router.post('/', async function(req, res, next) {
   }
 
   try{
-    var list = await model.Gallery.create(data);
 
-    res.status(200).json(response(200,"gallery",list));
-  } catch(err) {
-    res.status(200).json(response(400,"gallery",err));
-  }
-  
+    if (typeof body.image == "undefined") {
+      var errId = {
+        "message":"id not found",
+        "path":"id",
+        "value": null
+      }
+      err.push(errId)
+
+      return res.status(200).json(response(400,"booking",err));
+    } else {
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+
+      data.imageUrl = path + img
+
+      var upload = await uploadFile(path+img,decode)
+      if (upload) {
+       data.url = urlGoogle
+       data.imageUrl = path + img
+     }
+   }
+
+   var list = await model.Gallery.create(data);
+
+   res.status(200).json(response(200,"gallery",list));
+ } catch(err) {
+  res.status(200).json(response(400,"gallery",err));
+}
+
 });
 
 router.put('/', async function(req, res, next) {
@@ -97,6 +121,19 @@ router.put('/', async function(req, res, next) {
   }
 
   try{
+
+    if (typeof body.image != "undefined") {
+      var decode = cryptoLocal.decodeBase64Image(body.image)
+      var img = crypto.randomBytes(32).toString('hex') +'.'+ decode.type;
+
+      data.imageUrl = path + img
+
+      var upload = await uploadFile(path+img,decode)
+      if (upload) {
+       data.url = urlGoogle
+       data.imageUrl = path + img
+     }
+   }
 
     var update = await model.Gallery.update(data, {
       where: {
