@@ -38,7 +38,7 @@ router.get('/list', async function(req, res, next) {
         [Sequelize.literal('`status`.`name`'),'statusName'],
         [Sequelize.literal('`paymentType`.`name`'),'paymentTypeName']
         ]
-      }
+      },
       include: [
       {
         model:model.Code,
@@ -283,7 +283,7 @@ router.get('/:id', async function(req, res, next) {
         [Sequelize.literal('`status`.`name`'),'statusName'],
         [Sequelize.literal('`paymentType`.`name`'),'paymentTypeName']
         ]
-      }
+      },
       include: [
       {
         model:model.Code,
