@@ -9,6 +9,51 @@ var constant = require('../config/constant.json');
 const {uploadFile} = require('../config/uploadFile');
 var urlGoogle = constant.url.googleStorage
 
+/* GET users listing. */
+router.get('/list', async function(req, res, next) {
+
+  var page = 0;
+  var perPage = 10;
+  var offset = parseInt(req.query.page)
+  var limit = parseInt(req.query.limit)
+  var where = {}
+  var whereCount = {}
+
+  if (offset > 1) {
+    page = offset-1
+  }
+
+  if (limit >= 1) {
+    perPage = limit
+  }
+
+  try{
+    var list = await model.Payment.findAll({
+      offset:page*perPage,
+      limit:perPage,
+      where: where
+    });
+
+    var count = await model.Payment.count({
+      where:whereCount
+    })
+
+    var totalPage = Math.ceil(count/perPage)
+
+    var paging = {
+      "currentPage": page+1,
+      "limitPerPage": perPage,
+      "totalPage": totalPage
+    }
+
+    res.status(200).json(response(200,"payments",list,paging));
+  } catch(err) {
+    console.log(err)
+    res.status(200).json(response(400,"payments",err));
+  }
+
+});
+
 router.put('/upload', async function(req, res, next) {
   var body = req.body;
   var user = req.user
@@ -208,5 +253,19 @@ router.put('/updateStatus', auth.isUser, async function(req, res, next) {
   }
 
 })
+
+router.get('/:id', async function(req, res, next) {
+
+  try{
+
+    var list = await model.Payment.findByPk(req.params.id);
+
+    res.status(200).json(response(200,"payment",list));
+
+  } catch(err) {
+    res.status(200).json(response(400,"payment",err));
+  }
+
+});
 
 module.exports = router;
