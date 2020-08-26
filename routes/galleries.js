@@ -44,7 +44,34 @@ router.get('/list', async function(req, res, next) {
     var list = await model.Gallery.findAll({
       offset:page*perPage,
       limit:perPage,
-      where: where
+      where: where,
+      attributes:{
+        include: [
+        [Sequelize.literal('`vendor`.`name`'),'vendorName'],
+        [Sequelize.literal('`project`.`title`'),'projectTitle'],
+        [Sequelize.literal('`package`.`name`'),'packageName']
+        ]
+      },
+      include: [
+      {
+        model:model.Vendor,
+        as: 'vendor',
+        attributes: [],
+        required: false
+      },
+      {
+        model:model.Package,
+        as: 'package',
+        attributes: [],
+        required: false
+      },
+      {
+        model:model.Project,
+        as: 'project',
+        attributes: [],
+        required: false
+      }
+      ]
     });
 
     var count = await model.Gallery.count({
@@ -135,23 +162,23 @@ router.put('/', async function(req, res, next) {
      }
    }
 
-    var update = await model.Gallery.update(data, {
-      where: {
-        id:body.id
-      }
-    });
-
-    if (update[0] == 1) {
-      update = await model.Gallery.findByPk(body.id);
-    } else {
-      return res.status(200).json(response(400,"gallery",update));
+   var update = await model.Gallery.update(data, {
+    where: {
+      id:body.id
     }
+  });
 
-    res.status(200).json(response(200,"gallery",update));
-
-  } catch(err) {
-    res.status(200).json(response(400,"gallery",err));
+   if (update[0] == 1) {
+    update = await model.Gallery.findByPk(body.id);
+  } else {
+    return res.status(200).json(response(400,"gallery",update));
   }
+
+  res.status(200).json(response(200,"gallery",update));
+
+} catch(err) {
+  res.status(200).json(response(400,"gallery",err));
+}
 
 });
 
@@ -178,7 +205,35 @@ router.get('/:id', async function(req, res, next) {
 
   try{
 
-    var list = await model.Gallery.findByPk(req.params.id);
+    var list = await model.Gallery.findByPk(req.params.id, {
+      attributes:{
+        include: [
+        [Sequelize.literal('`vendor`.`name`'),'vendorName'],
+        [Sequelize.literal('`project`.`title`'),'projectTitle'],
+        [Sequelize.literal('`package`.`name`'),'packageName']
+        ]
+      },
+      include: [
+      {
+        model:model.Vendor,
+        as: 'vendor',
+        attributes: [],
+        required: false
+      },
+      {
+        model:model.Package,
+        as: 'package',
+        attributes: [],
+        required: false
+      },
+      {
+        model:model.Project,
+        as: 'project',
+        attributes: [],
+        required: false
+      }
+      ]
+    });
 
     res.status(200).json(response(200,"gallery",list));
 
