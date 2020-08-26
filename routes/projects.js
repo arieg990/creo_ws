@@ -31,18 +31,36 @@ router.get('/list', async function(req, res, next) {
 
 
   if (user.userType == "customer") {
-    id = user.id
+    where.customerId = user.id
+    whereCount.customerId = user.id
+  }
+
+  if (user.userType == "vendor") {
+    where.vendorId = user.vendorId
+    whereCount.vendorId = user.vendorId
   }
 
   try{
-    var list = await model.Gallery.findAll({
+    var list = await model.Project.findAll({
       offset:page*perPage,
       limit:perPage,
-      where: where
+      include: [
+      {
+        model:model.Booking,
+        as:"booking",
+        where:where
+      }
+      ]
     });
 
-    var count = await model.Gallery.count({
-      where:whereCount
+    var count = await model.Project.count({
+      include: [
+      {
+        model:model.Booking,
+        as:"booking",
+        where:where
+      }
+      ]
     })
 
     var totalPage = Math.ceil(count/perPage)
@@ -53,80 +71,80 @@ router.get('/list', async function(req, res, next) {
       "totalPage": totalPage
     }
 
-    res.status(200).json(response(200,"galleries",list,paging));
+    res.status(200).json(response(200,"projects",list,paging));
   } catch(err) {
     console.log(err)
-    res.status(200).json(response(400,"galleries",err));
+    res.status(200).json(response(400,"projects",err));
   }
 
 });
 
-router.post('/', async function(req, res, next) {
-	var body = req.body;
-  var url = req.protocol + '://' + req.get('host')
-  var data = {
-    vendorId: body.vendorId,
-    packageId: body.packageId,
-    isMain: body.isMain
-  }
+// router.post('/', async function(req, res, next) {
+// 	var body = req.body;
+//   var url = req.protocol + '://' + req.get('host')
+//   var data = {
+//     vendorId: body.vendorId,
+//     packageId: body.packageId,
+//     isMain: body.isMain
+//   }
 
-  try{
-    var list = await model.Gallery.create(data);
+//   try{
+//     var list = await model.Gallery.create(data);
 
-    res.status(200).json(response(200,"gallery",list));
-  } catch(err) {
-    res.status(200).json(response(400,"gallery",err));
-  }
+//     res.status(200).json(response(200,"gallery",list));
+//   } catch(err) {
+//     res.status(200).json(response(400,"gallery",err));
+//   }
   
-});
+// });
 
-router.put('/', async function(req, res, next) {
-  var body = req.body;
-  var url = req.protocol + '://' + req.get('host')
-  var path = constant.path.categories
-  var data = {
-    vendorId: body.vendorId,
-    packageId: body.packageId,
-    isMain: body.isMain
-  }
+// router.put('/', async function(req, res, next) {
+//   var body = req.body;
+//   var url = req.protocol + '://' + req.get('host')
+//   var path = constant.path.categories
+//   var data = {
+//     vendorId: body.vendorId,
+//     packageId: body.packageId,
+//     isMain: body.isMain
+//   }
 
-  try{
+//   try{
 
-    var update = await model.Gallery.update(data, {
-      where: {
-        id:body.id
-      }
-    });
+//     var update = await model.Project.update(data, {
+//       where: {
+//         id:body.id
+//       }
+//     });
 
-    if (update[0] == 1) {
-      update = await model.Gallery.findByPk(body.id);
-    } else {
-      return res.status(200).json(response(400,"gallery",update));
-    }
+//     if (update[0] == 1) {
+//       update = await model.Gallery.findByPk(body.id);
+//     } else {
+//       return res.status(200).json(response(400,"gallery",update));
+//     }
 
-    res.status(200).json(response(200,"gallery",update));
+//     res.status(200).json(response(200,"gallery",update));
 
-  } catch(err) {
-    res.status(200).json(response(400,"gallery",err));
-  }
+//   } catch(err) {
+//     res.status(200).json(response(400,"gallery",err));
+//   }
 
-});
+// });
 
 router.delete('/', async function(req, res, next) {
   var body = req.body;
 
   try{
 
-    var update = await model.Gallery.destroy({
+    var update = await model.Project.destroy({
       where: {
         id:body.id
       }
     });
 
-    res.status(200).json(response(200,"gallery",update));
+    res.status(200).json(response(200,"project",update));
     
   } catch(err) {
-    res.status(200).json(response(400,"gallery",err));
+    res.status(200).json(response(400,"project",err));
   }
   
 });
@@ -135,12 +153,12 @@ router.get('/:id', async function(req, res, next) {
 
   try{
 
-    var list = await model.Gallery.findByPk(req.params.id);
+    var list = await model.Project.findByPk(req.params.id);
 
-    res.status(200).json(response(200,"gallery",list));
+    res.status(200).json(response(200,"project",list));
 
   } catch(err) {
-    res.status(200).json(response(400,"gallery",err));
+    res.status(200).json(response(400,"project",err));
   }
 
 });
