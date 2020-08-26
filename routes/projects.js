@@ -99,37 +99,36 @@ router.get('/list', async function(req, res, next) {
   
 // });
 
-// router.put('/', async function(req, res, next) {
-//   var body = req.body;
-//   var url = req.protocol + '://' + req.get('host')
-//   var path = constant.path.categories
-//   var data = {
-//     vendorId: body.vendorId,
-//     packageId: body.packageId,
-//     isMain: body.isMain
-//   }
+router.put('/', auth.isUserOrVendor, async function(req, res, next) {
+  var body = req.body;
+  var url = req.protocol + '://' + req.get('host')
+  var path = constant.path.categories
+  var data = {
+    title: body.title,
+    description: body.description
+  }
 
-//   try{
+  try{
 
-//     var update = await model.Project.update(data, {
-//       where: {
-//         id:body.id
-//       }
-//     });
+    var update = await model.Project.update(data, {
+      where: {
+        id:body.id
+      }
+    });
 
-//     if (update[0] == 1) {
-//       update = await model.Gallery.findByPk(body.id);
-//     } else {
-//       return res.status(200).json(response(400,"gallery",update));
-//     }
+    if (update[0] == 1) {
+      update = await model.Gallery.findByPk(body.id);
+    } else {
+      return res.status(200).json(response(400,"gallery",update));
+    }
 
-//     res.status(200).json(response(200,"gallery",update));
+    res.status(200).json(response(200,"gallery",update));
 
-//   } catch(err) {
-//     res.status(200).json(response(400,"gallery",err));
-//   }
+  } catch(err) {
+    res.status(200).json(response(400,"gallery",err));
+  }
 
-// });
+});
 
 router.delete('/', async function(req, res, next) {
   var body = req.body;
