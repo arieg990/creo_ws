@@ -4,6 +4,7 @@ var model = require('../models');
 var response = require('../config/constant').response;
 const crypto = require('crypto');
 const cryptoLocal = require('../config/crypto');
+const Sequelize = require("sequelize")
 var constant = require('../config/constant.json');
 var auth = require('../config/auth');
 var path = constant.path.galleries
