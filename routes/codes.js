@@ -14,6 +14,8 @@ router.get('/list', async function(req, res, next) {
   var perPage = 10;
   var offset = parseInt(req.query.page)
   var limit = parseInt(req.query.limit)
+  var where = {}
+  var whereCount = {}
 
   if (offset > 1) {
     page = offset-1
@@ -23,13 +25,21 @@ router.get('/list', async function(req, res, next) {
     perPage = limit
   }
 
+  if (typeof req.query.categoryCode != "undefined") {
+    where.categoryCodeId = req.query.categoryCode
+    whereCount.categoryCodeId = req.query.categoryCode
+  }
+
   try{
     var list = await model.Code.findAll({
       offset: page*perPage,
       limit:perPage,
+      where:where
     });
 
-    var count = await model.Code.count()
+    var count = await model.Code.count({
+      where:whereCount
+    })
 
     var totalPage = Math.ceil(count/perPage)
 
