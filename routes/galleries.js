@@ -197,6 +197,7 @@ router.delete('/', async function(req, res, next) {
     res.status(200).json(response(200,"gallery",update));
     
   } catch(err) {
+    console.log(err)
     res.status(200).json(response(400,"gallery",err));
   }
   
