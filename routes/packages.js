@@ -107,7 +107,7 @@ router.post('/', auth.isUserOrVendor, async function(req, res, next) {
     provinceId:body.provinceId,
     isMain: body.isMain,
     cityId:body.cityId,
-    detail.body.detail
+    detail:body.detail
   }
 
   if (user.userType == "user") {
@@ -218,7 +218,7 @@ router.put('/', auth.isUserOrVendor, async function(req, res, next) {
     provinceId:body.provinceId,
     isMain: body.isMain,
     cityId:body.cityId,
-    detail.body.detail
+    detail:body.detail
   }
 
   if (body.image1 != null) {
